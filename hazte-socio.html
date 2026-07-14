@@ -1,0 +1,363 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Hazte socio de Lô Esport Menorca por 50 € al año y ayuda al crecimiento del club, al deporte base y al proyecto deportivo."
+    />
+    <meta name="theme-color" content="#0b0c0d" />
+    <link rel="icon" type="image/png" sizes="512x512" href="/assets/favicons/favicon-light.png" />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="512x512"
+      href="/assets/favicons/favicon-light.png"
+      media="(prefers-color-scheme: light)"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="512x512"
+      href="/assets/favicons/favicon-dark.png"
+      media="(prefers-color-scheme: dark)"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,300..900&family=Barlow+Condensed:ital,wght@0,500;0,600;0,700;0,800;0,900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/styles.css" />
+    <title>Hazte socio — Lô Esport Menorca</title>
+  </head>
+  <body class="join-body">
+    <a class="skip-link" href="#contenido">Saltar al contenido</a>
+
+    <header class="page-header" id="inicio">
+      <div class="announcement">
+        <p><strong>Hazte socio</strong><span>50 €/año</span></p>
+        <a href="#alta"><span>Formulario</span><span>de alta <span aria-hidden="true">↗</span></span></a>
+      </div>
+
+      <div class="site-header">
+        <nav class="nav-shell" aria-label="Navegación principal">
+        <div class="nav-identity">
+          <button
+            class="menu-toggle"
+            type="button"
+            aria-label="Abrir menú"
+            aria-expanded="false"
+            aria-controls="site-menu"
+          >
+            <span aria-hidden="true"></span><span aria-hidden="true"></span>
+          </button>
+          <a class="brand" href="/" aria-label="Lô Esport Menorca, inicio">
+            <img src="/assets/logos/logo-oscuro.avif" alt="Lô Esport Menorca" />
+          </a>
+          <label class="language-switcher language-switcher-mobile">
+            <span class="sr-only">Idioma</span>
+            <select name="language" aria-label="Idioma">
+              <option value="es">ES</option>
+              <option value="ca">CA</option>
+              <option value="gl">GL</option>
+              <option value="eu">EU</option>
+            </select>
+          </label>
+          <span class="nav-season"><span aria-hidden="true">DH · 2026</span><span class="sr-only">División de Honor 2026</span></span>
+        </div>
+
+        <div class="desktop-nav">
+          <a href="/historia.html">Historia</a>
+          <a href="/#grupos">Grupos</a>
+          <a href="/#gestiones">Gestiones</a>
+          <a href="/#patrocinadores">Patrocinadores</a>
+          <a href="/#contacto">Contacto</a>
+        </div>
+
+        <div class="nav-actions">
+          <a class="nav-social is-current" href="#alta" aria-current="page">Hazte socio</a>
+          <a class="nav-cta" href="#alta">Formulario de alta <span aria-hidden="true">↗</span></a>
+        </div>
+        </nav>
+      </div>
+    </header>
+
+    <div class="menu-backdrop" aria-hidden="true"></div>
+
+    <nav class="mobile-menu" id="site-menu" aria-label="Menú principal" aria-hidden="true" inert hidden>
+      <div class="menu-layout">
+        <div class="menu-main">
+          <div class="menu-quick-links">
+            <a href="#alta">Hazte socio</a>
+            <a href="#impacto">Qué apoyas</a>
+            <a href="#dudas">Dudas frecuentes</a>
+          </div>
+
+          <button
+            class="menu-section-button is-active"
+            type="button"
+            data-menu-section="actividad"
+            aria-expanded="true"
+            aria-controls="menu-inline-actividad menu-panel-actividad"
+          >
+            <span>Entrenamientos</span>
+            <span aria-hidden="true">›</span>
+          </button>
+          <div class="menu-inline-panel is-active" id="menu-inline-actividad" data-menu-inline-panel="actividad">
+            <a href="/#grupos">Grupos por edad y nivel</a>
+            <a href="/#grupos">Sedes de entrenamiento</a>
+            <a href="/#gestiones">Inscribirse a un grupo</a>
+          </div>
+          <button
+            class="menu-section-button"
+            type="button"
+            data-menu-section="comunidad"
+            aria-expanded="false"
+            aria-controls="menu-inline-comunidad menu-panel-comunidad"
+          >
+            <span>Socios y comunidad</span>
+            <span aria-hidden="true">›</span>
+          </button>
+          <div class="menu-inline-panel" id="menu-inline-comunidad" data-menu-inline-panel="comunidad" hidden>
+            <a href="#alta">Formulario de alta</a>
+            <a href="#impacto">Qué hace posible tu cuota</a>
+            <a href="/#patrocinadores">Patrocinadores y colaboradores</a>
+          </div>
+          <a class="menu-section-link" href="/#patrocinadores">
+            <span>Patrocinadores</span>
+            <span aria-hidden="true">›</span>
+          </a>
+          <a class="menu-section-link" href="/#contacto">
+            <span>Contacto</span>
+            <span aria-hidden="true">›</span>
+          </a>
+        </div>
+
+        <div class="menu-detail" role="group" aria-label="Submenú">
+          <div class="menu-panel is-active" id="menu-panel-actividad" data-menu-panel="actividad">
+            <a href="/#grupos">Grupos por edad y nivel</a>
+            <a href="/#grupos">Sedes de entrenamiento</a>
+            <a href="/#gestiones">Inscribirse a un grupo</a>
+          </div>
+          <div class="menu-panel" id="menu-panel-comunidad" data-menu-panel="comunidad" hidden>
+            <a href="#alta">Formulario de alta</a>
+            <a href="#impacto">Qué hace posible tu cuota</a>
+            <a href="/#patrocinadores">Patrocinadores y colaboradores</a>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <main class="join-page" id="contenido">
+      <section class="join-hero" aria-labelledby="join-title">
+        <div class="join-hero-media" aria-hidden="true">
+          <img src="/assets/images/homeheader.webp" alt="" />
+        </div>
+        <div class="join-hero-shade" aria-hidden="true"></div>
+        <div class="section-shell join-hero-grid">
+          <div class="join-hero-copy reveal">
+            <p class="hero-kicker"><span aria-hidden="true"></span> Socios Lô Esport Menorca</p>
+            <h1 id="join-title">Ayuda a construir la mejor escuela de atletismo de España.</h1>
+            <p class="join-hero-lead">
+              Cada cuota de <strong>50 €</strong> se destina a cosas concretas:
+              material de entrenamiento, viajes a competiciones, licencias,
+              equipaciones, tecnificación y más horas de pista para la escuela.
+            </p>
+            <div class="join-price-row" aria-label="Cuota anual de socio">
+              <strong>50 €</strong>
+              <span>Cuota anual</span>
+              <small>Menos de 1 € a la semana para financiar recursos reales del club.</small>
+            </div>
+            <ul class="join-checklist">
+              <li>Más vallas, conos, testigos, balones medicinales y material de pista.</li>
+              <li>Más apoyo para desplazamientos, campeonatos y jornadas de tecnificación.</li>
+              <li>Un objetivo: que Lô Esport Menorca sea referencia nacional en escuela y club.</li>
+              <li>Recibes el alta directamente con el club, sin pago online.</li>
+            </ul>
+            <a class="button button-primary" href="#alta">Rellenar el formulario <span aria-hidden="true">↗</span></a>
+          </div>
+
+          <form class="join-form reveal" id="alta" data-success="Solicitud recibida. Nos pondremos en contacto contigo para completar el alta.">
+            <div class="join-form-header">
+              <h2>Alta de socio</h2>
+            </div>
+            <div class="join-form-grid">
+              <label>
+                <span>Nombre y apellidos</span>
+                <input type="text" name="member-name" autocomplete="name" placeholder="Nombre completo" required />
+              </label>
+              <label>
+                <span>Correo electrónico</span>
+                <input type="email" name="member-email" autocomplete="email" placeholder="nombre@correo.com" required />
+              </label>
+              <label class="full">
+                <span>Teléfono</span>
+                <input type="tel" name="member-phone" autocomplete="tel" placeholder="689 752 415" required />
+              </label>
+            </div>
+            <label class="join-consent">
+              <input type="checkbox" name="member-consent" required />
+              <span>Acepto recibir información para completar mi alta como socio de Lô Esport Menorca.</span>
+            </label>
+            <button type="submit">Solicitar alta<span aria-hidden="true">→</span></button>
+            <p class="join-form-note">El club confirmará los datos y la forma de pago antes de formalizar el alta.</p>
+          </form>
+        </div>
+      </section>
+
+      <section class="join-impact section-light" id="impacto" aria-labelledby="impact-title">
+        <div class="section-shell">
+          <header class="section-heading heading-row reveal">
+            <div>
+              <p class="eyebrow">Tu cuota se nota</p>
+              <h2 id="impact-title">Dónde va exactamente tu cuota.</h2>
+            </div>
+            <p class="section-intro">
+              La recaudación de socios tiene una meta clara: convertir Lô Esport
+              Menorca en el mejor club y escuela de atletismo de España, empezando
+              por lo que se puede comprar, usar y mejorar cada semana.
+            </p>
+          </header>
+
+          <div class="join-impact-grid reveal">
+            <article>
+              <span>01</span>
+              <h3>Material para entrenar mejor</h3>
+              <p>
+                Vallas, conos, testigos, gomas, balones medicinales, colchonetas,
+                cronómetros y material que se desgasta con el uso diario.
+              </p>
+            </article>
+            <article>
+              <span>02</span>
+              <h3>Viajes y competición</h3>
+              <p>
+                Ayuda para desplazamientos, alojamientos, inscripciones y logística
+                cuando los atletas compiten fuera de Menorca.
+              </p>
+            </article>
+            <article>
+              <span>03</span>
+              <h3>Escuela y tecnificación</h3>
+              <p>
+                Más sesiones específicas, seguimiento de atletas, formación de
+                entrenadores y actividades para que la cantera suba de nivel.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="join-momentum section-dark" id="proyecto" aria-labelledby="project-title">
+        <div class="section-shell join-momentum-grid">
+          <figure class="join-momentum-photo reveal">
+            <img src="/assets/images/nuestro-club-header.avif" alt="Atletas de Lô Esport Menorca en una pista de atletismo" loading="lazy" />
+            <figcaption>Lô Esport Menorca · Club, escuela y competición</figcaption>
+          </figure>
+          <div class="join-momentum-copy reveal">
+            <p class="eyebrow">El objetivo es medible</p>
+            <h2 id="project-title">Escuela fuerte, club competitivo y Menorca en la élite.</h2>
+            <p>
+              La cuota de socios no es una donación abstracta. Es una bolsa estable
+              para comprar material, planificar viajes, sostener entrenamientos y
+              crear una escuela capaz de formar atletas desde la base hasta la máxima
+              categoría nacional.
+            </p>
+            <a class="button button-primary" href="#alta">Quiero ser socio <span aria-hidden="true">↗</span></a>
+          </div>
+        </div>
+      </section>
+
+      <section class="join-faq section-light" id="dudas" aria-labelledby="faq-title">
+        <div class="section-shell join-faq-grid">
+          <div class="join-faq-heading reveal">
+            <p class="eyebrow">Sin vueltas</p>
+            <h2 id="faq-title">PREGUNTAS FRECUENTES.</h2>
+            <a class="button button-dark" href="#alta">Completar alta <span aria-hidden="true">↗</span></a>
+          </div>
+          <div class="join-faq-list reveal">
+            <details open>
+              <summary>¿Cuánto cuesta hacerse socio?</summary>
+              <p>La cuota es de 50 € anuales. El club te indicará cómo completar el pago después de recibir la solicitud.</p>
+            </details>
+            <details>
+              <summary>¿Tengo que entrenar o competir?</summary>
+              <p>No. Puedes ser socio aunque no entrenes. Tu cuota ayuda a pagar material, desplazamientos, tecnificación y estructura para la escuela y el equipo.</p>
+            </details>
+            <details>
+              <summary>¿A qué contribuye mi cuota?</summary>
+              <p>A material de pista, viajes a campeonatos, licencias, equipaciones, actividades de escuela, formación técnica y recursos para competir mejor.</p>
+            </details>
+            <details>
+              <summary>¿Qué pasa después de enviar el formulario?</summary>
+              <p>El club revisará tu solicitud y se pondrá en contacto contigo para confirmar los datos y cerrar el alta.</p>
+            </details>
+          </div>
+        </div>
+      </section>
+
+      <section class="join-final" aria-labelledby="join-final-title">
+        <div class="section-shell join-final-inner reveal">
+          <p class="eyebrow">Haz que cuente</p>
+          <h2 id="join-final-title">El objetivo: hacer de Lô Esport Menorca una escuela y un club referente en España.</h2>
+          <p>
+            Cada socio suma recursos: material, viajes, tecnificación y una
+            estructura mejor para entrenar, competir y formar atletas desde Menorca.
+          </p>
+          <a class="button button-primary" href="#alta">Rellenar el formulario <span aria-hidden="true">↗</span></a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="section-shell footer-grid">
+        <div class="footer-brand">
+          <img src="/assets/logos/logo-claro.avif" alt="Lô Esport Menorca" />
+          <p>Atletismo desde Menorca.<br />Compitiendo entre los mejores.</p>
+        </div>
+        <div>
+          <p class="footer-title">Club</p>
+          <a href="/historia.html">Historia y proyecto</a>
+          <a href="/#entrenadores">Entrenadores</a>
+          <a href="/ascenso-division-honor.html">Ascenso a División de Honor</a>
+          <button type="button" data-future="Galería">Galería</button>
+        </div>
+        <div>
+          <p class="footer-title">Entrena</p>
+          <a href="/#grupos">Grupos</a>
+          <a href="/#gestiones">Inscripciones</a>
+          <a href="/#gestiones">Periodo de prueba</a>
+          <button type="button" data-future="Competiciones">Competiciones</button>
+        </div>
+        <div>
+          <p class="footer-title">Comunidad</p>
+          <a href="/hazte-socio.html" aria-current="page">Hazte socio</a>
+          <a href="/#patrocinadores">Patrocinadores</a>
+          <a href="https://www.instagram.com/loesport" target="_blank" rel="noopener noreferrer" aria-label="Instagram de Lô Esport, abre en una pestaña nueva">Instagram <span aria-hidden="true">↗</span></a>
+          <a href="https://www.facebook.com/loesport" target="_blank" rel="noopener noreferrer" aria-label="Facebook de Lô Esport, abre en una pestaña nueva">Facebook <span aria-hidden="true">↗</span></a>
+        </div>
+        <div>
+          <p class="footer-title">Contacto</p>
+          <a href="mailto:loesport@gmail.com">loesport@gmail.com</a>
+          <a href="tel:+34689752415">689 752 415</a>
+          <span>Menorca · Illes Balears</span>
+        </div>
+      </div>
+      <div class="section-shell footer-bottom">
+        <p>© <span id="current-year">2026</span> Lô Esport Menorca</p>
+        <div>
+          <a href="/politica-de-privacidad.html">Privacidad</a>
+          <a href="/politica-de-cookies.html">Cookies</a>
+          <a href="/proteccion-de-datos.html">Protección de datos</a>
+        </div>
+        <a href="#inicio">Volver arriba</a>
+      </div>
+    </footer>
+
+    <div class="toast" role="status" aria-live="polite"></div>
+
+    <script type="module" src="/script.js"></script>
+  </body>
+</html>

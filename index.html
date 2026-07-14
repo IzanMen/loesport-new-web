@@ -1,0 +1,743 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Lô Esport Menorca, club de atletismo de División de Honor. Entrenamiento, escuela y competición en Maó, Alaior y Es Mercadal."
+    />
+    <meta name="theme-color" content="#0b0c0d" />
+    <link rel="icon" type="image/png" sizes="512x512" href="/assets/favicons/favicon-light.png" />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="512x512"
+      href="/assets/favicons/favicon-light.png"
+      media="(prefers-color-scheme: light)"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="512x512"
+      href="/assets/favicons/favicon-dark.png"
+      media="(prefers-color-scheme: dark)"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,300..900&family=Barlow+Condensed:ital,wght@0,500;0,600;0,700;0,800;0,900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/styles.css" />
+    <title>Lô Esport Menorca — Atletismo de élite</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#contenido">Saltar al contenido</a>
+
+    <header class="page-header" id="inicio">
+      <div class="announcement">
+        <p><strong>Temporada 2026</strong><span>Primer club balear en División de Honor</span></p>
+        <a href="#gestiones"><span>Inscripciones</span><span>abiertas ↗</span></a>
+      </div>
+
+      <div class="site-header">
+        <nav class="nav-shell" aria-label="Navegación principal">
+        <div class="nav-identity">
+          <button
+            class="menu-toggle"
+            type="button"
+            aria-label="Abrir menú"
+            aria-expanded="false"
+            aria-controls="site-menu"
+          >
+            <span aria-hidden="true"></span><span aria-hidden="true"></span>
+          </button>
+          <a class="brand" href="#inicio" aria-label="Lô Esport Menorca, inicio">
+            <img src="/assets/logos/logo-oscuro.avif" alt="Lô Esport Menorca" />
+          </a>
+          <label class="language-switcher language-switcher-mobile">
+            <span class="sr-only">Idioma</span>
+            <select name="language" aria-label="Idioma">
+              <option value="es">ES</option>
+              <option value="ca">CA</option>
+              <option value="gl">GL</option>
+              <option value="eu">EU</option>
+            </select>
+          </label>
+          <span class="nav-season"><span aria-hidden="true">DH · 2026</span><span class="sr-only">División de Honor 2026</span></span>
+        </div>
+
+        <div class="desktop-nav">
+          <a href="./historia.html">Historia</a>
+          <a href="#grupos">Grupos</a>
+          <a href="#gestiones">Gestiones</a>
+          <a href="#patrocinadores">Patrocinadores</a>
+          <a href="#contacto">Contacto</a>
+        </div>
+
+        <div class="nav-actions">
+          <a class="nav-social" href="./hazte-socio.html">Hazte socio</a>
+          <a class="nav-cta" href="#gestiones">Entrena con nosotros <span aria-hidden="true">↗</span></a>
+        </div>
+        </nav>
+      </div>
+    </header>
+
+    <div class="menu-backdrop" aria-hidden="true"></div>
+
+    <nav class="mobile-menu" id="site-menu" aria-label="Menú principal" aria-hidden="true" inert hidden>
+      <div class="menu-layout">
+        <div class="menu-main">
+          <div class="menu-quick-links">
+            <a href="./hazte-socio.html">Hazte socio</a>
+            <a href="#gestiones">Inscripciones</a>
+            <a href="#contacto">Contacto</a>
+          </div>
+
+          <button
+            class="menu-section-button is-active"
+            type="button"
+            data-menu-section="actividad"
+            aria-expanded="true"
+            aria-controls="menu-inline-actividad menu-panel-actividad"
+          >
+            <span>Entrenamientos</span>
+            <span aria-hidden="true">›</span>
+          </button>
+          <div class="menu-inline-panel is-active" id="menu-inline-actividad" data-menu-inline-panel="actividad">
+            <a href="#grupos">Grupos por edad y nivel</a>
+            <a href="#grupos">Sedes de entrenamiento</a>
+            <a href="#gestiones">Inscribirse a un grupo</a>
+          </div>
+          <button
+            class="menu-section-button"
+            type="button"
+            data-menu-section="comunidad"
+            aria-expanded="false"
+            aria-controls="menu-inline-comunidad menu-panel-comunidad"
+          >
+            <span>Socios y comunidad</span>
+            <span aria-hidden="true">›</span>
+          </button>
+          <div class="menu-inline-panel" id="menu-inline-comunidad" data-menu-inline-panel="comunidad" hidden>
+            <a href="/hazte-socio.html">Cómo hacerse socio</a>
+            <a href="#patrocinadores">Patrocinadores y colaboradores</a>
+            <a href="#contacto">Proponer una colaboración</a>
+          </div>
+          <a class="menu-section-link" href="#patrocinadores">
+            <span>Patrocinadores</span>
+            <span aria-hidden="true">›</span>
+          </a>
+          <a class="menu-section-link" href="#contacto">
+            <span>Contacto</span>
+            <span aria-hidden="true">›</span>
+          </a>
+        </div>
+
+        <div class="menu-detail" role="group" aria-label="Submenú">
+          <div class="menu-panel is-active" id="menu-panel-actividad" data-menu-panel="actividad">
+            <a href="#grupos">Grupos por edad y nivel</a>
+            <a href="#grupos">Sedes de entrenamiento</a>
+            <a href="#gestiones">Inscribirse a un grupo</a>
+          </div>
+          <div class="menu-panel" id="menu-panel-comunidad" data-menu-panel="comunidad" hidden>
+            <a href="/hazte-socio.html">Cómo hacerse socio</a>
+            <a href="#patrocinadores">Patrocinadores y colaboradores</a>
+            <a href="#contacto">Proponer una colaboración</a>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <main id="contenido">
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-media" aria-hidden="true">
+          <img src="/assets/images/nuestro-club-header.avif" alt="" />
+        </div>
+        <div class="hero-shade" aria-hidden="true"></div>
+        <div class="hero-lines" aria-hidden="true"></div>
+        <div class="hero-content">
+          <p class="hero-kicker"><span aria-hidden="true"></span> Menorca · Illes Balears</p>
+          <h1 id="hero-title">
+            <span>Atletismo</span>
+            <span>entre los</span>
+            <span class="accent">mejores.</span>
+          </h1>
+          <div class="hero-bottom">
+            <p>
+              Lô Esport hace historia. En 2026, el atletismo menorquín alcanza por
+              primera vez la máxima categoría nacional.
+            </p>
+            <div class="hero-buttons">
+              <a class="button button-primary" href="#club">Conoce el hito <span aria-hidden="true">↗</span></a>
+              <a
+                class="button button-ghost"
+                href="https://docs.google.com/forms/d/e/1FAIpQLSdMWe7S9acL9BdQe7rmp6-As_kgEJrBNBTnpAgoi3nxqNa0wA/viewform"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Inscripciones de la temporada 2026, abre en una pestaña nueva"
+              >Inscripciones <span aria-hidden="true">↗</span></a>
+            </div>
+          </div>
+        </div>
+        <div class="hero-status">
+          <span class="hero-status-number">01</span>
+          <span class="hero-status-line"></span>
+          <p>División de Honor<br /><strong>España · 2026</strong></p>
+        </div>
+      </section>
+
+      <section class="sponsor-marquee" aria-label="Patrocinadores del club">
+        <div class="marquee-label" aria-hidden="true"></div>
+        <div class="marquee-window">
+          <div class="marquee-track">
+            <div class="sponsor-set">
+              <a class="marquee-logo logo-dark logo-wide" href="https://www.conectabalear.com/" target="_blank" rel="noopener noreferrer" aria-label="ConectaBalear">
+                <img src="/assets/logos/conecta_balear.webp" alt="ConectaBalear" />
+              </a>
+              <a class="marquee-logo logo-xwide" href="https://www.gonyalons.com/es/inicio" target="_blank" rel="noopener noreferrer" aria-label="Distribuciones Goñalons">
+                <img src="/assets/logos/gonyalons-cropped.webp" alt="Distribuciones Goñalons" />
+              </a>
+              <a class="marquee-logo logo-square" href="https://www.covadenxoroi.com/es" target="_blank" rel="noopener noreferrer" aria-label="Cova d'en Xoroi">
+                <img src="/assets/logos/xoroi.avif" alt="Cova d'en Xoroi" />
+              </a>
+              <a
+                class="marquee-logo logo-dark logo-square"
+                href="https://www.reclam2012.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Reclam, abrir sitio web en una pestaña nueva"
+              >
+                <img src="/assets/logos/reclam-logo.avif" alt="Reclam" />
+              </a>
+              <a class="marquee-logo logo-wide" href="https://colonya.com/" target="_blank" rel="noopener noreferrer" aria-label="Colonya Caixa Pollença">
+                <img src="/assets/logos/colonya-clean.webp" alt="Colonya Caixa Pollença" />
+              </a>
+              <a class="marquee-logo logo-square" href="https://www.instagram.com/happy_menorca/" target="_blank" rel="noopener noreferrer" aria-label="Happy Menorca">
+                <img src="/assets/logos/happy_menorca.png" alt="Happy Menorca" />
+              </a>
+              <a class="marquee-logo logo-tall" href="https://www.aj-alaior.org/" target="_blank" rel="noopener noreferrer" aria-label="Ajuntament d'Alaior">
+                <img src="/assets/logos/logo-ajuntamiento-alaior.png" alt="Ajuntament d'Alaior" />
+              </a>
+              <a class="marquee-logo logo-square" href="https://www.cime.es/portal.aspx" target="_blank" rel="noopener noreferrer" aria-label="Consell Insular de Menorca">
+                <img src="/assets/logos/logo-consell-insular.png" alt="Consell Insular de Menorca" />
+              </a>
+              <a class="marquee-logo logo-dark logo-xwide" href="https://esports.cime.es/" target="_blank" rel="noopener noreferrer" aria-label="Esports CIME">
+                <img src="/assets/logos/esports-cime.avif" alt="Esports CIME" />
+              </a>
+              <a class="marquee-logo logo-square" href="https://www.caib.es/webgoib/esports1" target="_blank" rel="noopener noreferrer" aria-label="Esports Illes Balears">
+                <img src="/assets/logos/esportsib.png" alt="Esports Illes Balears" />
+              </a>
+            </div>
+            <div class="sponsor-set" aria-hidden="true">
+              <span class="marquee-logo logo-dark logo-wide">
+                <img src="/assets/logos/conecta_balear.webp" alt="" />
+              </span>
+              <span class="marquee-logo logo-xwide">
+                <img src="/assets/logos/gonyalons-cropped.webp" alt="" />
+              </span>
+              <span class="marquee-logo logo-square">
+                <img src="/assets/logos/xoroi.avif" alt="" />
+              </span>
+              <span class="marquee-logo logo-dark logo-square">
+                <img src="/assets/logos/reclam-logo.avif" alt="" />
+              </span>
+              <span class="marquee-logo logo-wide">
+                <img src="/assets/logos/colonya-clean.webp" alt="" />
+              </span>
+              <span class="marquee-logo logo-square">
+                <img src="/assets/logos/happy_menorca.png" alt="" />
+              </span>
+              <span class="marquee-logo logo-tall">
+                <img src="/assets/logos/logo-ajuntamiento-alaior.png" alt="" />
+              </span>
+              <span class="marquee-logo logo-square">
+                <img src="/assets/logos/logo-consell-insular.png" alt="" />
+              </span>
+              <span class="marquee-logo logo-dark logo-xwide">
+                <img src="/assets/logos/esports-cime.avif" alt="" />
+              </span>
+              <span class="marquee-logo logo-square">
+                <img src="/assets/logos/esportsib.png" alt="" />
+              </span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="club-section section-dark" id="club" aria-labelledby="club-title">
+        <div class="section-shell">
+          <header class="section-heading reveal">
+            <p class="eyebrow">Nuestro club · Desde 2011</p>
+            <h2 id="club-title">De una isla.<br />A la élite.</h2>
+            <p class="section-intro">
+              Un club nacido en Alaior, construido desde la base y convertido en
+              referente del atletismo balear.
+            </p>
+          </header>
+
+          <div class="achievement-grid">
+            <article class="achievement-copy reveal">
+              <p class="big-year">2026</p>
+              <h3>Un ascenso sin precedentes</h3>
+              <p>
+                En su primera temporada en Primera División, el equipo masculino se
+                proclamó subcampeón de la Liga Joma y logró el ascenso a División de
+                Honor. Por primera vez, un club de atletismo de las Illes Balears
+                competirá en la máxima categoría española.
+              </p>
+              <a class="text-link" href="/historia.html">
+                Descubre nuestra historia <span aria-hidden="true">↗</span>
+              </a>
+            </article>
+
+            <figure class="achievement-photo reveal">
+              <img src="/assets/images/homeheader.webp" alt="Atletas de Lô Esport celebrando juntos en la pista" />
+              <figcaption>
+                <span>Trabajo. Ilusión. Compromiso.</span>
+                <span>Menorca, 2026</span>
+              </figcaption>
+            </figure>
+
+            <div class="club-stats reveal">
+              <div><strong>2011</strong><span>Nace el club<br />en Alaior</span></div>
+              <div><strong>03</strong><span>Sedes de<br />entrenamiento</span></div>
+              <div><strong>01</strong><span>Primer club balear<br />en la élite</span></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="groups-section section-light" id="grupos" aria-labelledby="groups-title">
+        <div class="section-shell">
+          <header class="section-heading heading-row reveal">
+            <div>
+              <h2 id="groups-title">Nuestros grupos</h2>
+              <p class="groups-subtitle">Una isla. Tres sedes.</p>
+            </div>
+            <p class="section-intro">
+              Entrenamiento para todas las edades y niveles. Elige tu sede y empieza
+              a construir tu próxima marca.
+            </p>
+          </header>
+
+          <div class="location-grid reveal">
+            <article class="location-card" aria-labelledby="location-mao-title">
+              <div class="location-index">Maó</div>
+              <div class="location-main">
+                <p>Pista de atletismo municipal</p>
+                <h3 id="location-mao-title">MAÓ</h3>
+                <ul class="location-groups" id="groups-mao" hidden>
+                  <li>Iniciación</li>
+                  <li>Benjamín · Sub-10</li>
+                  <li>Alevín · Sub-12</li>
+                  <li>Infantil &amp; Cadete</li>
+                  <li>Tecnificación</li>
+                  <li>Adultos &amp; Running</li>
+                </ul>
+              </div>
+              <button
+                class="location-toggle"
+                type="button"
+                aria-expanded="false"
+                aria-controls="groups-mao"
+                aria-label="Ver grupos de Maó"
+              >
+                <span aria-hidden="true">↗</span>
+              </button>
+            </article>
+
+            <article class="location-card is-active" aria-labelledby="location-alaior-title">
+              <div class="location-index">Alaior</div>
+              <div class="location-main">
+                <p>Polideportivo municipal</p>
+                <h3 id="location-alaior-title">ALAIOR</h3>
+                <ul class="location-groups" id="groups-alaior">
+                  <li>Iniciación</li>
+                  <li>Benjamín &amp; Alevín · Sub-10 &amp; Sub-12</li>
+                  <li>Infantil &amp; Cadete · Sub-14 &amp; Sub-16</li>
+                  <li>Adultos</li>
+                  <li>Iniciación femenina</li>
+                </ul>
+              </div>
+              <button
+                class="location-toggle"
+                type="button"
+                aria-expanded="true"
+                aria-controls="groups-alaior"
+                aria-label="Ver grupos de Alaior"
+              >
+                <span aria-hidden="true">↗</span>
+              </button>
+            </article>
+
+            <article class="location-card" aria-labelledby="location-mercadal-title">
+              <div class="location-index">Es Mercadal</div>
+              <div class="location-main">
+                <p>Campo municipal de fútbol</p>
+                <h3 id="location-mercadal-title">MERCADAL</h3>
+                <ul class="location-groups" id="groups-mercadal" hidden>
+                  <li>Escolares</li>
+                  <li>Formación deportiva</li>
+                  <li>Iniciación al atletismo</li>
+                </ul>
+              </div>
+              <button
+                class="location-toggle"
+                type="button"
+                aria-expanded="false"
+                aria-controls="groups-mercadal"
+                aria-label="Ver grupos de Es Mercadal"
+              >
+                <span aria-hidden="true">↗</span>
+              </button>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="management-section" id="gestiones" aria-labelledby="management-title">
+        <div class="track-background" aria-hidden="true"></div>
+        <div class="section-shell">
+          <header class="section-heading heading-row heading-white reveal">
+            <div>
+              <h2 id="management-title">Gestiones</h2>
+            </div>
+            <p class="section-intro">
+              Altas, pruebas, licencias y bajas. Todo lo necesario para entrenar con
+              nosotros, claro y en un solo lugar.
+            </p>
+          </header>
+
+          <div class="management-grid reveal">
+            <article class="management-card featured">
+              <div>
+                <p class="eyebrow">Empieza ahora</p>
+                <h3>Si eres nuevo en el club</h3>
+                <p>Ven a probar nuestra actividad durante una semana sin ningún compromiso.</p>
+              </div>
+              <a
+                href="https://forms.gle/2Qhnbt1YoChPjN2w7"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Solicitar periodo de prueba, abre en una pestaña nueva"
+              >Periodo de prueba <span aria-hidden="true">↗</span></a>
+            </article>
+
+            <article class="management-card">
+              <div>
+                <p class="eyebrow">Temporada</p>
+                <h3>Inscripciones temporada 2026</h3>
+                <p>Se renueva la inscripción cada temporada.</p>
+              </div>
+              <a
+                href="https://docs.google.com/forms/d/e/1FAIpQLSdMWe7S9acL9BdQe7rmp6-As_kgEJrBNBTnpAgoi3nxqNa0wA/viewform"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Inscripciones de la temporada 2026, abre en una pestaña nueva"
+              >Inscripciones <span aria-hidden="true">↗</span></a>
+            </article>
+
+            <article class="management-card wide alert-card">
+              <h3>La cancelación de la actividad deberá comunicarse antes del día 20 del mes anterior.</h3>
+              <a
+                href="https://forms.gle/ScTbVW5ZxivmJCqHA"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Abrir proceso de cancelación en una pestaña nueva"
+              >Proceso de cancelación <span aria-hidden="true">↗</span></a>
+            </article>
+          </div>
+
+          <div class="license-block reveal" role="region" aria-label="Licencias de atletismo">
+            <div class="license-block-heading">
+              <p class="eyebrow">Licencias</p>
+              <h3>Para competir con todo en regla.</h3>
+            </div>
+            <div class="license-grid">
+              <article class="management-card license-card">
+                <div>
+                  <h3>Información sobre la licencia de atletismo</h3>
+                  <p>Una licencia de atletismo es necesaria para que los atletas puedan participar en eventos oficiales.</p>
+                </div>
+                <button class="text-link link-button" type="button" data-future="Información sobre licencias">
+                  Más información <span aria-hidden="true">↗</span>
+                </button>
+              </article>
+
+              <article class="management-card license-card yellow">
+                <div>
+                  <h3>Licencia de atletismo</h3>
+                  <p>A partir de categorías Sub-16 nacional y Sub-18 autonómica.</p>
+                </div>
+                <a
+                  href="https://forms.gle/WddxgrsRfHkEw4fcA"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Tramitar licencia de atletismo, abre en una pestaña nueva"
+                >Tramitar licencia <span aria-hidden="true">↗</span></a>
+              </article>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="coaches-section section-dark" id="entrenadores" aria-labelledby="coaches-title">
+        <div class="section-shell">
+          <header class="section-heading heading-row reveal">
+            <div>
+              <p class="eyebrow">Místeres · Entrenadores</p>
+              <h2 id="coaches-title">El equipo<br />detrás del equipo.</h2>
+            </div>
+            <div class="coach-controls">
+              <button type="button" class="coach-prev" aria-label="Entrenador anterior">←</button>
+              <button type="button" class="coach-next" aria-label="Entrenador siguiente">→</button>
+            </div>
+          </header>
+
+          <div class="coach-viewport reveal">
+            <div class="coach-track">
+              <article class="coach-card">
+                <img src="/assets/coaches/sergi-entrenadores.avif" alt="Sergi Reurer" />
+                <div><span>01</span><h3>Sergi Reurer</h3><p>Entrenador</p></div>
+              </article>
+              <article class="coach-card">
+                <img src="/assets/coaches/catalinacardona.webp" alt="Catalina Cardona" />
+                <div><span>02</span><h3>Catalina Cardona</h3><p>Entrenadora</p></div>
+              </article>
+              <article class="coach-card">
+                <img src="/assets/coaches/miguelquesada.webp" alt="Miguel Quesada" />
+                <div><span>03</span><h3>Miguel Quesada</h3><p>Entrenador</p></div>
+              </article>
+              <article class="coach-card">
+                <img src="/assets/coaches/juliacarreras.webp" alt="Julia Carreras" />
+                <div><span>04</span><h3>Julia Carreras</h3><p>Entrenadora</p></div>
+              </article>
+              <article class="coach-card">
+                <img src="/assets/coaches/modemarques.webp" alt="Mode Marquès" />
+                <div><span>05</span><h3>Mode Marquès</h3><p>Entrenador</p></div>
+              </article>
+              <article class="coach-card">
+                <img src="/assets/coaches/martaorives.webp" alt="Marta Orives" />
+                <div><span>06</span><h3>Marta Orives</h3><p>Entrenadora</p></div>
+              </article>
+              <article class="coach-card">
+                <img src="/assets/coaches/izansanchez.webp" alt="Izan Sánchez" />
+                <div><span>07</span><h3>Izan Sánchez</h3><p>Entrenador</p></div>
+              </article>
+              <article class="coach-card">
+                <img src="/assets/coaches/marcgomila.webp" alt="Marc Gomila" />
+                <div><span>08</span><h3>Marc Gomila</h3><p>Entrenador</p></div>
+              </article>
+              <article class="coach-card">
+                <img src="/assets/coaches/yzabellemaciel.webp" alt="Yzabelle Maciel" />
+                <div><span>09</span><h3>Yzabelle Maciel</h3><p>Entrenadora</p></div>
+              </article>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="partners-section section-light" id="patrocinadores" aria-labelledby="partners-title">
+        <div class="section-shell">
+          <header class="section-heading heading-row reveal">
+            <div>
+              <p class="eyebrow">Patrocinadores</p>
+              <h2 id="partners-title">Las marcas<br />que nos hacen volar.</h2>
+            </div>
+            <p class="section-intro">
+              Empresas e instituciones comprometidas con el talento, la salud y el
+              futuro deportivo de Menorca.
+            </p>
+          </header>
+
+          <div class="partner-wall reveal">
+            <a class="dark-logo logo-conecta" href="https://www.conectabalear.com/" target="_blank" rel="noopener noreferrer" aria-label="ConectaBalear"><img src="/assets/logos/conecta_balear.webp" alt="ConectaBalear" /></a>
+            <a class="logo-gonyalons" href="https://www.gonyalons.com/es/inicio" target="_blank" rel="noopener noreferrer" aria-label="Distribuciones Goñalons"><img src="/assets/logos/gonyalons-cropped.webp" alt="Distribuciones Goñalons" /></a>
+            <a class="logo-xoroi" href="https://www.covadenxoroi.com/es" target="_blank" rel="noopener noreferrer" aria-label="Cova d'en Xoroi"><img src="/assets/logos/xoroi.avif" alt="Cova d'en Xoroi" /></a>
+            <a class="dark-logo logo-reclam" href="https://www.reclam2012.com/" target="_blank" rel="noopener noreferrer" aria-label="Reclam, abrir sitio web en una pestaña nueva"><img src="/assets/logos/reclam-logo.avif" alt="Reclam" /></a>
+            <a class="logo-colonya" href="https://colonya.com/" target="_blank" rel="noopener noreferrer" aria-label="Colonya Caixa Pollença"><img src="/assets/logos/colonya-clean.webp" alt="Colonya Caixa Pollença" /></a>
+            <a class="logo-happy" href="https://www.instagram.com/happy_menorca/" target="_blank" rel="noopener noreferrer" aria-label="Happy Menorca"><img src="/assets/logos/happy_menorca.png" alt="Happy Menorca" /></a>
+            <a class="logo-alaior" href="https://www.aj-alaior.org/" target="_blank" rel="noopener noreferrer" aria-label="Ajuntament d'Alaior"><img src="/assets/logos/logo-ajuntamiento-alaior.png" alt="Ajuntament d'Alaior" /></a>
+            <a class="logo-consell" href="https://www.cime.es/portal.aspx" target="_blank" rel="noopener noreferrer" aria-label="Consell Insular de Menorca"><img src="/assets/logos/logo-consell-insular.png" alt="Consell Insular de Menorca" /></a>
+            <a class="dark-logo logo-cime" href="https://esports.cime.es/" target="_blank" rel="noopener noreferrer" aria-label="Esports CIME"><img src="/assets/logos/esports-cime.avif" alt="Esports CIME" /></a>
+            <a class="logo-esportsib" href="https://www.caib.es/webgoib/esports1" target="_blank" rel="noopener noreferrer" aria-label="Esports Illes Balears"><img src="/assets/logos/esportsib.png" alt="Esports Illes Balears" /></a>
+          </div>
+
+          <div class="partner-cta reveal">
+            <div>
+              <p class="eyebrow">Tu empresa, en nuestra camiseta</p>
+              <h3>Haz que tu marca corra con nosotros.</h3>
+            </div>
+            <p>
+              Forma parte de un proyecto menorquín con alcance nacional y conecta
+              con una comunidad que comparte valores reales.
+            </p>
+            <a class="button button-dark" href="mailto:loesport@gmail.com?subject=Quiero%20patrocinar%20L%C3%B4%20Esport">Quiero patrocinar <span aria-hidden="true">↗</span></a>
+          </div>
+        </div>
+      </section>
+
+      <section class="newsletter-section" aria-labelledby="newsletter-title">
+        <div class="newsletter-runner" aria-hidden="true">
+          <img src="/assets/images/imagen-inicio-header-1.webp" alt="" />
+        </div>
+        <div class="section-shell newsletter-grid reveal">
+          <div>
+            <p class="eyebrow">Newsletter</p>
+            <h2 id="newsletter-title">Lô News</h2>
+          </div>
+          <form class="inline-form" data-success="Ya estás dentro. Bienvenido a Lô News.">
+            <label for="newsletter-email">No te quedes atrás.</label>
+            <div>
+              <input id="newsletter-email" type="email" name="email" autocomplete="email" placeholder="Tu correo electrónico" required />
+              <button type="submit">Suscribirme <span aria-hidden="true">→</span></button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <section class="contact-section section-dark" id="contacto" aria-labelledby="contact-title">
+        <div class="section-shell">
+          <header class="section-heading reveal">
+            <p class="eyebrow">Contacto</p>
+            <h2 id="contact-title">Hablemos</h2>
+          </header>
+
+          <div class="contact-grid reveal">
+            <form class="contact-form" data-success="Mensaje enviado. Te responderemos muy pronto.">
+              <div class="field">
+                <label for="name">Nombre</label>
+                <input id="name" name="name" type="text" autocomplete="name" placeholder="Tu nombre" required />
+              </div>
+              <div class="field">
+                <label for="email">Correo electrónico</label>
+                <input id="email" name="email" type="email" autocomplete="email" placeholder="nombre@correo.com" required />
+              </div>
+              <div class="field full">
+                <label for="subject">Asunto</label>
+                <select id="subject" name="subject">
+                  <option>Quiero empezar a entrenar</option>
+                  <option>Información sobre grupos</option>
+                  <option>Patrocinio y colaboraciones</option>
+                  <option>Otro asunto</option>
+                </select>
+              </div>
+              <div class="field full">
+                <label for="message">Mensaje</label>
+                <textarea id="message" name="message" rows="4" placeholder="Cuéntanos cómo podemos ayudarte" required></textarea>
+              </div>
+              <button class="button button-primary" type="submit">Enviar mensaje <span aria-hidden="true">↗</span></button>
+            </form>
+
+            <div class="map-panel">
+              <a
+                class="map-embed-link"
+                href="https://www.google.com/maps/search/?api=1&query=Pista%20de%20atletismo%20municipal%20Ma%C3%B3"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <span>Ver ubicación en Google Maps</span>
+              </a>
+              <div class="map-details">
+                <p><span>Base principal</span> Pista de atletismo municipal · Maó</p>
+                <p><span>Teléfono</span> <a href="tel:+34689752415">689 752 415</a></p>
+                <p><span>Email</span> <a href="mailto:loesport@gmail.com">loesport@gmail.com</a></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="member-section" id="socio" aria-labelledby="member-title">
+        <div class="section-shell member-grid reveal">
+          <div class="member-copy-block">
+            <h2 class="member-title" id="member-title"><span>Hazte</span><span>Socio</span></h2>
+            <p class="member-subtitle">También se gana desde fuera de la pista.</p>
+            <p class="member-copy">
+              Con una cuota anual de <strong>50 €</strong> contribuyes al crecimiento
+              del club, al deporte base y al futuro del proyecto deportivo.
+            </p>
+          </div>
+          <form class="member-form" data-success="Solicitud recibida. Nos pondremos en contacto contigo.">
+            <label>
+              <span>Nombre y apellidos</span>
+              <input type="text" name="member-name" autocomplete="name" placeholder="Nombre completo" required />
+            </label>
+            <label>
+              <span>Correo electrónico</span>
+              <input type="email" name="member-email" autocomplete="email" placeholder="nombre@correo.com" required />
+            </label>
+            <label class="member-privacy">
+              <input type="checkbox" name="member-consent" required />
+              <span>Acepto recibir información para completar mi alta como socio.</span>
+            </label>
+            <button type="submit">Solicitar alta<span aria-hidden="true">→</span></button>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="section-shell footer-grid">
+        <div class="footer-brand">
+          <img src="/assets/logos/logo-claro.avif" alt="Lô Esport Menorca" />
+          <p>Atletismo desde Menorca.<br />Compitiendo entre los mejores.</p>
+        </div>
+        <div>
+          <p class="footer-title">Club</p>
+          <a href="/historia.html">Historia y proyecto</a>
+          <a href="#entrenadores">Entrenadores</a>
+          <a href="/ascenso-division-honor.html">Ascenso a División de Honor</a>
+          <button type="button" data-future="Galería">Galería</button>
+        </div>
+        <div>
+          <p class="footer-title">Entrena</p>
+          <a href="#grupos">Grupos</a>
+          <a href="#gestiones">Inscripciones</a>
+          <a href="#gestiones">Periodo de prueba</a>
+          <button type="button" data-future="Competiciones">Competiciones</button>
+        </div>
+        <div>
+          <p class="footer-title">Comunidad</p>
+          <a href="/hazte-socio.html">Hazte socio</a>
+          <a href="#patrocinadores">Patrocinadores</a>
+          <a href="https://www.instagram.com/loesport" target="_blank" rel="noopener noreferrer" aria-label="Instagram de Lô Esport, abre en una pestaña nueva">Instagram <span aria-hidden="true">↗</span></a>
+          <a href="https://www.facebook.com/loesport" target="_blank" rel="noopener noreferrer" aria-label="Facebook de Lô Esport, abre en una pestaña nueva">Facebook <span aria-hidden="true">↗</span></a>
+        </div>
+        <div>
+          <p class="footer-title">Contacto</p>
+          <a href="mailto:loesport@gmail.com">loesport@gmail.com</a>
+          <a href="tel:+34689752415">689 752 415</a>
+          <span>Menorca · Illes Balears</span>
+        </div>
+      </div>
+      <div class="section-shell footer-bottom">
+        <p>© <span id="current-year">2026</span> Lô Esport Menorca</p>
+        <div>
+          <a href="/politica-de-privacidad.html">Privacidad</a>
+          <a href="/politica-de-cookies.html">Cookies</a>
+          <a href="/proteccion-de-datos.html">Protección de datos</a>
+        </div>
+        <a href="#inicio">Volver arriba</a>
+      </div>
+    </footer>
+
+    <div class="scroll-runner" aria-hidden="true">
+      <div class="runner-track"></div>
+      <video
+        src="/assets/video/corredor-scroll.webm"
+        muted
+        loop
+        playsinline
+        preload="auto"
+        tabindex="-1"
+      ></video>
+    </div>
+
+    <div class="toast" role="status" aria-live="polite"></div>
+
+    <script type="module" src="./script.js"></script>
+  </body>
+</html>

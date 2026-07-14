@@ -1,0 +1,16 @@
+{
+  "name": "lo-esport-menorca",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "clean": "rm -rf dist",
+    "build": "vite build",
+    "check": "npm run build",
+    "preview": "vite preview --host 0.0.0.0"
+  },
+  "devDependencies": {
+    "vite": "^6.1.0"
+  }
+}
