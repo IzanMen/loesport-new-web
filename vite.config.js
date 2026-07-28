@@ -3,6 +3,9 @@ import { defineConfig } from "vite";
 
 const pages = {
   main: "index.html",
+  gruposMao: "grupos-mao.html",
+  gruposAlaior: "grupos-alaior.html",
+  gruposMercadal: "grupos-mercadal.html",
   historia: "historia.html",
   ascensoDivisionHonor: "ascenso-division-honor.html",
   hazteSocio: "hazte-socio.html",

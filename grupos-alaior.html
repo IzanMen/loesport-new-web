@@ -1,0 +1,481 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Grupos de atletismo de Lô Esport en Alaior. Encuentra el grupo por año de nacimiento y consulta horarios, lugar y precios."
+    />
+    <meta name="theme-color" content="#0b0c0d" />
+    <link rel="icon" type="image/png" sizes="512x512" href="/assets/favicons/favicon-light.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,300..900&family=Barlow+Condensed:ital,wght@0,500;0,600;0,700;0,800;0,900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/styles.css" />
+    <title>Grupos en Alaior | Lô Esport Menorca</title>
+  </head>
+  <body class="group-page-body">
+    <a class="skip-link" href="#contenido">Saltar al contenido</a>
+
+    <header class="page-header" id="inicio">
+      <div class="announcement group-announcement">
+        <p><strong>¿No sabes qué grupo elegir?</strong><span>Te ayudamos por año de nacimiento</span></p>
+        <a href="#encuentra-tu-grupo"><span>Buscar mi grupo</span><span aria-hidden="true">↓</span></a>
+      </div>
+
+      <div class="site-header">
+        <nav class="nav-shell" aria-label="Navegación principal">
+          <div class="nav-identity">
+            <button
+              class="menu-toggle"
+              type="button"
+              aria-label="Abrir menú"
+              aria-expanded="false"
+              aria-controls="site-menu"
+            >
+              <span aria-hidden="true"></span><span aria-hidden="true"></span>
+            </button>
+            <a class="brand" href="/" aria-label="Lô Esport Menorca, inicio">
+              <img src="/assets/logos/logo-oscuro.avif" alt="Lô Esport Menorca" />
+            </a>
+            <label class="language-switcher language-switcher-mobile">
+              <span class="sr-only">Idioma</span>
+              <select name="language" aria-label="Idioma">
+                <option value="es">ES</option>
+                <option value="ca">CA</option>
+                <option value="gl">GL</option>
+                <option value="eu">EU</option>
+              </select>
+            </label>
+            <span class="nav-season"><span aria-hidden="true">ALAIOR</span><span class="sr-only">Sede de Alaior</span></span>
+          </div>
+
+          <div class="desktop-nav">
+            <a href="/historia.html">Historia</a>
+            <a href="/#grupos" aria-current="page">Grupos</a>
+            <a href="/#gestiones">Gestiones</a>
+            <a href="/#patrocinadores">Patrocinadores</a>
+            <a href="/#contacto">Contacto</a>
+          </div>
+
+          <div class="nav-actions">
+            <a class="nav-social" href="/hazte-socio.html">Hazte socio</a>
+            <a class="nav-cta" href="#inscripcion">Inscribirse <span aria-hidden="true">↗</span></a>
+          </div>
+        </nav>
+      </div>
+    </header>
+
+    <div class="menu-backdrop" aria-hidden="true"></div>
+    <nav class="mobile-menu" id="site-menu" aria-label="Menú principal" aria-hidden="true" inert hidden>
+      <div class="menu-layout">
+        <div class="menu-main">
+          <div class="menu-quick-links">
+            <a href="#encuentra-tu-grupo">Encontrar mi grupo</a>
+            <a href="#grupos-alaior">Horarios y precios</a>
+            <a href="#inscripcion">Inscripción y prueba</a>
+          </div>
+          <a class="menu-section-link" href="/"><span>Inicio</span><span aria-hidden="true">›</span></a>
+          <a class="menu-section-link" href="/historia.html"><span>Historia</span><span aria-hidden="true">›</span></a>
+          <a class="menu-section-link" href="/#grupos"><span>Las tres sedes</span><span aria-hidden="true">›</span></a>
+          <a class="menu-section-link" href="/#contacto"><span>Contacto</span><span aria-hidden="true">›</span></a>
+        </div>
+        <div class="menu-detail" role="group" aria-label="Accesos del grupo">
+          <div class="menu-panel is-active">
+            <a href="#encuentra-tu-grupo">Buscar por año de nacimiento</a>
+            <a href="#grupos-alaior">Comparar todos los grupos</a>
+            <a href="#informacion-practica">Qué incluye la cuota</a>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <main class="group-page" id="contenido">
+      <section class="group-hero" aria-labelledby="group-hero-title">
+        <div class="group-hero-media" aria-hidden="true">
+          <img src="/assets/images/grupos.avif" alt="" />
+        </div>
+        <div class="group-hero-shade" aria-hidden="true"></div>
+        <div class="group-hero-content section-shell">
+          <p class="hero-kicker"><span aria-hidden="true"></span> Atletismo en Menorca</p>
+          <h1 id="group-hero-title"><span>Grupos en</span><strong>Alaior</strong></h1>
+          <div class="group-hero-bottom">
+            <p>
+              Escuela, adultos y running en el entorno del polideportivo municipal.
+              Encuentra tu opción sin tener que conocer las categorías.
+            </p>
+            <a class="button button-primary" href="#encuentra-tu-grupo">Encontrar mi grupo <span aria-hidden="true">↓</span></a>
+          </div>
+        </div>
+      </section>
+
+      <nav class="group-location-nav" aria-label="Cambiar sede">
+        <div class="section-shell">
+          <span>Sede</span>
+          <a href="/grupos-mao.html">Maó</a>
+          <a class="is-active" href="/grupos-alaior.html" aria-current="page">Alaior</a>
+          <a href="/grupos-mercadal.html">Es Mercadal</a>
+        </div>
+      </nav>
+
+      <section
+        class="group-finder-section"
+        id="encuentra-tu-grupo"
+        data-group-finder
+        data-finder-mode="year"
+        aria-labelledby="finder-title"
+      >
+        <div class="section-shell group-finder-layout">
+          <div class="group-finder-heading reveal">
+            <p class="eyebrow">La forma más fácil</p>
+            <h2 id="finder-title">Dinos el año de nacimiento.</h2>
+            <p>No hace falta saber si es Sub-10, Sub-12 o Sub-16. Te mostramos directamente las opciones que encajan.</p>
+          </div>
+          <div class="group-finder-tool reveal">
+            <form>
+              <label for="birth-year-alaior">Año de nacimiento o adulto/a</label>
+              <div class="group-finder-control">
+                <select id="birth-year-alaior" data-group-value required>
+                  <option value="">Selecciona una opción</option>
+                  <option value="2022">2022</option>
+                  <option value="2021">2021</option>
+                  <option value="2020">2020</option>
+                  <option value="2019">2019</option>
+                  <option value="2018">2018</option>
+                  <option value="2017">2017</option>
+                  <option value="2016">2016</option>
+                  <option value="2015">2015</option>
+                  <option value="2014">2014</option>
+                  <option value="2013">2013</option>
+                  <option value="2012">2012</option>
+                  <option value="2011">2011</option>
+                  <option value="adult">Busco un grupo para adultos</option>
+                </select>
+                <button type="submit">Ver mi grupo</button>
+              </div>
+            </form>
+            <div class="group-finder-result" data-group-result hidden aria-live="polite">
+              <p class="group-result-kicker">Resultado</p>
+              <h3 data-group-result-title></h3>
+              <div class="group-match-list" data-group-result-list></div>
+              <p class="group-result-empty" data-group-empty hidden>
+                Escríbenos o llámanos y te orientaremos personalmente.
+                <a href="tel:+34689752415">689 752 415</a>
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="group-overview" aria-label="Resumen de la sede">
+        <div class="section-shell group-overview-grid">
+          <div><span>Lugar principal</span><strong>Polideportivo municipal</strong></div>
+          <div><span>Días habituales</span><strong>Martes y jueves</strong></div>
+          <div><span>Opciones</span><strong>6 grupos</strong></div>
+          <div><span>Cuotas</span><strong>Desde 12 €/mes</strong></div>
+        </div>
+      </section>
+
+      <section class="group-list-section" id="grupos-alaior" aria-labelledby="groups-list-title">
+        <div class="section-shell">
+          <header class="group-list-heading reveal">
+            <div>
+              <p class="eyebrow">Todos los grupos</p>
+              <h2 id="groups-list-title">Horarios y precios, de un vistazo.</h2>
+            </div>
+            <p>Lo más importante siempre está visible. Abre “Ver cuota completa” únicamente cuando necesites el detalle.</p>
+          </header>
+
+          <div class="group-card-list">
+            <article
+              class="group-card reveal"
+              id="alaior-iniciacion"
+              data-group-card
+              data-year-min="2019"
+              data-year-max="2022"
+              data-audience="child"
+              data-category="Nacidos entre 2019 y 2022"
+              data-title="Iniciación"
+              data-summary="Martes y jueves · 17:15–18:15"
+              data-price="Desde 12 €/mes"
+            >
+              <div class="group-card-heading">
+                <p class="group-card-category">2019–2022</p>
+                <div><h3>Iniciación</h3><p>Primer contacto con el atletismo a través del juego y el movimiento.</p></div>
+                <p class="group-card-price"><strong>12 €</strong><span>desde / mes</span></p>
+              </div>
+              <div class="group-card-facts">
+                <div><span>Días</span><strong>Martes y jueves</strong></div>
+                <div><span>Horario</span><strong>17:15–18:15</strong></div>
+                <div><span>Lugar</span><strong>Campo de fútbol 7</strong><small>Junto al polideportivo</small></div>
+                <div><span>Empieza</span><strong>16 de septiembre</strong></div>
+              </div>
+              <details class="group-card-details">
+                <summary>Ver cuota completa</summary>
+                <div class="group-price-options">
+                  <p><strong>2 días/semana</strong><span>25 € matrícula + 18 €/mes</span></p>
+                  <p><strong>1 día/semana</strong><span>25 € matrícula + 12 €/mes</span></p>
+                </div>
+              </details>
+            </article>
+
+            <article
+              class="group-card reveal"
+              id="alaior-sub10-sub12"
+              data-group-card
+              data-year-min="2015"
+              data-year-max="2018"
+              data-audience="child"
+              data-category="Nacidos entre 2015 y 2018"
+              data-title="Sub-10 y Sub-12"
+              data-summary="Martes y jueves · 17:00–18:00"
+              data-price="Desde 15 €/mes"
+            >
+              <div class="group-card-heading">
+                <p class="group-card-category">2015–2018</p>
+                <div><h3>Sub-10 y Sub-12</h3><p>Aprendizaje de las distintas pruebas y desarrollo de habilidades atléticas.</p></div>
+                <p class="group-card-price"><strong>15 €</strong><span>desde / mes</span></p>
+              </div>
+              <div class="group-card-facts">
+                <div><span>Días</span><strong>Martes y jueves</strong></div>
+                <div><span>Horario</span><strong>17:00–18:00</strong></div>
+                <div><span>Lugar</span><strong>Campo de fútbol 7</strong><small>Junto al polideportivo</small></div>
+                <div><span>Empieza</span><strong>16 de septiembre</strong></div>
+              </div>
+              <details class="group-card-details">
+                <summary>Ver cuota completa</summary>
+                <div class="group-price-options">
+                  <p><strong>2 días/semana</strong><span>25 € matrícula + 22 €/mes</span></p>
+                  <p><strong>1 día/semana</strong><span>25 € matrícula + 15 €/mes</span></p>
+                </div>
+              </details>
+            </article>
+
+            <article
+              class="group-card reveal"
+              id="alaior-sub14-sub16"
+              data-group-card
+              data-year-min="2011"
+              data-year-max="2014"
+              data-audience="child"
+              data-category="Nacidos entre 2011 y 2014"
+              data-title="Sub-14 y Sub-16"
+              data-summary="Martes y jueves · 17:00–18:00"
+              data-price="Desde 15 €/mes"
+            >
+              <div class="group-card-heading">
+                <p class="group-card-category">2011–2014</p>
+                <div><h3>Sub-14 y Sub-16</h3><p>Formación técnica y progresión deportiva para jóvenes atletas.</p></div>
+                <p class="group-card-price"><strong>15 €</strong><span>desde / mes</span></p>
+              </div>
+              <div class="group-card-facts">
+                <div><span>Días</span><strong>Martes y jueves</strong></div>
+                <div><span>Horario</span><strong>17:00–18:00</strong></div>
+                <div><span>Lugar</span><strong>Campo de fútbol 7</strong><small>Junto al polideportivo</small></div>
+                <div><span>Empieza</span><strong>16 de septiembre</strong></div>
+              </div>
+              <details class="group-card-details">
+                <summary>Ver cuota completa</summary>
+                <div class="group-price-options">
+                  <p><strong>2 días/semana</strong><span>35 € matrícula + 22 €/mes</span></p>
+                  <p><strong>1 día/semana</strong><span>35 € matrícula + 15 €/mes</span></p>
+                  <p><strong>1 día extra en Maó</strong><span>+8 €/mes</span></p>
+                </div>
+              </details>
+            </article>
+
+            <article
+              class="group-card reveal"
+              id="alaior-adultos-1715"
+              data-group-card
+              data-audience="adult"
+              data-category="Adultos"
+              data-title="Adultos · 17:15"
+              data-summary="Martes y jueves · 17:15–18:15"
+              data-price="17 €/mes"
+            >
+              <div class="group-card-heading">
+                <p class="group-card-category">Adultos</p>
+                <div><h3>Adultos · 17:15</h3><p>Una hora de entrenamiento mientras entrenan los grupos de iniciación.</p></div>
+                <p class="group-card-price"><strong>17 €</strong><span>al mes</span></p>
+              </div>
+              <div class="group-card-facts">
+                <div><span>Días</span><strong>Martes y jueves</strong></div>
+                <div><span>Horario</span><strong>17:15–18:15</strong></div>
+                <div><span>Lugar</span><strong>Polideportivo municipal</strong></div>
+                <div><span>Empieza</span><strong>10 de septiembre</strong></div>
+              </div>
+              <details class="group-card-details">
+                <summary>Ver cuota completa</summary>
+                <div class="group-price-options">
+                  <p><strong>Cuota mensual</strong><span>20 € matrícula + 17 €/mes</span></p>
+                  <p><strong>1 día extra en Maó</strong><span>+8 €/mes</span></p>
+                </div>
+              </details>
+            </article>
+
+            <article
+              class="group-card reveal"
+              id="alaior-adultos-ruta"
+              data-group-card
+              data-audience="adult"
+              data-category="Adultos"
+              data-title="Adultos · Ruta"
+              data-summary="Martes y jueves · 18:00–19:00"
+              data-price="17 €/mes"
+            >
+              <div class="group-card-heading">
+                <p class="group-card-category">Adultos · Ruta</p>
+                <div><h3>Adultos · 18:00</h3><p>Entrenamiento para correr en ruta y mejorar de forma progresiva.</p></div>
+                <p class="group-card-price"><strong>17 €</strong><span>al mes</span></p>
+              </div>
+              <div class="group-card-facts">
+                <div><span>Días</span><strong>Martes y jueves</strong></div>
+                <div><span>Horario</span><strong>18:00–19:00</strong></div>
+                <div><span>Lugar</span><strong>Polideportivo municipal</strong></div>
+                <div><span>Empieza</span><strong>10 de septiembre</strong></div>
+              </div>
+              <details class="group-card-details">
+                <summary>Ver cuota completa</summary>
+                <div class="group-price-options">
+                  <p><strong>Cuota mensual</strong><span>20 € matrícula + 17 €/mes</span></p>
+                  <p><strong>1 día extra en Maó</strong><span>+8 €/mes</span></p>
+                </div>
+              </details>
+            </article>
+
+            <article
+              class="group-card reveal"
+              id="alaior-womens"
+              data-group-card
+              data-audience="adult"
+              data-category="Mujeres adultas"
+              data-title="Women's iniciación"
+              data-summary="Sábados · 08:45–09:45"
+              data-price="14 €/mes"
+            >
+              <div class="group-card-heading">
+                <p class="group-card-category">Mujeres · Iniciación</p>
+                <div><h3>Women's iniciación</h3><p>Una sesión de iniciación pensada para empezar con acompañamiento.</p></div>
+                <p class="group-card-price"><strong>14 €</strong><span>al mes</span></p>
+              </div>
+              <div class="group-card-facts">
+                <div><span>Día</span><strong>Sábado</strong></div>
+                <div><span>Horario</span><strong>08:45–09:45</strong></div>
+                <div><span>Lugar</span><strong>Polideportivo municipal</strong></div>
+                <div><span>Empieza</span><strong>6 de septiembre</strong></div>
+              </div>
+              <details class="group-card-details">
+                <summary>Ver cuota completa</summary>
+                <div class="group-price-options">
+                  <p><strong>Sesión del sábado</strong><span>20 € matrícula + 14 €/mes</span></p>
+                  <p><strong>+1 día, martes o jueves</strong><span>17 €/mes en total</span></p>
+                  <p><strong>+2 días, martes y jueves</strong><span>20 €/mes en total</span></p>
+                </div>
+              </details>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="group-practical-section" id="informacion-practica" aria-labelledby="practical-title">
+        <div class="section-shell">
+          <header class="group-practical-heading reveal">
+            <p class="eyebrow">Información práctica</p>
+            <h2 id="practical-title">Lo que conviene saber antes de apuntarse.</h2>
+          </header>
+          <div class="group-practical-grid reveal">
+            <article>
+              <span>01</span>
+              <h3>Incluido en escuela</h3>
+              <p>Licencia federativa, seguro de accidentes, material deportivo, acceso a las instalaciones y camiseta del club.</p>
+            </article>
+            <article>
+              <span>02</span>
+              <h3>Cuota familiar</h3>
+              <p>Con 3 o más miembros de la familia se descuentan 5 € en cada cuota.</p>
+            </article>
+            <article>
+              <span>03</span>
+              <h3>Esport, salut &amp; família</h3>
+              <p>Padres y madres de la escuela: 1 día por 8 € o 2 días por 12 € añadidos a la cuota mensual del hijo o hija.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="group-cta-section" id="inscripcion" aria-labelledby="cta-title">
+        <div class="section-shell group-cta-grid">
+          <div>
+            <p class="eyebrow">Da el siguiente paso</p>
+            <h2 id="cta-title">Pruébalo antes de decidir.</h2>
+            <p>Puedes solicitar un periodo de prueba o completar directamente la inscripción.</p>
+          </div>
+          <div class="group-cta-actions">
+            <a
+              class="button button-primary"
+              href="https://docs.google.com/forms/d/e/1FAIpQLSdffePyj9_NxbcwiocttaZMJQB6IhWPI8zlme8Q78kThlwl9w/viewform?usp=send_form"
+              target="_blank"
+              rel="noopener noreferrer"
+            >Solicitar prueba <span aria-hidden="true">↗</span></a>
+            <a
+              class="button button-ghost"
+              href="https://docs.google.com/forms/d/e/1FAIpQLSdMWe7S9acL9BdQe7rmp6-As_kgEJrBNBTnpAgoi3nxqNa0wA/viewform?usp=send_form"
+              target="_blank"
+              rel="noopener noreferrer"
+            >Inscribirse <span aria-hidden="true">↗</span></a>
+            <a class="group-contact-link" href="tel:+34689752415">¿Tienes dudas? 689 752 415</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="section-shell footer-grid">
+        <div class="footer-brand">
+          <img src="/assets/logos/logo-claro.avif" alt="Lô Esport Menorca" />
+          <p>Atletismo desde Menorca.<br />Compitiendo entre los mejores.</p>
+        </div>
+        <div>
+          <p class="footer-title">Grupos</p>
+          <a href="/grupos-mao.html">Maó</a>
+          <a href="/grupos-alaior.html">Alaior</a>
+          <a href="/grupos-mercadal.html">Es Mercadal</a>
+        </div>
+        <div>
+          <p class="footer-title">Gestiones</p>
+          <a href="#inscripcion">Inscripción</a>
+          <a href="#inscripcion">Periodo de prueba</a>
+          <a href="/#gestiones">Más gestiones</a>
+        </div>
+        <div>
+          <p class="footer-title">Club</p>
+          <a href="/historia.html">Historia</a>
+          <a href="/ascenso-division-honor.html">División de Honor</a>
+          <a href="/hazte-socio.html">Hazte socio</a>
+        </div>
+        <div>
+          <p class="footer-title">Contacto</p>
+          <a href="mailto:loesport@gmail.com">loesport@gmail.com</a>
+          <a href="tel:+34689752415">689 752 415</a>
+          <span>Menorca · Illes Balears</span>
+        </div>
+      </div>
+      <div class="section-shell footer-bottom">
+        <p>© <span id="current-year">2026</span> Lô Esport Menorca</p>
+        <div>
+          <a href="/politica-de-privacidad.html">Privacidad</a>
+          <a href="/politica-de-cookies.html">Cookies</a>
+          <a href="/proteccion-de-datos.html">Protección de datos</a>
+        </div>
+        <a href="#inicio">Volver arriba</a>
+      </div>
+    </footer>
+
+    <script type="module" src="/groups.js"></script>
+  </body>
+</html>
