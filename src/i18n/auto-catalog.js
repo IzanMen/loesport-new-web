@@ -369,10 +369,10 @@ export const autoCatalogue = {
     "gl": "Descubra en que país se atopa cando solicite un servizo.",
     "eu": "Jakin zein herrialdetan zauden zerbitzu bat eskatzerakoan."
   },
-  "Ayuda a construir la mejor escuela de atletismo de España.": {
-    "ca": "Ajuda a construir la millor escola d´atletisme d´Espanya.",
-    "gl": "Axuda a construír a mellor escola de atletismo de España.",
-    "eu": "Lagundu Espainiako atletismo eskolarik onena eraikitzen."
+  "Ayuda a construir la mejor escuela de atletismo.": {
+    "ca": "Ajuda a construir la millor escola d'\u2060atletisme.",
+    "gl": "Axuda a construír a mellor escola de atletismo.",
+    "eu": "Lagundu atletismo eskolarik onena eraikitzen."
   },
   "Braga de competición del conjunto oficial.": {
     "ca": "Calces de competició del conjunt oficial.",
