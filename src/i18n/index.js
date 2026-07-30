@@ -8,7 +8,19 @@ const LANGUAGE_NAMES = {
   gl: "GL",
   eu: "EU",
 };
-const TRANSLATABLE_ATTRIBUTES = ["aria-label", "alt", "content", "data-future", "data-success", "placeholder", "title"];
+const TRANSLATABLE_ATTRIBUTES = [
+  "aria-label",
+  "alt",
+  "content",
+  "data-category",
+  "data-future",
+  "data-price",
+  "data-success",
+  "data-summary",
+  "data-title",
+  "placeholder",
+  "title",
+];
 const originalTextNodes = new WeakMap();
 const originalAttributes = new WeakMap();
 

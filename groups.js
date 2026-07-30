@@ -10,7 +10,7 @@ const navigation = initNavigation(i18n);
 
 initScrollEffects();
 initRevealAnimations();
-initGroupFinder();
+initGroupFinder(i18n);
 initCurrentYear();
 
 document.addEventListener("loesport:languagechange", () => {

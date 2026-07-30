@@ -19,7 +19,7 @@ function getMatchingCards(finder, value) {
   });
 }
 
-function createResultCard(card) {
+function createResultCard(card, i18n) {
   const item = document.createElement("article");
   item.className = "group-match-card";
 
@@ -40,13 +40,13 @@ function createResultCard(card) {
 
   const link = document.createElement("a");
   link.href = `#${card.id}`;
-  link.textContent = "Ver horarios y precios";
+  link.textContent = i18n.translate("Ver horarios y precios");
 
   item.append(category, title, summary, price, link);
   return item;
 }
 
-export function initGroupFinder() {
+export function initGroupFinder(i18n) {
   document.querySelectorAll("[data-group-finder]").forEach((finder) => {
     const form = finder.querySelector("form");
     const select = finder.querySelector("[data-group-value]");
@@ -71,14 +71,16 @@ export function initGroupFinder() {
       result.hidden = false;
 
       if (!matches.length) {
-        resultTitle.textContent = "No encontramos una coincidencia exacta";
+        resultTitle.textContent = i18n.translate("No encontramos una coincidencia exacta");
         empty.hidden = false;
         return;
       }
 
       resultTitle.textContent =
-        matches.length === 1 ? "Este es el grupo que encaja" : `Estas ${matches.length} opciones pueden encajar`;
-      matches.forEach((card) => resultList.append(createResultCard(card)));
+        matches.length === 1
+          ? i18n.translate("Este es el grupo que encaja")
+          : i18n.translate("Estas {count} opciones pueden encajar", { count: matches.length });
+      matches.forEach((card) => resultList.append(createResultCard(card, i18n)));
       result.scrollIntoView({ behavior: "smooth", block: "nearest" });
     };
 
@@ -88,5 +90,8 @@ export function initGroupFinder() {
     });
 
     select.addEventListener("change", updateResults);
+    document.addEventListener("loesport:languagechange", () => {
+      if (!result.hidden) updateResults();
+    });
   });
 }

@@ -12,6 +12,8 @@ export function initForms(i18n) {
   }
 
   document.querySelectorAll("form[data-success]").forEach((form) => {
+    if (form.hasAttribute("data-google-form")) return;
+
     form.addEventListener("submit", (event) => {
       event.preventDefault();
       if (!form.reportValidity()) return;
