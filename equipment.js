@@ -8,10 +8,8 @@ import { initRevealAnimations } from "./src/ui/reveal.js";
 import { initScrollEffects } from "./src/ui/scroll-effects.js";
 
 const catalog = document.querySelector("[data-equipment-catalog]");
-const categoryButtons = [...document.querySelectorAll("[data-equipment-filter]")];
 const sortSelect = document.querySelector("[data-equipment-sort]");
 const productCount = document.querySelector("[data-product-count]");
-let activeCategory = "all";
 
 function createProductCard(product) {
   const article = document.createElement("article");
@@ -62,12 +60,6 @@ function createProductCard(product) {
   return article;
 }
 
-function visibleProducts() {
-  return equipmentProducts.filter((product) => {
-    return activeCategory === "all" || product.categories.includes(activeCategory);
-  });
-}
-
 function sortedProducts(products) {
   const next = [...products];
   switch (sortSelect?.value) {
@@ -83,7 +75,7 @@ function sortedProducts(products) {
 }
 
 function renderCatalog() {
-  const products = sortedProducts(visibleProducts());
+  const products = sortedProducts(equipmentProducts);
   catalog?.replaceChildren(...products.map(createProductCard));
   if (productCount) {
     productCount.textContent = `${products.length} producto${products.length === 1 ? "" : "s"}`;
@@ -91,19 +83,6 @@ function renderCatalog() {
   initRevealAnimations();
 }
 
-function filterCatalog(category) {
-  activeCategory = category;
-  categoryButtons.forEach((button) => {
-    const isActive = button.dataset.equipmentFilter === category;
-    button.classList.toggle("is-active", isActive);
-    button.setAttribute("aria-pressed", String(isActive));
-  });
-  renderCatalog();
-}
-
-categoryButtons.forEach((button) => {
-  button.addEventListener("click", () => filterCatalog(button.dataset.equipmentFilter));
-});
 sortSelect?.addEventListener("change", renderCatalog);
 
 renderCatalog();

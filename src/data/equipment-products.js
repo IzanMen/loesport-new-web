@@ -1,3 +1,15 @@
+import bragaMujerImage from "../../assets/equipment/braga-mujer.webp";
+import camisetaHombreImage from "../../assets/equipment/camiseta-hombre.webp";
+import camisetaMujerImage from "../../assets/equipment/camiseta-mujer.webp";
+import mallasCortasHombreImage from "../../assets/equipment/mallas-cortas-hombre.png";
+import mallasLargasImage from "../../assets/equipment/mallas-largas.png";
+import mochilaImage from "../../assets/equipment/mochila.png";
+import monoCompeticionImage from "../../assets/equipment/mono-competicion.webp";
+import pantalonHombreImage from "../../assets/equipment/pantalon-hombre.webp";
+import shortMujerImage from "../../assets/equipment/short-mujer.webp";
+import sudaderaImage from "../../assets/equipment/sudadera.png";
+import topMujerImage from "../../assets/equipment/top-mujer.png";
+
 export const equipmentProducts = [
   {
     id: "pack-mochila-sudadera",
@@ -6,7 +18,7 @@ export const equipmentProducts = [
     category: "pack",
     categories: ["pack", "club"],
     categoryLabel: "Pack club",
-    images: ["/assets/equipment/mochila.png", "/assets/equipment/sudadera.png"],
+    images: [mochilaImage, sudaderaImage],
     description: "Mochila del club y sudadera negra con capucha y logo Lô Esport Menorca.",
     detail:
       "El pack reúne dos básicos del club con un precio conjunto especial. La talla seleccionada corresponde a la sudadera; la mochila es de talla única.",
@@ -23,7 +35,7 @@ export const equipmentProducts = [
     category: "club",
     categories: ["club"],
     categoryLabel: "Club",
-    images: ["/assets/equipment/mochila.png"],
+    images: [mochilaImage],
     description: "Mochila negra del club con logotipo Lô Esport Menorca.",
     detail:
       "Una mochila versátil para entrenamientos, competiciones y uso diario. No requiere selección de talla.",
@@ -40,7 +52,7 @@ export const equipmentProducts = [
     category: "club",
     categories: ["club"],
     categoryLabel: "Club",
-    images: ["/assets/equipment/sudadera.png"],
+    images: [sudaderaImage],
     description: "Sudadera negra con capucha y logotipo del club.",
     detail:
       "Sudadera oficial para desplazamientos, calentamientos y uso diario, disponible en tallaje infantil y adulto.",
@@ -57,7 +69,7 @@ export const equipmentProducts = [
     category: "mujer",
     categories: ["mujer"],
     categoryLabel: "Mujer",
-    images: ["/assets/equipment/top-mujer.png"],
+    images: [topMujerImage],
     description: "Top amarillo de competición con diseño oficial del club.",
     detail:
       "Prenda técnica de competición con patrón femenino y ajuste ceñido para entrenamientos intensos y pruebas oficiales.",
@@ -74,7 +86,7 @@ export const equipmentProducts = [
     category: "mujer",
     categories: ["mujer"],
     categoryLabel: "Mujer",
-    images: ["/assets/equipment/braga-mujer.webp"],
+    images: [bragaMujerImage],
     description: "Braga de competición del conjunto oficial.",
     detail:
       "Parte inferior técnica con patrón femenino, pensada para ofrecer libertad de movimiento durante la competición.",
@@ -91,7 +103,7 @@ export const equipmentProducts = [
     category: "mujer",
     categories: ["mujer"],
     categoryLabel: "Mujer",
-    images: ["/assets/equipment/short-mujer.webp"],
+    images: [shortMujerImage],
     description: "Short de competición ligero en amarillo del club.",
     detail:
       "Pantalón corto técnico con patrón femenino y tejido ligero para entrenamientos y competiciones.",
@@ -108,7 +120,7 @@ export const equipmentProducts = [
     category: "mujer",
     categories: ["mujer"],
     categoryLabel: "Mujer",
-    images: ["/assets/equipment/camiseta-mujer.webp"],
+    images: [camisetaMujerImage],
     description: "Camiseta de competición femenina.",
     detail:
       "Camiseta técnica oficial con patrón femenino, preparada para entrenamientos y competiciones de atletismo.",
@@ -125,7 +137,7 @@ export const equipmentProducts = [
     category: "hombre",
     categories: ["hombre"],
     categoryLabel: "Hombre",
-    images: ["/assets/equipment/camiseta-hombre.webp"],
+    images: [camisetaHombreImage],
     description: "Camiseta de competición masculina.",
     detail:
       "Camiseta técnica oficial con patrón masculino para entrenamientos y competiciones de atletismo.",
@@ -142,7 +154,7 @@ export const equipmentProducts = [
     category: "hombre",
     categories: ["hombre"],
     categoryLabel: "Hombre",
-    images: ["/assets/equipment/pantalon-hombre.webp"],
+    images: [pantalonHombreImage],
     description: "Pantalón corto de competición.",
     detail:
       "Pantalón corto técnico con patrón masculino, ligero y preparado para entrenamientos y pruebas oficiales.",
@@ -159,7 +171,7 @@ export const equipmentProducts = [
     category: "hombre",
     categories: ["hombre"],
     categoryLabel: "Hombre",
-    images: ["/assets/equipment/mallas-cortas-hombre.png"],
+    images: [mallasCortasHombreImage],
     description: "Malla corta negra con logotipo del club.",
     detail:
       "Malla técnica corta con patrón masculino y ajuste ceñido para entrenamientos y competiciones.",
@@ -176,7 +188,7 @@ export const equipmentProducts = [
     category: "junior",
     categories: ["junior", "club"],
     categoryLabel: "Júnior",
-    images: ["/assets/equipment/mallas-largas.png"],
+    images: [mallasLargasImage],
     description: "Mallas largas negras para categorías júnior.",
     detail:
       "Malla larga para atletas jóvenes, con tallaje por edades y diseño oficial Lô Esport Menorca.",
@@ -193,7 +205,7 @@ export const equipmentProducts = [
     category: "club",
     categories: ["club"],
     categoryLabel: "Club",
-    images: ["/assets/equipment/mallas-largas.png"],
+    images: [mallasLargasImage],
     description: "Mallas largas negras para adulto.",
     detail:
       "Malla larga para entrenamientos, calentamientos y uso deportivo diario con diseño oficial del club.",
@@ -210,7 +222,7 @@ export const equipmentProducts = [
     category: "competicion",
     categories: ["hombre", "mujer"],
     categoryLabel: "Competición",
-    images: ["/assets/equipment/mono-competicion.webp"],
+    images: [monoCompeticionImage],
     description: "Mono de competición disponible en patrón de hombre y mujer.",
     detail:
       "La prenda técnica más completa de la equipación oficial. Selecciona el patrón y la talla antes de añadirla a tu solicitud.",
