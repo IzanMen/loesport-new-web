@@ -9,6 +9,7 @@ const pages = {
   historia: "historia.html",
   ascensoDivisionHonor: "ascenso-division-honor.html",
   hazteSocio: "hazte-socio.html",
+  patrocinadores: "patrocinadores.html",
   equipamiento: "equipamiento.html",
   productoEquipacion: "producto-equipacion.html",
   inscripcion: "inscripcion.html",
