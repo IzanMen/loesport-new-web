@@ -22,14 +22,14 @@ function createProductCard(product) {
   const link = document.createElement("a");
   link.className = "equipment-card-link";
   link.href = `/producto-equipacion.html?producto=${encodeURIComponent(product.id)}`;
-  link.setAttribute("aria-label", `Ver ${product.name}`);
+  link.setAttribute("aria-label", "Ver producto");
 
   const media = document.createElement("div");
   media.className = `equipment-card-media${product.images.length > 1 ? " equipment-pack-media" : ""}`;
   product.images.forEach((source, index) => {
     const image = document.createElement("img");
     image.src = source;
-    image.alt = index === 0 ? `${product.name} Lô Esport Menorca` : "";
+    image.alt = index === 0 ? product.name : "";
     image.loading = "lazy";
     media.append(image);
   });
@@ -49,7 +49,13 @@ function createProductCard(product) {
   description.textContent = product.description;
   const sizes = document.createElement("p");
   sizes.className = "equipment-sizes";
-  sizes.textContent = product.sizes.length ? `Tallas: ${product.sizes.join(", ")}` : "Talla única";
+  if (product.sizes.length) {
+    const label = document.createElement("span");
+    label.textContent = "Tallas:";
+    sizes.append(label, " ", product.sizes.join(", "));
+  } else {
+    sizes.textContent = "Talla única";
+  }
   const action = document.createElement("span");
   action.className = "equipment-card-action";
   action.innerHTML = 'Ver producto <span aria-hidden="true">→</span>';

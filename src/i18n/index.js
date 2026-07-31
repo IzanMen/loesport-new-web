@@ -25,6 +25,8 @@ const originalTextNodes = new WeakMap();
 const originalAttributes = new WeakMap();
 
 let currentLanguage = "es";
+let translationObserver;
+let isTranslating = false;
 
 function normalizeText(value) {
   return String(value).replace(/\u00a0/g, " ").replace(/\s+/g, " ").trim();
@@ -135,6 +137,49 @@ function translateAttributes(root) {
   });
 }
 
+function translateSubtree(root) {
+  if (!root) return;
+
+  if (root.nodeType === Node.TEXT_NODE) {
+    if (shouldSkipTextNode(root)) return;
+    if (!originalTextNodes.has(root)) originalTextNodes.set(root, root.textContent);
+    const original = originalTextNodes.get(root);
+    const key = normalizeText(original);
+    const entry = catalogue[key];
+    if (currentLanguage === "es" || !entry?.[currentLanguage]) {
+      root.textContent = original;
+      return;
+    }
+    const leading = original.match(/^\s*/)?.[0] || "";
+    const trailing = original.match(/\s*$/)?.[0] || "";
+    root.textContent = `${leading}${entry[currentLanguage]}${trailing}`;
+    return;
+  }
+
+  if (root.nodeType !== Node.ELEMENT_NODE && root.nodeType !== Node.DOCUMENT_NODE) return;
+
+  translateTextNodes(root);
+  if (root.nodeType === Node.ELEMENT_NODE) {
+    translateAttributes({ querySelectorAll: (selector) => [root, ...root.querySelectorAll(selector)] });
+  } else {
+    translateAttributes(root);
+  }
+}
+
+function startTranslationObserver() {
+  if (translationObserver) return;
+  translationObserver = new MutationObserver((mutations) => {
+    if (isTranslating || currentLanguage === "es") return;
+    isTranslating = true;
+    mutations.forEach((mutation) => {
+      mutation.addedNodes.forEach((node) => translateSubtree(node));
+    });
+    updateGeneratedLabels();
+    isTranslating = false;
+  });
+  translationObserver.observe(document.documentElement, { childList: true, subtree: true });
+}
+
 function updateGeneratedLabels() {
   document.querySelectorAll(".marquee-label").forEach((label) => {
     label.dataset.label = translatePhrase("Patrocinadores");
@@ -153,9 +198,11 @@ function updateGeneratedLabels() {
 function applyLanguage(language, { emit = true } = {}) {
   currentLanguage = normalizeLanguageCode(language) || "es";
   document.documentElement.lang = currentLanguage;
+  isTranslating = true;
   translateTextNodes(document.documentElement);
   translateAttributes(document.documentElement);
   updateGeneratedLabels();
+  isTranslating = false;
   saveLanguage(currentLanguage);
 
   if (emit) {
@@ -208,6 +255,7 @@ export function initI18n() {
   currentLanguage = getInitialLanguage();
   injectLanguageSelectors();
   applyLanguage(currentLanguage, { emit: false });
+  startTranslationObserver();
 
   return {
     get language() {

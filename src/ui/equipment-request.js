@@ -23,8 +23,12 @@ function itemKey(item) {
   return `${item.productId}|${item.size || ""}|${item.gender || ""}`;
 }
 
+function createText(text) {
+  return document.createTextNode(text);
+}
+
 function lineDescription(item) {
-  return [item.size && `Talla ${item.size}`, item.gender && `Patrón ${item.gender}`].filter(Boolean).join(" · ");
+  return [item.size && ["Talla", item.size], item.gender && ["Patrón", item.gender]].filter(Boolean);
 }
 
 export function initEquipmentRequest() {
@@ -81,14 +85,22 @@ export function initEquipmentRequest() {
     heading.append(name, price);
 
     const variant = document.createElement("p");
-    variant.textContent = lineDescription(item) || "Talla única";
+    const variantParts = lineDescription(item);
+    if (variantParts.length) {
+      variantParts.forEach(([label, value], index) => {
+        if (index) variant.append(" · ");
+        variant.append(createText(label), " ", value);
+      });
+    } else {
+      variant.textContent = "Talla única";
+    }
 
     const actions = document.createElement("div");
     actions.className = "request-item-actions";
     const quantityLabel = document.createElement("label");
     const quantityText = document.createElement("span");
     quantityText.className = "sr-only";
-    quantityText.textContent = `Cantidad de ${product.name}`;
+    quantityText.append(createText("Cantidad"), " ", product.name);
     const quantity = document.createElement("input");
     quantity.type = "number";
     quantity.min = "1";
@@ -188,7 +200,7 @@ export function initEquipmentRequest() {
     const data = new FormData(form);
     const productLines = items.map((item, index) => {
       const product = getEquipmentProduct(item.productId);
-      const variant = lineDescription(item);
+      const variant = lineDescription(item).map(([label, value]) => `${label} ${value}`).join(" · ");
       const lineTotal = formatEquipmentPrice(product.price * item.quantity);
       return `${index + 1}. ${product.name} · ${variant || "Talla única"} · ${item.quantity} ud. · ${lineTotal}`;
     });

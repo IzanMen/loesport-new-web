@@ -27,7 +27,7 @@ function renderGallery() {
   stage.className = "product-gallery-stage";
   const mainImage = document.createElement("img");
   mainImage.src = product.images[0];
-  mainImage.alt = `${product.name} Lô Esport Menorca`;
+  mainImage.alt = product.name;
   stage.append(mainImage);
   gallery.append(stage);
 
@@ -38,7 +38,7 @@ function renderGallery() {
       const button = document.createElement("button");
       button.type = "button";
       button.className = index === 0 ? "is-active" : "";
-      button.setAttribute("aria-label", `Ver imagen ${index + 1} de ${product.name}`);
+      button.setAttribute("aria-label", "Ver imagen del producto");
       const image = document.createElement("img");
       image.src = source;
       image.alt = "";
@@ -164,6 +164,9 @@ function renderProductInfo() {
   const details = document.createElement("div");
   details.className = "product-details-list";
   const featureItems = product.features.map((feature) => `<li>${feature}</li>`).join("");
+  const sizesCopy = product.sizes.length
+    ? `<span>Tallas disponibles:</span> ${product.sizes.join(", ")}. <span>La disponibilidad se confirma al tramitar la solicitud.</span>`
+    : `<span>Este artículo es de talla única.</span> <span>La disponibilidad se confirma al tramitar la solicitud.</span>`;
   details.innerHTML = `
     <details open>
       <summary>Detalles del producto</summary>
@@ -171,7 +174,7 @@ function renderProductInfo() {
     </details>
     <details>
       <summary>Tallas y ajuste</summary>
-      <p>${product.sizes.length ? `Tallas disponibles: ${product.sizes.join(", ")}.` : "Este artículo es de talla única."} La disponibilidad se confirma al tramitar la solicitud.</p>
+      <p>${sizesCopy}</p>
     </details>
     <details>
       <summary>Cómo funciona la solicitud</summary>
