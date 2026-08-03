@@ -1,63 +1,66 @@
+import altaLicensePdfUrl from "../../assets/documents/solicitud-alta-licencia-rfea-2026.pdf?url";
+import renewalLicensePdfUrl from "../../assets/documents/solicitud-renovacion-licencia-rfea-2026.pdf?url";
+
 const INSCRIPTION_GROUP_OPTIONS = [
   {
     value: "ATLETISMO MAÓ Escolar",
     title: "Maó · Escuela Sub-8/Sub-10/Sub-12",
     meta: "Nacidos en 2016 y posteriores",
-    details: ["Lun/mié o mar/jue", "17:30-18:30", "Pista de atletismo", "Desde 22 €/mes + 30 € matrícula"],
+    details: ["Inicio: lunes 14 de septiembre de 2026", "Lun/mié o mar/jue · 17:30-18:30", "1 día: 22 €/mes", "2 días: 27 €/mes", "Matrícula: 25 €"],
   },
   {
     value: "ATLETISMO MAÓ Escolar",
     title: "Maó · Escuela Sub-14/Sub-16/Sub-18",
     meta: "Nacidos 2010-2015",
-    details: ["Lun/mié o mar/jue", "17:30-18:30", "Tecnificación desde 18:30", "Desde 25 €/mes + 30 € matrícula"],
+    details: ["Inicio escuela: lunes 14 de septiembre de 2026", "1 día: 25 €/mes", "2 días: 30 €/mes", "3 días: 35 €/mes", "4-5 días: 40 €/mes", "Matrícula: 25 €"],
   },
   {
     value: "ATLETISMO MAÓ Tecnificación (a partir de nacidos 2010)",
     title: "Maó · Tecnificación",
     meta: "Sub-14 en adelante",
-    details: ["Martes y jueves", "Desde 18:30", "Pista de atletismo", "Cuota a confirmar por el club"],
+    details: ["Inicio: 2 de septiembre de 2026", "Martes y jueves", "A partir de las 18:30", "Cuota según los días del grupo del atleta"],
   },
   {
     value: "ATLETISMO MAÓ Adultos AVANZADO (Fondo) 18:30h",
     title: "Maó · Adultos fondistas",
     meta: "Nacidos 2009 y anteriores",
-    details: ["Lun/mié/vie 18:30-19:30", "Sábado 09:30-11:00", "Pista de atletismo", "Desde 25 €/mes + 30 € matrícula"],
+    details: ["Lun/mié/vie 18:30-19:30 · sábado 09:30-11:00", "1 día: 25 €/mes", "2 días: 30 €/mes", "3 días: 35 €/mes", "4-5 días: 40 €/mes", "Matrícula: 25 € solo nuevas altas desde Sub-20"],
   },
   {
     value: "ATLETISMO MAÓ Adultos INICIACIÓN (Esport&Salut) 17:30h",
     title: "Maó · Madres y padres / Running iniciación",
     meta: "Mientras entrena la escuela",
-    details: ["Lun/mié o mar/jue", "17:30-18:30", "Suplemento sobre cuota del hijo/a", "10 €/mes 1 día o 15 €/mes 2 días"],
+    details: ["Lun/mié o mar/jue · 17:30-18:30", "1 día: suplemento de 10 €/mes", "2 días: suplemento de 15 €/mes"],
   },
   {
     value: "ATLETISMO ALAIOR Escolar",
     title: "Alaior · Escuela",
     meta: "Nacidos 2010 y posteriores",
-    details: ["Martes y jueves", "17:15-18:15", "Campo de fútbol 7", "Desde 18 €/mes + 30 € matrícula"],
+    details: ["Inicio: martes 15 de septiembre de 2026", "Martes y jueves · 17:15-18:15", "1 día: 18 €/mes", "2 días: 25 €/mes", "Matrícula: 25 €"],
   },
   {
     value: "ATLETISMO ALAIOR Adultos (Esport&Salut) 17:15h",
     title: "Alaior · Adultos 17:15",
     meta: "Entrenamiento de adultos",
-    details: ["Martes y jueves", "17:15-18:15", "Polideportivo municipal", "Desde 15 €/mes + 30 € matrícula"],
+    details: ["Inicio: martes 1 de septiembre de 2026", "Martes y jueves · 17:15-18:15", "1 día: 15 €/mes", "2 días: 20 €/mes", "3 días: 23 €/mes", "Matrícula: 25 € solo nuevas altas desde Sub-20"],
   },
   {
     value: "ATLETISMO ALAIOR Adultos, grupo fondo 18:00h",
     title: "Alaior · Adultos running",
     meta: "Entrenamiento para correr y progresar",
-    details: ["Martes y jueves", "17:15-18:15", "Polideportivo municipal", "Desde 15 €/mes + 30 € matrícula"],
+    details: ["Inicio: martes 1 de septiembre de 2026", "Martes y jueves · 17:15-18:15", "1 día: 15 €/mes", "2 días: 20 €/mes", "3 días: 23 €/mes", "Matrícula: 25 € solo nuevas altas desde Sub-20"],
   },
   {
     value: 'ATLETISMO ALAIOR "WOMEN"',
     title: "Alaior · Women's iniciación",
     meta: "Mujeres adultas",
-    details: ["Sábados", "08:45-09:45", "Polideportivo municipal", "15 €/mes"],
+    details: ["Inicio: sábado 5 de septiembre de 2026", "Sábados · 08:45-09:45", "1 día: 15 €/mes"],
   },
   {
     value: "ATLETISMO MERCADAL Escolar",
     title: "Es Mercadal · Escuela",
     meta: "Niños y niñas de 5 a 14 años",
-    details: ["Días y horario por definir", "Campo municipal de fútbol", "Desde 18 €/mes + 30 € matrícula"],
+    details: ["Inicio: martes 15 de septiembre de 2026", "Días y horario por definir", "1 día: 18 €/mes", "2 días: 25 €/mes", "Matrícula: 25 €"],
   },
 ];
 
@@ -66,13 +69,13 @@ const TRIAL_GROUP_OPTIONS = [
     value: "ATLETISMO ALAIOR (Escolar)",
     title: "Alaior · Escuela",
     meta: "Nacidos 2010 y posteriores",
-    details: ["Martes y jueves", "17:15-18:15", "Campo de fútbol 7", "Desde 18 €/mes"],
+    details: ["Martes y jueves · 17:15-18:15", "1 día: 18 €/mes", "2 días: 25 €/mes"],
   },
   {
     value: "ATLETISMO ALAIOR (Adultos)",
     title: "Alaior · Adultos 17:15 / running",
     meta: "Entrenamiento de adultos",
-    details: ["Martes y jueves", "17:15-18:15", "Polideportivo municipal", "Desde 15 €/mes"],
+    details: ["Martes y jueves · 17:15-18:15", "1 día: 15 €/mes", "2 días: 20 €/mes", "3 días: 23 €/mes"],
   },
   {
     value: "ATLETISMO WOMENS ALAIOR (Sábados de 8:45h a 9:45h)",
@@ -84,19 +87,19 @@ const TRIAL_GROUP_OPTIONS = [
     value: "ATLETISMO MAÓ (Escolar)",
     title: "Maó · Escuela Sub-8 a Sub-18",
     meta: "Nacidos 2010 y posteriores",
-    details: ["Lun/mié o mar/jue", "17:30-18:30", "Pista de atletismo", "Desde 22 €/mes"],
+    details: ["Lun/mié o mar/jue · 17:30-18:30", "Sub-8 a Sub-12: 1 día 22 € · 2 días 27 €", "Sub-14 a Sub-18: 1 día 25 € · 2 días 30 € · 3 días 35 € · 4-5 días 40 €"],
   },
   {
     value: "ATLETISMO MAÓ (Adultos)",
     title: "Maó · Adultos fondistas/velocistas",
     meta: "Nacidos 2009 y anteriores",
-    details: ["Lun/mié/vie por la tarde", "Sábado por la mañana según grupo", "Pista de atletismo", "Desde 25 €/mes"],
+    details: ["Lun/mié/vie por la tarde · sábado según grupo", "1 día: 25 €", "2 días: 30 €", "3 días: 35 €", "4-5 días: 40 €"],
   },
   {
     value: "ATLETISMO MERCADAL (Escolar)",
     title: "Es Mercadal · Escuela",
     meta: "Niños y niñas de 5 a 14 años",
-    details: ["Días y horario por definir", "Campo municipal de fútbol", "Desde 18 €/mes"],
+    details: ["Días y horario por definir", "1 día: 18 €/mes", "2 días: 25 €/mes"],
   },
   {
     value:
@@ -118,7 +121,7 @@ export const FORM_DEFINITIONS = {
     action:
       "https://docs.google.com/forms/d/e/1FAIpQLSdMWe7S9acL9BdQe7rmp6-As_kgEJrBNBTnpAgoi3nxqNa0wA/formResponse",
     title: "Inscripción",
-    eyebrow: "Temporada 2026",
+    eyebrow: "Temporada 2026-27",
     intro: "Completa el alta o la renovación para entrenar con Lô Esport Menorca.",
     submitLabel: "Enviar inscripción",
     successTitle: "Inscripción recibida",
@@ -135,7 +138,7 @@ export const FORM_DEFINITIONS = {
             label: "Seleccione para hacer inscripción a:",
             required: true,
             help:
-              "Cada opción incluye sede, edad orientativa, días, horario, lugar y cuota base para que no tengas que consultar la página de grupos.",
+              "Cada opción incluye sede, edad orientativa, inicio, horario y el precio exacto según los días de entrenamiento.",
             options: INSCRIPTION_GROUP_OPTIONS,
           },
           { type: "text", entry: "1045781291", label: "Población de residencia", required: true },
@@ -154,13 +157,22 @@ export const FORM_DEFINITIONS = {
             required: true,
             options: ["FEMENINO", "MASCULINO"],
           },
-          { type: "text", entry: "839337160", label: "DNI", required: true },
+          {
+            type: "text",
+            entry: "839337160",
+            label: "Documento de identidad (DNI, NIE o pasaporte)",
+            required: true,
+            help:
+              "Indica el número del documento. El formulario actual no admite adjuntos; si el club necesita la copia, podrás enviarla a loesport@gmail.com.",
+          },
           {
             type: "radio",
             entry: "946002822",
             label: "Eres nuevo en el club?",
             required: true,
             options: ["Nuevo", "Renovación matrícula"],
+            help:
+              "La matrícula es de 25 €. Los grupos escolares la abonan siempre; desde Sub-20, solo se aplica a nuevas incorporaciones al club.",
           },
         ],
       },
@@ -258,28 +270,50 @@ export const FORM_DEFINITIONS = {
       },
       {
         title: "Forma de pago",
+        description:
+          "Puedes pagar mes a mes o hacer un solo pago al inicio de temporada con una bonificación del 5 % sobre el total de la cuota.",
         fields: [
           {
             type: "radio",
             entry: "506119602",
-            label:
-              "Forma de pago. Matrícula general: 30 €. Cuota mensual según grupo, sede y días seleccionados.",
+            label: "Elige la modalidad y forma de pago",
             required: true,
-            options: ["Mensual", "Anual"],
+            options: [
+              {
+                label: "Pago mensual por domiciliación bancaria",
+                submissionValue: "Mensual · domiciliación bancaria",
+                submitAsOther: true,
+              },
+              {
+                label: "Un solo pago al inicio (5 % de bonificación) · Efectivo al entrenador o responsable del club",
+                submissionValue: "Anual con bonificación del 5 % · Efectivo",
+                submitAsOther: true,
+              },
+              {
+                label: "Un solo pago al inicio (5 % de bonificación) · Domiciliación, el club ya tiene mis datos bancarios",
+                submissionValue: "Anual con bonificación del 5 % · Domiciliación, datos bancarios ya disponibles",
+                submitAsOther: true,
+              },
+              {
+                label: "Un solo pago al inicio (5 % de bonificación) · Domiciliación, soy nuevo/a en el club",
+                submissionValue: "Anual con bonificación del 5 % · Domiciliación, nuevo/a en el club",
+                submitAsOther: true,
+              },
+            ],
             other: true,
           },
           {
             type: "radio",
             entry: "43401703",
             label:
-              'Los recibos se cargarán en cuenta el dia 4 de cada mes. Las bajas se deberán comunicar antes del día 20 del mes anterior mediante formulario de "Solicitud de baja" que encontrará en nuestra página web.  Doy mi AUTORIZACION a ALAIOR ESPORT para que cargue los recibos derivados de la actividad en cuenta.',
+              'Para pagos por domiciliación, los recibos se cargarán en cuenta el día 4. Las bajas deben comunicarse antes del día 20 del mes anterior mediante el formulario de "Solicitud de baja". Autorizo a Lô Esport Menorca a cargar los recibos derivados de la actividad en cuenta.',
             options: ["AUTORIZO"],
           },
           {
             type: "textarea",
             entry: "1121669907",
             label:
-              'NUMERO DE CUENTA BANCARIA\n\n* Si eres nuevo en el club indica el número de cuenta bancario.\n\n* Renovaciones sin cambios en el número cuenta indicar "Igual anterior temporada"',
+              'NÚMERO DE CUENTA BANCARIA\n\nSi has elegido domiciliación y eres nuevo/a, indica el IBAN. Si el club ya tiene tus datos y no han cambiado, escribe "Igual que la temporada anterior". Para pagos en efectivo, escribe "No procede".',
             required: true,
             rows: 2,
             autocomplete: "off",
@@ -289,6 +323,13 @@ export const FORM_DEFINITIONS = {
       {
         title: "Autorizaciones",
         fields: [
+          {
+            type: "notice",
+            entry: "license-information",
+            label: "Licencia y camiseta por categorías",
+            help:
+              "La licencia federativa es obligatoria hasta Sub-18 incluida. El club cubre su coste hasta Sub-12 incluida; desde Sub-14, el coste que apruebe la FAIB para cada categoría se abonará en enero. La camiseta Lô Esport está incluida hasta Sub-18; desde Sub-20 se adquiere aparte.",
+          },
           {
             type: "radio",
             entry: "207757834",
@@ -327,7 +368,7 @@ export const FORM_DEFINITIONS = {
             type: "radio",
             entry: "577217566",
             label:
-              "De conformidad con lo previsto en la normativa de protección de datos de carácter personal (la LO 3/2018, de 5 de diciembre, de Protección de datos personales y garantía de los derechos digitales, LOPDyGDD y el Reglamento General sobre Protección de Datos 2016/679, de 27 de abril de 2016, RGPD, o norma que los sustituya), LES INFORMAMOS que los datos personales recogidos en el formulario de inscripción serán tratados por parte del club Alaior Esport como responsable del tratamiento con la única finalidad de programar la temporada 2024/25, así como para tramitar las licencias deportivas si fuera necesario. Les informamos que pueden ejercer sus derechos de acceso, rectificación, supresión, limitación del tratamiento, portabilidad de los datos y oposición enviando un correo electrónico a loesport@gmail.com",
+              "De conformidad con la LO 3/2018 y el Reglamento General de Protección de Datos 2016/679, los datos personales recogidos serán tratados por Lô Esport Menorca para gestionar la temporada 2026-27 y tramitar las licencias deportivas. Puedes ejercer tus derechos escribiendo a loesport@gmail.com.",
             required: true,
             options: ["CONOZCO Y ACEPTO PRIVACIDAD Y TRATAMIENTO DE MIS DATOS PERSONALES"],
             legal: true,
@@ -336,7 +377,7 @@ export const FORM_DEFINITIONS = {
             type: "radio",
             entry: "818465818",
             label:
-              "Condiciones de uso: Quien ha cumplimentado el presente formulario declara que los datos en él consignado son reales con lo que desde el momento que pulse sobre el botón ENVIAR supone su aceptación y la aceptación de las condiciones de uso y reglamentos del Club ALAIOR ESPORT.",
+              "Condiciones de uso: quien cumplimenta este formulario declara que los datos consignados son reales. Al pulsar ENVIAR acepta las condiciones de uso y los reglamentos de Lô Esport Menorca.",
             required: true,
             options: ["ACEPTO"],
             legal: true,
@@ -500,8 +541,22 @@ export const FORM_DEFINITIONS = {
     action:
       "https://docs.google.com/forms/d/e/1FAIpQLSfs_2fTOwvmd8Vx_XinsH7Fvy4HJMhO3Of6kXteU-xb8IAT2w/formResponse",
     title: "Licencias de atletismo",
-    eyebrow: "Temporada 2026",
+    eyebrow: "Temporada 2026-27",
     intro: "Solicita el alta o la renovación de tu licencia autonómica o nacional.",
+    documents: [
+      {
+        title: "Alta de licencia RFEA",
+        description: "Descarga el documento de alta, rellénalo y fírmalo antes de enviarlo al club.",
+        href: altaLicensePdfUrl,
+      },
+      {
+        title: "Renovación de licencia RFEA",
+        description: "Descarga el documento de renovación, rellénalo y fírmalo antes de enviarlo al club.",
+        href: renewalLicensePdfUrl,
+      },
+    ],
+    documentsNote:
+      "El envío actual de la web no admite archivos. Tras completar este formulario, adjunta el PDF firmado y, si corresponde, el DNI/NIE y el certificado de empadronamiento en un correo a loesport@gmail.com.",
     submitLabel: "Tramitar licencia",
     successTitle: "Solicitud recibida",
     success:
@@ -680,6 +735,7 @@ function createInput(field) {
 
 function createChoice(field, option, index, isOther = false) {
   const hasStructuredDetails = !isOther && typeof option === "object" && Array.isArray(option.details);
+  const submitsAsOther = !isOther && typeof option === "object" && option.submitAsOther;
   const container = hasStructuredDetails ? document.createElement("div") : null;
   if (container) container.className = "registration-choice-card";
 
@@ -690,8 +746,9 @@ function createChoice(field, option, index, isOther = false) {
   input.type = field.type === "checkboxes" ? "checkbox" : "radio";
   input.name = `entry.${field.entry}`;
   const optionLabel = typeof option === "object" ? option.label || option.title : option;
-  const optionValue = typeof option === "object" ? option.value : option;
-  input.value = isOther ? "__other_option__" : optionValue;
+  const optionValue =
+    typeof option === "object" ? option.value || option.submissionValue || option.label || option.title : option;
+  input.value = isOther || submitsAsOther ? "__other_option__" : optionValue;
   input.id = `entry-${field.entry}-${index}`;
   if (field.required && field.type === "radio") input.required = true;
 
@@ -710,19 +767,39 @@ function createChoice(field, option, index, isOther = false) {
   }
   choice.append(input, marker, text);
 
+  if (submitsAsOther) {
+    const fixedResponse = document.createElement("input");
+    fixedResponse.type = "hidden";
+    fixedResponse.name = `entry.${field.entry}.other_option_response`;
+    fixedResponse.value = option.submissionValue;
+    fixedResponse.disabled = true;
+    fixedResponse.dataset.otherResponse = "";
+    choice.append(fixedResponse);
+  }
+
   if (isOther) {
     const otherInput = document.createElement("input");
     otherInput.type = "text";
     otherInput.className = "registration-other-input";
     otherInput.name = `entry.${field.entry}.other_option_response`;
+    otherInput.dataset.otherResponse = "";
     otherInput.setAttribute("aria-label", "Otra respuesta");
     otherInput.addEventListener("focus", () => {
       input.checked = true;
-    });
-    input.addEventListener("change", () => {
-      if (input.checked) otherInput.focus();
+      input.dispatchEvent(new Event("change", { bubbles: true }));
     });
     choice.append(otherInput);
+  }
+
+  if (field.other || submitsAsOther) {
+    input.addEventListener("change", () => {
+      const choices = choice.closest(".registration-choices");
+      choices?.querySelectorAll("[data-other-response]").forEach((response) => {
+        const responseChoice = response.closest(".registration-choice");
+        response.disabled = !responseChoice?.querySelector('input[type="radio"]')?.checked;
+      });
+      if (isOther && input.checked) choice.querySelector(".registration-other-input")?.focus();
+    });
   }
 
   if (!container) return choice;
@@ -751,7 +828,9 @@ function createField(field) {
 
   if (field.help) wrapper.append(createTextElement("p", "registration-help", field.help));
 
-  if (field.type === "radio" || field.type === "checkboxes") {
+  if (field.type === "notice") {
+    wrapper.classList.add("is-notice");
+  } else if (field.type === "radio" || field.type === "checkboxes") {
     const choices = document.createElement("div");
     choices.className = "registration-choices";
     if (field.type === "checkboxes" && field.required) {
@@ -838,6 +917,42 @@ function setSubmittingState(form, submitting) {
   button.querySelector("span:first-child").textContent = submitting ? "Enviando..." : form.dataset.submitLabel;
 }
 
+function createDocumentDownloads(definition) {
+  if (!definition.documents?.length) return null;
+
+  const section = document.createElement("section");
+  section.className = "registration-documents";
+  section.append(
+    createTextElement("p", "eyebrow", "Documentación RFEA"),
+    createTextElement("h2", "", "Descarga y completa el impreso correspondiente"),
+  );
+
+  const list = document.createElement("div");
+  list.className = "registration-document-list";
+  definition.documents.forEach((documentDefinition) => {
+    const link = document.createElement("a");
+    link.className = "registration-document-card";
+    link.href = documentDefinition.href;
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+    link.append(
+      createTextElement("strong", "", documentDefinition.title),
+      createTextElement("span", "", documentDefinition.description),
+      createTextElement("small", "", "Abrir PDF ↗"),
+    );
+    list.append(link);
+  });
+  section.append(list);
+
+  const note = createTextElement("p", "registration-document-note", definition.documentsNote);
+  const email = document.createElement("a");
+  email.href = "mailto:loesport@gmail.com?subject=Documentaci%C3%B3n%20licencia%20RFEA";
+  email.textContent = "Enviar documentación por correo";
+  note.append(" ", email);
+  section.append(note);
+  return section;
+}
+
 function renderForm(root, definition, key) {
   const frameName = `registration-response-${key}`;
   const form = document.createElement("form");
@@ -848,6 +963,9 @@ function renderForm(root, definition, key) {
   form.dataset.googleForm = "";
   form.dataset.submitLabel = definition.submitLabel;
   form.noValidate = false;
+
+  const documentDownloads = createDocumentDownloads(definition);
+  if (documentDownloads) form.append(documentDownloads);
 
   definition.sections.forEach((section, index) => form.append(createSection(section, index)));
 

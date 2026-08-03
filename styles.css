@@ -187,6 +187,78 @@ body.has-scrolled .registration-tabs {
   display: block;
 }
 
+.registration-documents {
+  padding: clamp(32px, 4vw, 54px);
+  background: #f2f3e9;
+  border-bottom: 1px solid var(--line-dark);
+}
+
+.registration-documents h2 {
+  max-width: 680px;
+  margin: 10px 0 24px;
+  font-family: "Barlow Condensed", Impact, sans-serif;
+  font-size: clamp(32px, 3vw, 46px);
+  font-weight: 800;
+  line-height: 0.95;
+  text-transform: uppercase;
+}
+
+.registration-document-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.registration-document-card {
+  min-height: 180px;
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  color: var(--ink);
+  background: var(--white);
+  border: 1px solid rgba(11, 12, 13, 0.16);
+  transition: border-color 160ms ease, transform 160ms ease;
+}
+
+.registration-document-card:hover {
+  border-color: #7d8800;
+  transform: translateY(-2px);
+}
+
+.registration-document-card strong {
+  font-size: 16px;
+}
+
+.registration-document-card span {
+  margin-top: 10px;
+  color: #5f645d;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.registration-document-card small {
+  margin-top: auto;
+  padding-top: 18px;
+  color: #596200;
+  font-size: 11px;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.registration-document-note {
+  margin: 18px 0 0;
+  color: #4f544d;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.registration-document-note a {
+  font-weight: 800;
+  text-decoration: underline;
+  text-decoration-color: #a9c100;
+  text-underline-offset: 3px;
+}
+
 .registration-section {
   margin: 0;
   padding: clamp(32px, 4vw, 54px);
@@ -240,6 +312,18 @@ body.has-scrolled .registration-tabs {
   margin: 0;
   padding: 0;
   border: 0;
+}
+
+.registration-field.is-notice {
+  padding: 18px;
+  background: #f3f9c8;
+  border-left: 4px solid #8c9d00;
+}
+
+.registration-field.is-notice .registration-help {
+  color: #3f443d;
+  font-size: 13px;
+  line-height: 1.6;
 }
 
 .registration-label {
@@ -720,6 +804,18 @@ body.has-scrolled .registration-tabs {
 
   .registration-section {
     padding: 30px 20px;
+  }
+
+  .registration-documents {
+    padding: 30px 20px;
+  }
+
+  .registration-document-list {
+    grid-template-columns: 1fr;
+  }
+
+  .registration-document-card {
+    min-height: 150px;
   }
 
   .registration-section-heading {
@@ -4247,6 +4343,70 @@ body.has-scrolled .mobile-menu {
 
   .contact-grid {
     gap: 38px;
+  }
+}
+
+@media (max-width: 1440px) {
+  .nav-shell {
+    grid-template-columns: minmax(220px, 0.55fr) minmax(0, auto) minmax(300px, 0.55fr);
+    gap: clamp(14px, 2vw, 26px);
+    padding-inline: clamp(22px, 2.5vw, 34px);
+  }
+
+  .desktop-nav {
+    gap: clamp(16px, 1.8vw, 24px);
+  }
+
+  .nav-actions {
+    gap: 12px;
+  }
+}
+
+@media (max-width: 1280px) {
+  :root {
+    --nav-height: 68px;
+  }
+
+  .nav-shell {
+    grid-template-columns: 1fr;
+    gap: 0;
+    padding-inline: clamp(18px, 4vw, 38px);
+  }
+
+  .desktop-nav,
+  .nav-actions {
+    display: none;
+  }
+
+  .nav-identity {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .brand {
+    width: 106px;
+  }
+
+  .brand img {
+    height: 38px;
+  }
+
+  .nav-season {
+    margin-left: auto;
+  }
+
+  .language-switcher-mobile {
+    display: inline-flex;
+    margin-left: auto;
+  }
+
+  .language-switcher-mobile + .nav-season {
+    margin-left: 8px;
+  }
+
+  .mobile-menu {
+    width: min(440px, 82vw);
+    min-width: 0;
   }
 }
 
@@ -8228,6 +8388,10 @@ body.has-scrolled .mobile-menu {
   border-bottom: 1px solid var(--line);
 }
 
+.group-practical-grid-four {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
 .group-practical-grid article {
   min-height: 280px;
   padding: 34px;
@@ -8765,6 +8929,10 @@ body.has-scrolled .mobile-menu {
   }
 
   .group-practical-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .group-practical-grid-four {
     grid-template-columns: 1fr;
   }
 
