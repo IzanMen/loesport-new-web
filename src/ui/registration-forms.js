@@ -6,13 +6,32 @@ const INSCRIPTION_GROUP_OPTIONS = [
     value: "ATLETISMO MAÓ Escolar",
     title: "Maó · Escuela Sub-8/Sub-10/Sub-12",
     meta: "Nacidos en 2016 y posteriores",
-    details: ["Inicio: lunes 14 de septiembre de 2026", "Lun/mié o mar/jue · 17:30-18:30", "1 día: 22 €/mes", "2 días: 27 €/mes", "Matrícula: 25 €"],
+    details: [
+      "Inicio: lunes 14 de septiembre de 2026",
+      "Opción 1: lunes y miércoles · 17:30-18:30",
+      "Novedad · opción 2: martes y jueves · 17:30-18:30",
+      "Novedad · opción 3: 2 días o más a escoger entre lunes, martes, miércoles y jueves",
+      "1 día: 22 €/mes",
+      "2 días o más: 27 €/mes",
+      "Matrícula: 25 €",
+    ],
   },
   {
     value: "ATLETISMO MAÓ Escolar",
     title: "Maó · Escuela Sub-14/Sub-16/Sub-18",
     meta: "Nacidos 2010-2015",
-    details: ["Inicio escuela: lunes 14 de septiembre de 2026", "1 día: 25 €/mes", "2 días: 30 €/mes", "3 días: 35 €/mes", "4-5 días: 40 €/mes", "Matrícula: 25 €"],
+    details: [
+      "Inicio escuela: lunes 14 de septiembre de 2026",
+      "Opción 1: lunes y miércoles · escuela 17:30-18:30",
+      "Novedad · opción 2: martes y jueves · escuela 17:30-18:30",
+      "Novedad · opción 3: 2 días o más a escoger entre lunes, martes, miércoles y jueves",
+      "Tecnificación: desde las 18:30",
+      "1 día: 25 €/mes",
+      "2 días: 30 €/mes",
+      "3 días: 35 €/mes",
+      "4-5 días: 40 €/mes",
+      "Matrícula: 25 €",
+    ],
   },
   {
     value: "ATLETISMO MAÓ Tecnificación (a partir de nacidos 2010)",
@@ -30,7 +49,13 @@ const INSCRIPTION_GROUP_OPTIONS = [
     value: "ATLETISMO MAÓ Adultos INICIACIÓN (Esport&Salut) 17:30h",
     title: "Maó · Madres y padres / Running iniciación",
     meta: "Mientras entrena la escuela",
-    details: ["Lun/mié o mar/jue · 17:30-18:30", "1 día: suplemento de 10 €/mes", "2 días: suplemento de 15 €/mes"],
+    details: [
+      "Opción 1: lunes y miércoles · 17:30-18:30",
+      "Novedad · opción 2: martes y jueves · 17:30-18:30",
+      "Novedad · opción 3: 2 días o más a escoger entre lunes, martes, miércoles y jueves",
+      "1 día: suplemento de 10 €/mes",
+      "2 días o más: suplemento de 15 €/mes",
+    ],
   },
   {
     value: "ATLETISMO ALAIOR Escolar",
@@ -87,7 +112,7 @@ const TRIAL_GROUP_OPTIONS = [
     value: "ATLETISMO MAÓ (Escolar)",
     title: "Maó · Escuela Sub-8 a Sub-18",
     meta: "Nacidos 2010 y posteriores",
-    details: ["Lun/mié o mar/jue · 17:30-18:30", "Sub-8 a Sub-12: 1 día 22 € · 2 días 27 €", "Sub-14 a Sub-18: 1 día 25 € · 2 días 30 € · 3 días 35 € · 4-5 días 40 €"],
+    details: ["Opción 1: lun/mié · opción 2: mar/jue · opción 3: días a escoger", "Escuela 17:30-18:30", "Tecnificación Sub-14 en adelante desde 18:30", "Sub-8 a Sub-12: 1 día 22 € · 2 días o más 27 €", "Sub-14 a Sub-18: 1 día 25 € · 2 días 30 € · 3 días 35 € · 4-5 días 40 €"],
   },
   {
     value: "ATLETISMO MAÓ (Adultos)",
@@ -112,7 +137,7 @@ const TRIAL_GROUP_OPTIONS = [
     value: "GRUPO ENTRENAMIENTO PARA PAPÁS I MAMÁS A LA MISMA HORA QUE LOS NIÑOS (Maó)",
     title: "Maó · Madres y padres / Running iniciación",
     meta: "A la misma hora que la escuela",
-    details: ["Lun/mié o mar/jue", "17:30-18:30", "Suplemento 10 €/mes 1 día o 15 €/mes 2 días"],
+    details: ["Opción 1: lun/mié · opción 2: mar/jue · opción 3: días a escoger", "17:30-18:30", "Suplemento 10 €/mes 1 día o 15 €/mes 2 días o más"],
   },
 ];
 
@@ -162,8 +187,23 @@ export const FORM_DEFINITIONS = {
             entry: "839337160",
             label: "Documento de identidad (DNI, NIE o pasaporte)",
             required: true,
-            help:
-              "Indica el número del documento. El formulario actual no admite adjuntos; si el club necesita la copia, podrás enviarla a loesport@gmail.com.",
+            help: "Indica el número del documento y adjunta las dos caras a continuación.",
+          },
+          {
+            type: "file",
+            entry: "document-front",
+            label: "Documento de identidad · parte delantera",
+            required: true,
+            accept: "image/*,.pdf",
+            help: "Adjunta foto o PDF del anverso del DNI, NIE o pasaporte.",
+          },
+          {
+            type: "file",
+            entry: "document-back",
+            label: "Documento de identidad · parte trasera",
+            required: true,
+            accept: "image/*,.pdf",
+            help: "Adjunta foto o PDF del reverso. Si tu pasaporte no tiene reverso, adjunta de nuevo la página principal.",
           },
           {
             type: "radio",
@@ -220,6 +260,22 @@ export const FORM_DEFINITIONS = {
             label: "Menores de 18 años indicar:\nDNI de la madre/padre ó tutor legal ",
           },
           {
+            type: "file",
+            entry: "guardian-document-front",
+            label: "DNI/NIE del tutor legal · parte delantera",
+            accept: "image/*,.pdf",
+            requiredWhenMinorEntry: "1065046570",
+            help: "Obligatorio si el participante es menor de 18 años.",
+          },
+          {
+            type: "file",
+            entry: "guardian-document-back",
+            label: "DNI/NIE del tutor legal · parte trasera",
+            accept: "image/*,.pdf",
+            requiredWhenMinorEntry: "1065046570",
+            help: "Obligatorio si el participante es menor de 18 años.",
+          },
+          {
             type: "google-date",
             entry: "326584365",
             label: "Menores de 18 años indicar fecha de nacimiento de la madre/padre ó tutor legal",
@@ -232,8 +288,9 @@ export const FORM_DEFINITIONS = {
           {
             type: "checkboxes",
             entry: "167310009",
-            label:
-              "Indique cuántos días de entrenamiento semanal realizará. El club confirmará la cuota final según la sede y grupo elegidos.",
+            label: "Indique cuántos días de entrenamiento semanal realizará.",
+            help:
+              "En Maó, las opciones de escuela y madres/padres son: opción 1 lunes y miércoles, opción 2 martes y jueves, y opción 3 dos días o más a escoger entre lunes, martes, miércoles y jueves.",
             options: [
               "1 día a la semana",
               "2 días a la semana",
@@ -243,10 +300,38 @@ export const FORM_DEFINITIONS = {
             ],
           },
           {
-            type: "textarea",
+            type: "training-options",
             entry: "712946819",
-            label:
-              'Si en la pregunta anterior ha elegido la respuesta "Asistirá 1 día de entreno a la semana", indique aquí el día que asistirá',
+            label: "Elige la opción o los días concretos de entrenamiento",
+            help:
+              "Para escuela de Maó y grupo de madres/padres. Si tu grupo no usa estas opciones, elige \"Mi grupo tiene otro horario\" y escríbelo.",
+            required: true,
+            options: [
+              {
+                title: "Opción 1",
+                summary: "Lunes y miércoles",
+                detail: "17:30-18:30",
+                days: ["Lunes", "Miércoles"],
+              },
+              {
+                title: "Novedad · Opción 2",
+                summary: "Martes y jueves",
+                detail: "17:30-18:30",
+                days: ["Martes", "Jueves"],
+              },
+              {
+                title: "Novedad · Opción 3",
+                summary: "2 días o más a escoger",
+                detail: "Entre lunes, martes, miércoles y jueves",
+                customDays: true,
+              },
+              {
+                title: "Mi grupo tiene otro horario",
+                summary: "Lo indicaré manualmente",
+                detail: "Para Alaior, Es Mercadal, adultos fondo/velocidad u otros casos",
+                manual: true,
+              },
+            ],
           },
           {
             type: "radio",
@@ -556,7 +641,7 @@ export const FORM_DEFINITIONS = {
       },
     ],
     documentsNote:
-      "El envío actual de la web no admite archivos. Tras completar este formulario, adjunta el PDF firmado y, si corresponde, el DNI/NIE y el certificado de empadronamiento en un correo a loesport@gmail.com.",
+      "Descarga el impreso que corresponda, rellénalo y adjúntalo firmado en este formulario junto con el DNI/NIE por las dos caras.",
     submitLabel: "Tramitar licencia",
     successTitle: "Solicitud recibida",
     success:
@@ -613,6 +698,39 @@ export const FORM_DEFINITIONS = {
           },
           { type: "date-text", entry: "2606285", label: "FECHA DE NACIMIENTO", required: true },
           { type: "text", entry: "945385681", label: "DNI ó NIE", required: true },
+          {
+            type: "file",
+            entry: "license-signed-form",
+            label: "Impreso de licencia firmado",
+            required: true,
+            accept: "image/*,.pdf",
+            help: "Adjunta el documento de alta o renovación RFEA ya rellenado y firmado.",
+          },
+          {
+            type: "file",
+            entry: "license-document-front",
+            label: "DNI/NIE · parte delantera",
+            required: true,
+            accept: "image/*,.pdf",
+            help: "Adjunta foto o PDF del anverso del DNI o NIE.",
+          },
+          {
+            type: "file",
+            entry: "license-document-back",
+            label: "DNI/NIE · parte trasera",
+            required: true,
+            accept: "image/*,.pdf",
+            help: "Adjunta foto o PDF del reverso del DNI o NIE.",
+          },
+          {
+            type: "file",
+            entry: "license-nie-census",
+            label: "Certificado de empadronamiento para NIE",
+            accept: "image/*,.pdf",
+            requiredWhenNieEntry: "945385681",
+            help:
+              "Obligatorio solo si el documento indicado es NIE. Debe tener una antigüedad máxima de 3 meses.",
+          },
           {
             type: "radio",
             entry: "1992566615",
@@ -722,11 +840,17 @@ function createInput(field) {
 
   if (field.type === "google-date") {
     input.dataset.googleDate = field.entry;
+  } else if (field.type === "file") {
+    input.name = `attachment-${field.entry}`;
+    input.dataset.fileInput = "";
+    if (field.requiredWhenNieEntry) input.dataset.requiredWhenNieEntry = field.requiredWhenNieEntry;
+    if (field.requiredWhenMinorEntry) input.dataset.requiredWhenMinorEntry = field.requiredWhenMinorEntry;
   } else {
     input.name = `entry.${field.entry}`;
   }
 
   if (field.required) input.required = true;
+  if (field.accept) input.accept = field.accept;
   if (field.autocomplete) input.autocomplete = field.autocomplete;
   if (field.inputmode) input.inputMode = field.inputmode;
   input.id = `entry-${field.entry}`;
@@ -814,6 +938,116 @@ function createChoice(field, option, index, isOther = false) {
   return container;
 }
 
+function createTrainingOptionsField(wrapper, field) {
+  const stateInput = document.createElement("input");
+  stateInput.type = "text";
+  stateInput.name = `entry.${field.entry}`;
+  stateInput.id = `entry-${field.entry}`;
+  stateInput.className = "registration-training-value";
+  stateInput.placeholder = "Selecciona una opción para continuar";
+  stateInput.readOnly = true;
+  if (field.required) stateInput.required = true;
+
+  const choices = document.createElement("div");
+  choices.className = "registration-training-options";
+
+  const daysPanel = document.createElement("div");
+  daysPanel.className = "registration-day-selector";
+  daysPanel.hidden = true;
+
+  const daysIntro = createTextElement("p", "", "Marca los días que quiere entrenar:");
+  const dayChoices = document.createElement("div");
+  dayChoices.className = "registration-day-options";
+  const availableDays = ["Lunes", "Martes", "Miércoles", "Jueves"];
+  availableDays.forEach((day) => {
+    const label = document.createElement("label");
+    label.className = "registration-day-choice";
+    const input = document.createElement("input");
+    input.type = "checkbox";
+    input.value = day;
+    const marker = document.createElement("span");
+    marker.setAttribute("aria-hidden", "true");
+    label.append(input, marker, document.createTextNode(day));
+    dayChoices.append(label);
+  });
+  daysPanel.append(daysIntro, dayChoices);
+
+  const manualPanel = document.createElement("div");
+  manualPanel.className = "registration-manual-schedule";
+  manualPanel.hidden = true;
+  const manualLabel = document.createElement("label");
+  manualLabel.textContent = "Indica aquí el horario o días de ese grupo";
+  const manualInput = document.createElement("textarea");
+  manualInput.rows = 2;
+  manualInput.placeholder = "Ejemplo: martes y jueves, 17:15-18:15";
+  manualLabel.append(manualInput);
+  manualPanel.append(manualLabel);
+
+  function selectedOption() {
+    return choices.querySelector('input[type="radio"]:checked');
+  }
+
+  function updateValue() {
+    const option = selectedOption();
+    if (!option) {
+      stateInput.value = "";
+    } else if (option.dataset.customDays === "true") {
+      const selectedDays = [...dayChoices.querySelectorAll("input:checked")].map((input) => input.value);
+      stateInput.value = selectedDays.length
+        ? `${option.dataset.title} · ${selectedDays.join(", ")}`
+        : "";
+    } else if (option.dataset.manual === "true") {
+      stateInput.value = manualInput.value.trim() ? `${option.dataset.title} · ${manualInput.value.trim()}` : "";
+    } else {
+      stateInput.value = `${option.dataset.title} · ${option.dataset.summary} · ${option.dataset.detail}`;
+    }
+
+    daysPanel.hidden = option?.dataset.customDays !== "true";
+    manualPanel.hidden = option?.dataset.manual !== "true";
+    stateInput.setCustomValidity(stateInput.value ? "" : "Selecciona una opción o indica los días concretos.");
+  }
+
+  field.options.forEach((option, index) => {
+    const label = document.createElement("label");
+    label.className = "registration-training-option";
+    const input = document.createElement("input");
+    input.type = "radio";
+    input.name = `training-option-${field.entry}`;
+    input.value = option.title;
+    input.dataset.title = option.title;
+    input.dataset.summary = option.summary;
+    input.dataset.detail = option.detail;
+    if (option.customDays) input.dataset.customDays = "true";
+    if (option.manual) input.dataset.manual = "true";
+    input.id = `training-option-${field.entry}-${index}`;
+
+    const marker = document.createElement("span");
+    marker.className = "registration-choice-marker";
+    marker.setAttribute("aria-hidden", "true");
+
+    const text = document.createElement("span");
+    text.className = "registration-choice-text";
+    text.append(
+      createTextElement("strong", "registration-choice-title", option.title),
+      createTextElement("span", "registration-choice-meta", option.summary),
+      createTextElement("small", "registration-training-detail", option.detail),
+    );
+
+    label.append(input, marker, text);
+    input.addEventListener("change", updateValue);
+    choices.append(label);
+  });
+
+  dayChoices.addEventListener("change", updateValue);
+  manualInput.addEventListener("input", updateValue);
+  stateInput.addEventListener("invalid", () => {
+    choices.querySelector('input[type="radio"]')?.focus();
+  });
+  updateValue();
+  wrapper.classList.add("registration-training-field");
+  wrapper.append(choices, daysPanel, manualPanel, stateInput);
+}
+
 function createField(field) {
   const wrapper = document.createElement("fieldset");
   wrapper.className = `registration-field${field.legal ? " is-legal" : ""}`;
@@ -823,6 +1057,12 @@ function createField(field) {
   if (field.required) {
     const required = createTextElement("span", "registration-required", "(Obligatorio)");
     legend.append(" ", required);
+  } else if (field.requiredWhenNieEntry) {
+    const required = createTextElement("span", "registration-required", "(Obligatorio si NIE)");
+    legend.append(" ", required);
+  } else if (field.requiredWhenMinorEntry) {
+    const required = createTextElement("span", "registration-required", "(Obligatorio si menor)");
+    legend.append(" ", required);
   }
   wrapper.append(legend);
 
@@ -830,6 +1070,23 @@ function createField(field) {
 
   if (field.type === "notice") {
     wrapper.classList.add("is-notice");
+  } else if (field.type === "training-options") {
+    createTrainingOptionsField(wrapper, field);
+  } else if (field.type === "file") {
+    wrapper.classList.add("registration-file-field");
+    const input = createInput(field);
+    const shell = document.createElement("label");
+    shell.className = "registration-file-drop";
+    shell.htmlFor = input.id;
+    shell.append(
+      createTextElement("span", "registration-file-action", "Seleccionar archivo"),
+      createTextElement("span", "registration-file-name", "Ningún archivo seleccionado"),
+    );
+    input.addEventListener("change", () => {
+      const fileName = input.files?.[0]?.name || "Ningún archivo seleccionado";
+      shell.querySelector(".registration-file-name").textContent = fileName;
+    });
+    wrapper.append(input, shell);
   } else if (field.type === "radio" || field.type === "checkboxes") {
     const choices = document.createElement("div");
     choices.className = "registration-choices";
@@ -885,6 +1142,64 @@ function validateOtherResponses(form) {
     const missingResponse = Boolean(otherOption?.checked && !input.value.trim());
     input.setCustomValidity(missingResponse ? "Escribe la otra respuesta." : "");
     if (missingResponse) valid = false;
+  });
+  return valid;
+}
+
+function validateTrainingOptions(form) {
+  let valid = true;
+  form.querySelectorAll(".registration-training-value").forEach((input) => {
+    const isComplete = Boolean(input.value.trim());
+    input.setCustomValidity(isComplete ? "" : "Selecciona una opción o indica los días concretos.");
+    if (!isComplete) valid = false;
+  });
+  return valid;
+}
+
+function looksLikeNie(value) {
+  return /^[XYZ]/i.test(value.trim());
+}
+
+function isMinorFromDate(value) {
+  if (!value) return false;
+  const birthDate = new Date(`${value}T00:00:00`);
+  if (Number.isNaN(birthDate.getTime())) return false;
+  const today = new Date();
+  let age = today.getFullYear() - birthDate.getFullYear();
+  const monthDelta = today.getMonth() - birthDate.getMonth();
+  if (monthDelta < 0 || (monthDelta === 0 && today.getDate() < birthDate.getDate())) age -= 1;
+  return age < 18;
+}
+
+function validateFileInputs(form) {
+  let valid = true;
+  form.querySelectorAll("[data-file-input]").forEach((input) => {
+    let message = "";
+    if (input.required && !input.files?.length) {
+      message = "Adjunta este archivo para poder enviar el formulario.";
+    }
+
+    const relatedEntry = input.dataset.requiredWhenNieEntry;
+    if (!message && relatedEntry) {
+      const documentInput = form.querySelector(`[name="entry.${relatedEntry}"]`);
+      const isRequired = documentInput && looksLikeNie(documentInput.value);
+      if (isRequired && !input.files?.length) {
+        message = "El certificado de empadronamiento es obligatorio si el documento es NIE.";
+      }
+    }
+
+    const minorEntry = input.dataset.requiredWhenMinorEntry;
+    if (!message && minorEntry) {
+      const birthDateInput = form.querySelector(`[name="entry.${minorEntry}"]`);
+      const isRequired = birthDateInput && isMinorFromDate(birthDateInput.value);
+      if (isRequired && !input.files?.length) {
+        message = "Este documento es obligatorio si el participante es menor de 18 años.";
+      }
+    }
+
+    input.setCustomValidity(message);
+    input.closest(".registration-file-field")?.classList.toggle("has-error", Boolean(message));
+    if (message) valid = false;
   });
   return valid;
 }
@@ -959,6 +1274,7 @@ function renderForm(root, definition, key) {
   form.className = "registration-form";
   form.action = definition.action;
   form.method = "POST";
+  form.enctype = "multipart/form-data";
   form.target = frameName;
   form.dataset.googleForm = "";
   form.dataset.submitLabel = definition.submitLabel;
@@ -1024,10 +1340,27 @@ function renderForm(root, definition, key) {
   form.querySelectorAll(".registration-other-input").forEach((input) => {
     input.addEventListener("input", () => validateOtherResponses(form));
   });
+  form.querySelectorAll(".registration-training-field").forEach((field) => {
+    field.addEventListener("change", () => validateTrainingOptions(form));
+    field.addEventListener("input", () => validateTrainingOptions(form));
+  });
+  form.querySelectorAll("[data-file-input]").forEach((input) => {
+    input.addEventListener("change", () => validateFileInputs(form));
+  });
+  form.querySelectorAll("[data-required-when-nie-entry]").forEach((input) => {
+    const documentInput = form.querySelector(`[name="entry.${input.dataset.requiredWhenNieEntry}"]`);
+    documentInput?.addEventListener("input", () => validateFileInputs(form));
+  });
+  form.querySelectorAll("[data-required-when-minor-entry]").forEach((input) => {
+    const birthDateInput = form.querySelector(`[name="entry.${input.dataset.requiredWhenMinorEntry}"]`);
+    birthDateInput?.addEventListener("input", () => validateFileInputs(form));
+  });
 
   form.addEventListener("submit", (event) => {
     validateCheckboxGroups(form);
     validateOtherResponses(form);
+    validateTrainingOptions(form);
+    validateFileInputs(form);
     if (!form.reportValidity()) {
       event.preventDefault();
       form.querySelector(":invalid")?.focus();

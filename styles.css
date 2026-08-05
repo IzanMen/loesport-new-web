@@ -320,7 +320,15 @@ body.has-scrolled .registration-tabs {
   border-left: 4px solid #8c9d00;
 }
 
+.registration-field.is-notice .registration-label {
+  float: left;
+  margin: 0 0 12px;
+  font-weight: 850;
+}
+
 .registration-field.is-notice .registration-help {
+  clear: both;
+  margin: 0;
   color: #3f443d;
   font-size: 13px;
   line-height: 1.6;
@@ -365,6 +373,60 @@ body.has-scrolled .registration-tabs {
   outline: 0;
   resize: vertical;
   transition: border-color 160ms ease, box-shadow 160ms ease, background 160ms ease;
+}
+
+.registration-file-field > input[type="file"] {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.registration-file-drop {
+  min-height: 66px;
+  margin-top: 10px;
+  padding: 14px;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 14px;
+  background: #f4f4ef;
+  border: 1px dashed rgba(11, 12, 13, 0.32);
+  cursor: pointer;
+  transition: background 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.registration-file-drop:hover,
+.registration-file-field:focus-within .registration-file-drop {
+  background: #f3f9c8;
+  border-color: #8c9d00;
+  box-shadow: 0 0 0 3px rgba(140, 157, 0, 0.12);
+}
+
+.registration-file-field.has-error .registration-file-drop {
+  border-color: #c73625;
+}
+
+.registration-file-action {
+  min-height: 36px;
+  padding: 0 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink);
+  background: var(--yellow);
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.registration-file-name {
+  min-width: 0;
+  color: #4f554e;
+  font-size: 12px;
+  font-weight: 750;
+  overflow-wrap: anywhere;
 }
 
 .registration-field > input:focus-visible,
@@ -530,6 +592,142 @@ body.has-scrolled .registration-tabs {
   background: #7a8400;
 }
 
+.registration-training-options {
+  margin-top: 12px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.registration-training-option {
+  position: relative;
+  min-height: 92px;
+  display: grid;
+  grid-template-columns: 20px minmax(0, 1fr);
+  align-items: start;
+  gap: 12px;
+  padding: 14px 12px;
+  background: #f4f4ef;
+  border: 1px solid rgba(11, 12, 13, 0.13);
+  cursor: pointer;
+  transition: background 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.registration-training-option:has(input:checked) {
+  background: #f3f9c8;
+  border-color: #8c9d00;
+}
+
+.registration-training-option:focus-within,
+.registration-day-choice:focus-within {
+  outline: 0 !important;
+  border-color: rgba(83, 96, 90, 0.62);
+  box-shadow: 0 0 0 3px rgba(83, 96, 90, 0.1) !important;
+}
+
+.registration-training-option > input[type="radio"],
+.registration-day-choice > input[type="checkbox"] {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  outline: 0 !important;
+  box-shadow: none !important;
+  pointer-events: none;
+}
+
+.registration-training-option > input:checked + .registration-choice-marker {
+  background: var(--ink);
+  border-color: var(--ink);
+  box-shadow: inset 0 0 0 4px var(--yellow);
+}
+
+.registration-training-detail {
+  color: #5f645e;
+  font-size: 11px;
+  line-height: 1.35;
+}
+
+.registration-day-selector,
+.registration-manual-schedule {
+  margin-top: 10px;
+  padding: 14px;
+  background: #f8f8f3;
+  border: 1px solid rgba(11, 12, 13, 0.12);
+}
+
+.registration-day-selector p,
+.registration-manual-schedule label {
+  margin: 0;
+  color: #4d524c;
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1.4;
+}
+
+.registration-day-options {
+  margin-top: 10px;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 7px;
+}
+
+.registration-day-choice {
+  position: relative;
+  min-height: 40px;
+  padding: 10px 10px 10px 34px;
+  display: flex;
+  align-items: center;
+  color: #30332f;
+  background: var(--white);
+  border: 1px solid rgba(11, 12, 13, 0.13);
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.registration-day-choice span {
+  position: absolute;
+  left: 10px;
+  width: 15px;
+  height: 15px;
+  background: #f4f4ef;
+  border: 2px solid #777b75;
+}
+
+.registration-day-choice input:checked + span {
+  background: var(--ink);
+  border-color: var(--ink);
+}
+
+.registration-day-choice input:checked + span::after {
+  content: "";
+  position: absolute;
+  left: 3px;
+  top: 3px;
+  width: 6px;
+  height: 3px;
+  border-left: 2px solid var(--white);
+  border-bottom: 2px solid var(--white);
+  transform: rotate(-45deg);
+}
+
+.registration-manual-schedule textarea {
+  width: 100%;
+  margin-top: 8px;
+  padding: 8px 0;
+  color: var(--ink);
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid rgba(11, 12, 13, 0.34);
+  border-radius: 0;
+  resize: vertical;
+}
+
+.registration-training-value {
+  font-weight: 800;
+}
+
 .registration-other-input {
   grid-column: 2;
   width: 100%;
@@ -540,6 +738,21 @@ body.has-scrolled .registration-tabs {
   border-bottom: 1px solid rgba(11, 12, 13, 0.32);
   border-radius: 0;
   outline: 0;
+}
+
+@media (max-width: 700px) {
+  .registration-file-drop {
+    grid-template-columns: 1fr;
+    align-items: stretch;
+  }
+
+  .registration-training-options {
+    grid-template-columns: 1fr;
+  }
+
+  .registration-day-options {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 .registration-field.is-legal .registration-label {
@@ -1332,8 +1545,9 @@ body.menu-open .menu-backdrop {
   top: calc(var(--announce-height) + var(--nav-height));
   bottom: 0;
   left: 0;
-  width: min(760px, 56vw);
-  min-width: 620px;
+  width: max-content;
+  min-width: min(620px, calc(100vw - 32px));
+  max-width: calc(100vw - 32px);
   color: var(--ink);
   background: var(--white);
   border-right: 1px solid rgba(11, 12, 13, 0.22);
@@ -1358,8 +1572,9 @@ body.has-scrolled .mobile-menu {
 .menu-layout {
   height: 100%;
   display: grid;
-  grid-template-columns: minmax(280px, 360px) minmax(260px, 1fr);
+  grid-template-columns: minmax(max-content, 360px) minmax(300px, max-content);
   overflow-y: auto;
+  overflow-x: hidden;
   overscroll-behavior: contain;
 }
 
@@ -4405,8 +4620,9 @@ body.has-scrolled .mobile-menu {
   }
 
   .mobile-menu {
-    width: min(440px, 82vw);
-    min-width: 0;
+    width: max-content;
+    min-width: min(620px, calc(100vw - 32px));
+    max-width: calc(100vw - 32px);
   }
 }
 
@@ -4453,8 +4669,9 @@ body.has-scrolled .mobile-menu {
   }
 
   .mobile-menu {
-    width: min(440px, 82vw);
-    min-width: 0;
+    width: max-content;
+    min-width: min(620px, calc(100vw - 32px));
+    max-width: calc(100vw - 32px);
   }
 
   .hero-content {
@@ -4509,6 +4726,7 @@ body.has-scrolled .mobile-menu {
   .mobile-menu {
     width: min(440px, 82vw);
     min-width: 0;
+    max-width: none;
   }
 
   .menu-layout {
@@ -4813,6 +5031,8 @@ body.has-scrolled .mobile-menu {
 
   .mobile-menu {
     width: min(338px, 82vw);
+    min-width: 0;
+    max-width: none;
   }
 
   .hero {
@@ -8246,6 +8466,48 @@ body.has-scrolled .mobile-menu {
   line-height: 1.55;
 }
 
+.group-training-options {
+  padding: 0 34px 34px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.group-training-options div {
+  min-height: 128px;
+  padding: 18px;
+  display: grid;
+  align-content: start;
+  gap: 8px;
+  background: #f4f4ef;
+  border-left: 5px solid rgba(11, 12, 13, 0.16);
+}
+
+.group-training-options div:has(span:first-child) span {
+  width: fit-content;
+}
+
+.group-training-options span {
+  padding: 5px 7px;
+  color: var(--ink);
+  background: rgba(223, 255, 0, 0.86);
+  font-size: 10px;
+  font-weight: 900;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.group-training-options strong {
+  font-size: 19px;
+  line-height: 1.12;
+}
+
+.group-training-options small {
+  color: #5f645e;
+  font-size: 12px;
+  line-height: 1.35;
+}
+
 .group-card-price {
   margin: 0;
   display: flex;
@@ -8854,6 +9116,10 @@ body.has-scrolled .mobile-menu {
     gap: 24px;
   }
 
+  .group-training-options {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .group-card-facts {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -8920,6 +9186,10 @@ body.has-scrolled .mobile-menu {
 
   .group-card-heading {
     grid-template-columns: 110px minmax(0, 1fr);
+  }
+
+  .group-training-options {
+    grid-template-columns: 1fr;
   }
 
   .group-card-price {
@@ -9164,6 +9434,15 @@ body.has-scrolled .mobile-menu {
 
   .group-card-heading h3 {
     font-size: 42px;
+  }
+
+  .group-training-options {
+    padding: 0 20px 24px;
+  }
+
+  .group-training-options div {
+    min-height: 0;
+    padding: 16px;
   }
 
   .group-card-price {
