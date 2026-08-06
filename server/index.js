@@ -10,7 +10,7 @@ import MailComposer from "nodemailer/lib/mail-composer/index.js";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const distDirectory = path.resolve(__dirname, "../dist");
 const port = Number(process.env.PORT) || 8080;
-const recipients = (process.env.FORM_RECIPIENT || "loesport@gmail.com,sanchezginesizan@gmail.com")
+const recipients = (process.env.FORM_RECIPIENT || "loesport@gmail.com")
   .split(",")
   .map((email) => validEmail(email))
   .filter(Boolean);
