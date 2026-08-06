@@ -6,6 +6,7 @@ import {
   getTrainingGroup,
   getTrainingLocation,
 } from "../data/training-groups.js";
+import { translatePhrase } from "../i18n/index.js";
 import { sendFormSubmission } from "./form-submission.js";
 
 export const FORM_DEFINITIONS = {
@@ -191,6 +192,14 @@ export const FORM_DEFINITIONS = {
               },
             ],
             other: true,
+          },
+          {
+            type: "notice",
+            entry: "bank-fee-notice",
+            label: "Gastos bancarios",
+            help: "Si eliges pagar por domiciliación bancaria, hay que sumar 0,50 € por gastos bancarios.",
+            showWhenEntry: "506119602",
+            showWhenValueIncludes: "domicili",
           },
           {
             type: "radio",
@@ -586,6 +595,14 @@ export const FORM_DEFINITIONS = {
             other: true,
           },
           {
+            type: "notice",
+            entry: "license-bank-fee-notice",
+            label: "Gastos bancarios",
+            help: "Si eliges pagar por domiciliación bancaria, hay que sumar 0,50 € por gastos bancarios.",
+            showWhenEntry: "1180835478",
+            showWhenValueIncludes: "domicili",
+          },
+          {
             type: "text",
             entry: "1098533702",
             label:
@@ -709,7 +726,15 @@ function createFlowChoice({ type, name, id, value, title, meta, detail, classNam
   const text = document.createElement("span");
   text.className = "registration-flow-choice-text";
   text.append(createTextElement("strong", "", title));
-  if (meta) text.append(createTextElement("span", "", meta));
+  if (meta) {
+    const metaElement = createTextElement("span", "", "");
+    const metaParts = Array.isArray(meta) ? meta : [meta];
+    metaParts.forEach((part, index) => {
+      if (index) metaElement.append(document.createTextNode(" · "));
+      metaElement.append(document.createTextNode(part));
+    });
+    text.append(metaElement);
+  }
   if (detail) text.append(createTextElement("small", "", detail));
 
   label.append(input, marker, text);
@@ -939,7 +964,7 @@ function createGroupSelectionField(wrapper, field) {
         id: `training-group-${field.entry}-${group.id}`,
         value: group.id,
         title: group.title,
-        meta: `${location.title} · ${group.category}`,
+        meta: [location.title, group.category],
         detail: group.schedule,
         className: "registration-group-choice",
       });
@@ -1198,7 +1223,7 @@ function createTrainingOptionsField(wrapper, field) {
 
     daysPanel.hidden = option?.dataset.customDays !== "true";
     manualPanel.hidden = option?.dataset.manual !== "true";
-    stateInput.setCustomValidity(stateInput.value ? "" : "Selecciona o indica los días concretos.");
+    stateInput.setCustomValidity(stateInput.value ? "" : translatePhrase("Selecciona o indica los días concretos."));
   }
 
   field.options.forEach((option, index) => {
@@ -1378,7 +1403,7 @@ function validateCheckboxGroups(form) {
   form.querySelectorAll("[data-required-checkboxes]").forEach((group) => {
     const first = group.querySelector('input[type="checkbox"]');
     const hasSelection = Boolean(group.querySelector('input[type="checkbox"]:checked'));
-    first.setCustomValidity(hasSelection ? "" : group.dataset.error);
+    first.setCustomValidity(hasSelection ? "" : translatePhrase(group.dataset.error));
     if (!hasSelection) valid = false;
   });
   return valid;
@@ -1389,7 +1414,7 @@ function validateOtherResponses(form) {
   form.querySelectorAll(".registration-other-input").forEach((input) => {
     const otherOption = input.closest(".registration-choice")?.querySelector('input[type="radio"]');
     const missingResponse = Boolean(otherOption?.checked && !input.value.trim());
-    input.setCustomValidity(missingResponse ? "Escribe la otra respuesta." : "");
+    input.setCustomValidity(missingResponse ? translatePhrase("Escribe la otra respuesta.") : "");
     if (missingResponse) valid = false;
   });
   return valid;
@@ -1399,7 +1424,7 @@ function validateTrainingOptions(form) {
   let valid = true;
   form.querySelectorAll(".registration-training-value").forEach((input) => {
     const isComplete = Boolean(input.value.trim());
-    input.setCustomValidity(isComplete ? "" : "Selecciona o indica los días concretos.");
+    input.setCustomValidity(isComplete ? "" : translatePhrase("Selecciona o indica los días concretos."));
     if (!isComplete) valid = false;
   });
   return valid;
@@ -1478,7 +1503,7 @@ function validateFileInputs(form) {
   form.querySelectorAll("[data-file-input]").forEach((input) => {
     let message = "";
     if (input.required && !input.files?.length) {
-      message = "Adjunta este archivo para poder enviar el formulario.";
+      message = translatePhrase("Adjunta este archivo para poder enviar el formulario.");
     }
 
     const relatedEntry = input.dataset.requiredWhenNieEntry;
@@ -1486,7 +1511,7 @@ function validateFileInputs(form) {
       const documentInput = form.querySelector(`[name="entry.${relatedEntry}"]`);
       const isRequired = documentInput && looksLikeNie(documentInput.value);
       if (isRequired && !input.files?.length) {
-        message = "El certificado de empadronamiento es obligatorio si el documento es NIE.";
+        message = translatePhrase("El certificado de empadronamiento es obligatorio si el documento es NIE.");
       }
     }
 
@@ -1495,7 +1520,7 @@ function validateFileInputs(form) {
       const birthDateInput = form.querySelector(`[name="entry.${minorEntry}"]`);
       const isRequired = birthDateInput && isMinorFromDate(birthDateInput.value);
       if (isRequired && !input.files?.length) {
-        message = "Este documento es obligatorio si el participante es menor de 18 años.";
+        message = translatePhrase("Este documento es obligatorio si el participante es menor de 18 años.");
       }
     }
 

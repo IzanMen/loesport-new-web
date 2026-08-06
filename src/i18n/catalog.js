@@ -1,4 +1,5 @@
 import { autoCatalogue } from "./auto-catalog.js";
+import { supplementalCatalogue } from "./supplemental-catalog.js";
 
 function normalizeText(value) {
   return String(value).replace(/\u00a0/g, " ").replace(/\s+/g, " ").trim();
@@ -1117,6 +1118,10 @@ export function createCatalogue() {
   add("ATLETISMO categoría Sénior (136€)", "ATLETISME categoria sènior (136€)", "ATLETISMO categoría sénior (136€)", "ATLETISMO senior kategoria (136€)");
   add("ATLETISMO categoria máster (81€)", "ATLETISME categoria màster (81€)", "ATLETISMO categoría máster (81€)", "ATLETISMO master kategoria (81€)");
   add("ATLETISMO categoria Máster (141€)", "ATLETISME categoria màster (141€)", "ATLETISMO categoría máster (141€)", "ATLETISMO master kategoria (141€)");
+
+  Object.entries(supplementalCatalogue).forEach(([key, translations]) => {
+    if (!catalogue[key]) catalogue[key] = translations;
+  });
 
   Object.entries(autoCatalogue).forEach(([key, translations]) => {
     if (!catalogue[key]) catalogue[key] = translations;

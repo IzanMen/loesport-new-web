@@ -182,16 +182,19 @@ function startTranslationObserver() {
 
 function updateGeneratedLabels() {
   document.querySelectorAll(".marquee-label").forEach((label) => {
-    label.dataset.label = translatePhrase("Patrocinadores");
+    const value = translatePhrase("Patrocinadores");
+    if (label.dataset.label !== value) label.dataset.label = value;
   });
 
   document.querySelectorAll(".language-switcher span").forEach((label) => {
-    label.textContent = translatePhrase("Idioma");
+    const value = translatePhrase("Idioma");
+    if (label.textContent !== value) label.textContent = value;
   });
 
   document.querySelectorAll(".language-switcher select").forEach((select) => {
-    select.value = currentLanguage;
-    select.setAttribute("aria-label", translatePhrase("Idioma"));
+    if (select.value !== currentLanguage) select.value = currentLanguage;
+    const label = translatePhrase("Idioma");
+    if (select.getAttribute("aria-label") !== label) select.setAttribute("aria-label", label);
   });
 }
 
@@ -229,12 +232,19 @@ function createLanguageSwitcher(kind) {
     select.append(option);
   });
 
-  select.addEventListener("change", () => {
-    applyLanguage(select.value);
-  });
-
   wrapper.append(label, select);
   return wrapper;
+}
+
+function bindLanguageSelectors() {
+  document.querySelectorAll(".language-switcher select").forEach((select) => {
+    if (select.dataset.languageSwitcherBound === "true") return;
+
+    select.dataset.languageSwitcherBound = "true";
+    select.addEventListener("change", () => {
+      applyLanguage(select.value);
+    });
+  });
 }
 
 function injectLanguageSelectors() {
@@ -254,6 +264,7 @@ function injectLanguageSelectors() {
 export function initI18n() {
   currentLanguage = getInitialLanguage();
   injectLanguageSelectors();
+  bindLanguageSelectors();
   applyLanguage(currentLanguage, { emit: false });
   startTranslationObserver();
 

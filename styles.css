@@ -2999,6 +2999,10 @@ body.has-scrolled .mobile-menu {
   gap: clamp(14px, 1.4vw, 22px);
 }
 
+.license-grid.single {
+  grid-template-columns: minmax(0, 1fr);
+}
+
 .license-card {
   min-height: 340px;
   border: 1px solid rgba(255, 255, 255, 0.26);
@@ -10904,9 +10908,12 @@ body.request-drawer-open {
     font-size: 9px;
   }
 
-  .equipment-body .language-switcher-mobile,
   .equipment-body .nav-season {
     display: none;
+  }
+
+  .equipment-body .equipment-mobile-request {
+    margin-left: 0;
   }
 
   .equipment-toolbar {

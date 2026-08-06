@@ -10,7 +10,9 @@
     "authorize:gmail": "node server/authorize-gmail.js",
     "clean": "rm -rf dist",
     "build": "vite build",
-    "check": "npm run build",
+    "check:i18n": "node scripts/source-i18n-audit.mjs",
+    "audit:i18n:browser": "node scripts/browser-i18n-audit.mjs",
+    "check": "npm run check:i18n && npm run build",
     "preview": "vite preview --host 0.0.0.0"
   },
   "devDependencies": {

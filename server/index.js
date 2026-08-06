@@ -394,12 +394,15 @@ app.use("/api", (_request, response) => {
 app.use((error, _request, response, _next) => {
   const status = error.status || (error instanceof multer.MulterError ? 413 : 500);
   if (status >= 500) console.error("Form API error", error);
+  const clientMessage = error instanceof multer.MulterError
+    ? "No se han podido procesar los archivos. Revisa su tamaño y vuelve a intentarlo."
+    : error.message;
   response.status(status).json({
     ok: false,
     message:
       status >= 500
         ? "No se ha podido enviar el formulario. Inténtalo de nuevo en unos minutos."
-        : error.message,
+        : clientMessage,
   });
 });
 

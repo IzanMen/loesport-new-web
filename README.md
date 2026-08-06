@@ -9,7 +9,8 @@ Sitio estático multipágina construido con Vite.
 - `npm run build`: genera `dist/`.
 - `npm run preview`: previsualiza la build.
 - `npm run clean`: elimina `dist/`.
-- `npm run check`: comprobación de build.
+- `npm run check:i18n`: comprueba la cobertura de textos dinámicos y errores del servidor.
+- `npm run check`: comprueba traducciones y build.
 
 ## Estructura
 
@@ -17,6 +18,7 @@ Sitio estático multipágina construido con Vite.
 - `styles.css`: estilos globales del sitio.
 - `script.js`: entrada JS mínima.
 - `src/i18n/`: detección de idioma, selector y catálogo.
+- `scripts/`: auditorías de cobertura y funcionamiento de idiomas.
 - `src/ui/`: módulos de interacción reutilizables.
 - `server/`: servidor de producción y envío mediante Gmail API.
 - `assets/`: imágenes, logos, favicons y vídeo usados por las páginas.
@@ -53,4 +55,11 @@ guarda el nuevo token como otra versión de `gmail-refresh-token`.
 2. Añade `<link rel="stylesheet" href="/styles.css" />` en el `<head>`.
 3. Añade `<script type="module" src="/script.js"></script>` antes de cerrar `<body>`.
 4. Registra el archivo en `pages` dentro de `vite.config.js`.
-5. Si hay textos nuevos, añádelos en `src/i18n/catalog.js`.
+5. Si hay textos nuevos, añádelos en `src/i18n/catalog.js` o `src/i18n/supplemental-catalog.js`.
+6. Ejecuta `npm run check` para verificar que no queda ninguna cadena sin traducir.
+
+## Auditoría de idiomas en navegador
+
+Con Vite abierto en `http://127.0.0.1:4321` y Chrome en modo headless con el
+puerto de depuración `9224`, `npm run audit:i18n:browser` recorre todos los HTML,
+las fichas de producto y los estados interactivos en ES, CA, GL y EU.
