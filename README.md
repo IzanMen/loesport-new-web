@@ -29,11 +29,18 @@ La web y `POST /api/forms` se publican juntos en el servicio de Cloud Run
 Cada envío genera una captura del formulario, incluye las respuestas en el cuerpo
 del correo y adjunta los archivos originales.
 
+Las builds de producción envían directamente a la API de Cloud Run. CORS está
+limitado a `https://loesport-new-web.vercel.app`, `https://loesport.es` y
+`https://www.loesport.es`. En `localhost`, Vite mantiene su proxy `/api`.
+
 Cloud Run recibe estas variables desde Secret Manager:
 
 - `GMAIL_CLIENT_ID` desde `gmail-client-id`.
 - `GMAIL_CLIENT_SECRET` desde `gmail-client-secret`.
 - `GMAIL_REFRESH_TOKEN` desde `gmail-refresh-token`.
+
+`FORM_RECIPIENT` admite uno o varios correos separados por comas. Por ejemplo:
+`loesport@gmail.com,sanchezginesizan@gmail.com`.
 
 El cliente OAuth debe permanecer en estado **En producción** para que el token de
 una aplicación externa no caduque a los siete días. Para renovar la autorización,

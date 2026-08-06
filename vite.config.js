@@ -36,6 +36,17 @@ export default defineConfig({
       },
     },
   },
+  preview: {
+    proxy: {
+      "/api": {
+        target: formApiTarget,
+        changeOrigin: true,
+        headers: {
+          origin: formApiOrigin,
+        },
+      },
+    },
+  },
   build: {
     emptyOutDir: true,
     rollupOptions: {

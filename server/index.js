@@ -10,7 +10,10 @@ import MailComposer from "nodemailer/lib/mail-composer/index.js";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const distDirectory = path.resolve(__dirname, "../dist");
 const port = Number(process.env.PORT) || 8080;
-const recipient = process.env.FORM_RECIPIENT || "sanchezginesizan@gmail.com";
+const recipients = (process.env.FORM_RECIPIENT || "loesport@gmail.com,sanchezginesizan@gmail.com")
+  .split(",")
+  .map((email) => validEmail(email))
+  .filter(Boolean);
 const sender = process.env.GMAIL_SENDER || "sanchezginesizan@gmail.com";
 const maxUploadBytes = 17 * 1024 * 1024;
 const maxRequestBytes = 20 * 1024 * 1024;
@@ -76,8 +79,12 @@ function validEmail(value) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ? email : "";
 }
 
+function requestOrigin(request) {
+  return cleanText(request.get("origin"), 300).replace(/\/$/, "");
+}
+
 function requestOriginAllowed(request) {
-  const origin = cleanText(request.get("origin"), 300).replace(/\/$/, "");
+  const origin = requestOrigin(request);
   if (!origin) return false;
   if (allowedOrigins.has(origin)) return true;
   const forwardedHost = request.get("x-forwarded-host") || request.get("host");
@@ -261,7 +268,7 @@ async function sendSubmissionEmail(payload, snapshot, uploadedFiles) {
   }));
   const message = new MailComposer({
     from: `"Web Lô Esport Menorca" <${sender}>`,
-    to: recipient,
+    to: recipients,
     replyTo: payload.replyTo || undefined,
     subject: subjectFor(payload),
     text: emailText(payload, files),
@@ -289,6 +296,28 @@ async function sendSubmissionEmail(payload, snapshot, uploadedFiles) {
   });
   return { submissionId, gmailMessageId: response.data.id };
 }
+
+app.use("/api", (request, response, next) => {
+  const origin = requestOrigin(request);
+  if (origin && allowedOrigins.has(origin)) {
+    response.setHeader("Access-Control-Allow-Origin", origin);
+    response.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+    response.setHeader("Access-Control-Allow-Headers", "Content-Type");
+    response.setHeader("Access-Control-Max-Age", "86400");
+    response.vary("Origin");
+  }
+
+  if (request.method !== "OPTIONS") {
+    next();
+    return;
+  }
+
+  if (!origin || !allowedOrigins.has(origin)) {
+    response.status(403).json({ ok: false, message: "El origen del formulario no está autorizado." });
+    return;
+  }
+  response.status(204).end();
+});
 
 app.get("/api/health", (_request, response) => {
   response.json({

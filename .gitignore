@@ -7,3 +7,5 @@ dist/
 Thumbs.db
 *.log
 npm-debug.log*
+.vercel
+.env*

@@ -1,4 +1,7 @@
-const FORM_API_ENDPOINT = "/api/forms";
+const CLOUD_FORM_API_ENDPOINT = "https://loesport-web-473754422972.europe-southwest1.run.app/api/forms";
+const localHostname = ["localhost", "127.0.0.1"].includes(window.location.hostname);
+const FORM_API_ENDPOINT =
+  import.meta.env.VITE_FORM_API_ENDPOINT || (localHostname ? "/api/forms" : CLOUD_FORM_API_ENDPOINT);
 const MAX_UPLOAD_BYTES = 17 * 1024 * 1024;
 const REQUEST_TIMEOUT_MS = 90_000;
 
