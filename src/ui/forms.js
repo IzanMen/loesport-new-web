@@ -1,3 +1,21 @@
+import { collectFormSubmission, sendFormSubmission } from "./form-submission.js";
+
+function formSubject(form) {
+  const heading =
+    form.dataset.emailSubject ||
+    form.closest("section")?.querySelector("h1, h2, h3")?.textContent ||
+    document.title ||
+    "Formulario web";
+  return heading.trim();
+}
+
+function formType(form) {
+  if (form.classList.contains("inline-form")) return "newsletter";
+  if (form.classList.contains("sponsor-contact-form")) return "patrocinio";
+  if (form.classList.contains("member-form") || form.classList.contains("join-form")) return "socio";
+  return "contacto";
+}
+
 export function initForms(i18n) {
   const toast = document.querySelector(".toast");
   let toastTimer;
@@ -12,13 +30,42 @@ export function initForms(i18n) {
   }
 
   document.querySelectorAll("form[data-success]").forEach((form) => {
-    if (form.hasAttribute("data-google-form")) return;
-
-    form.addEventListener("submit", (event) => {
+    let submitting = false;
+    form.addEventListener("submit", async (event) => {
       event.preventDefault();
-      if (!form.reportValidity()) return;
-      showToast(form.dataset.success);
-      form.reset();
+      if (submitting || !form.reportValidity()) return;
+
+      submitting = true;
+      const button = form.querySelector('button[type="submit"]');
+      const originalButtonContent = button?.innerHTML;
+      try {
+        const submission = collectFormSubmission(form);
+        await sendFormSubmission({
+          form,
+          type: formType(form),
+          title: formSubject(form),
+          answers: submission.answers,
+          attachments: submission.attachments,
+          replyTo: submission.replyTo,
+          onCaptured: () => {
+            if (!button) return;
+            button.disabled = true;
+            button.setAttribute("aria-busy", "true");
+            button.textContent = "Enviando...";
+          },
+        });
+        showToast(form.dataset.success);
+        form.reset();
+      } catch (error) {
+        showToast(error.message || "No se ha podido enviar el formulario. Inténtalo de nuevo.");
+      } finally {
+        submitting = false;
+        if (button) {
+          button.disabled = false;
+          button.removeAttribute("aria-busy");
+          button.innerHTML = originalButtonContent;
+        }
+      }
     });
   });
 

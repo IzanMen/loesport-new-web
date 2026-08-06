@@ -1,4 +1,5 @@
 import { formatEquipmentPrice, getEquipmentProduct } from "../data/equipment-products.js";
+import { sendFormSubmission } from "./form-submission.js";
 
 const STORAGE_KEY = "loesport-equipment-request";
 
@@ -193,36 +194,74 @@ export function initEquipmentRequest() {
     render();
   });
 
-  form?.addEventListener("submit", (event) => {
+  let submitting = false;
+  form?.addEventListener("submit", async (event) => {
     event.preventDefault();
-    if (!form.reportValidity() || !items.length) return;
+    if (submitting || !form.reportValidity() || !items.length) return;
 
+    submitting = true;
     const data = new FormData(form);
-    const productLines = items.map((item, index) => {
+    const productAnswers = items.map((item, index) => {
       const product = getEquipmentProduct(item.productId);
       const variant = lineDescription(item).map(([label, value]) => `${label} ${value}`).join(" · ");
       const lineTotal = formatEquipmentPrice(product.price * item.quantity);
-      return `${index + 1}. ${product.name} · ${variant || "Talla única"} · ${item.quantity} ud. · ${lineTotal}`;
+      return {
+        section: "Artículos solicitados",
+        label: `${index + 1}. ${product.name}`,
+        value: `${variant || "Talla única"} · ${item.quantity} ud. · ${lineTotal}`,
+      };
     });
-    const lines = [
-      "SOLICITUD DE EQUIPACIÓN",
-      "",
-      `Nombre: ${data.get("name")}`,
-      `Email: ${data.get("email")}`,
-      `Teléfono: ${data.get("phone") || "-"}`,
-      "",
-      "ARTÍCULOS",
-      ...productLines,
-      "",
-      `Total orientativo: ${formatEquipmentPrice(requestTotal())}`,
-      `Observaciones: ${data.get("notes") || "-"}`,
-      "",
-      "Solicitud pendiente de confirmación de disponibilidad y forma de pago por parte del club.",
+    const answers = [
+      { section: "Datos de contacto", label: "Nombre y apellidos", value: data.get("name") },
+      { section: "Datos de contacto", label: "Correo electrónico", value: data.get("email") },
+      { section: "Datos de contacto", label: "Teléfono", value: data.get("phone") || "Sin respuesta" },
+      ...productAnswers,
+      { section: "Resumen", label: "Total orientativo", value: formatEquipmentPrice(requestTotal()) },
+      { section: "Resumen", label: "Observaciones", value: data.get("notes") || "Sin respuesta" },
+      { section: "Privacidad", label: "Consentimiento", value: "Aceptado" },
     ];
-
-    const subject = encodeURIComponent(`Solicitud de equipación · ${itemCount()} artículo${itemCount() === 1 ? "" : "s"}`);
-    const body = encodeURIComponent(lines.join("\n"));
-    window.location.href = `mailto:loesport@gmail.com?subject=${subject}&body=${body}`;
+    const button = form.querySelector('button[type="submit"]');
+    const originalButtonContent = button?.innerHTML;
+    try {
+      await sendFormSubmission({
+        form,
+        type: "equipacion",
+        title: "Solicitud de equipación",
+        answers,
+        replyTo: String(data.get("email") || ""),
+        captureTarget: drawer.querySelector(".request-drawer-content") || form,
+        onCaptured: () => {
+          if (!button) return;
+          button.disabled = true;
+          button.setAttribute("aria-busy", "true");
+          button.textContent = "Enviando...";
+        },
+      });
+      form.reset();
+      items = [];
+      render();
+      closeDrawer();
+      const toast = document.querySelector(".toast");
+      if (toast) {
+        toast.textContent = "Solicitud enviada correctamente.";
+        toast.classList.add("is-visible");
+        window.setTimeout(() => toast.classList.remove("is-visible"), 3800);
+      }
+    } catch (error) {
+      const toast = document.querySelector(".toast");
+      if (toast) {
+        toast.textContent = error.message || "No se ha podido enviar la solicitud.";
+        toast.classList.add("is-visible");
+        window.setTimeout(() => toast.classList.remove("is-visible"), 4800);
+      }
+    } finally {
+      submitting = false;
+      if (button) {
+        button.disabled = false;
+        button.removeAttribute("aria-busy");
+        button.innerHTML = originalButtonContent;
+      }
+    }
   });
 
   document.addEventListener("keydown", (event) => {

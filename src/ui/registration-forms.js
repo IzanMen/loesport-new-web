@@ -1,150 +1,15 @@
 import altaLicensePdfUrl from "../../assets/documents/solicitud-alta-licencia-rfea-2026.pdf?url";
 import renewalLicensePdfUrl from "../../assets/documents/solicitud-renovacion-licencia-rfea-2026.pdf?url";
-
-const INSCRIPTION_GROUP_OPTIONS = [
-  {
-    value: "ATLETISMO MAÓ Escolar",
-    title: "Maó · Escuela Sub-8/Sub-10/Sub-12",
-    meta: "Nacidos en 2016 y posteriores",
-    details: [
-      "Inicio: lunes 14 de septiembre de 2026",
-      "Opción 1: lunes y miércoles · 17:30-18:30",
-      "Novedad · opción 2: martes y jueves · 17:30-18:30",
-      "Novedad · opción 3: 2 días o más a escoger entre lunes, martes, miércoles y jueves",
-      "1 día: 22 €/mes",
-      "2 días o más: 27 €/mes",
-      "Matrícula: 25 €",
-    ],
-  },
-  {
-    value: "ATLETISMO MAÓ Escolar",
-    title: "Maó · Escuela Sub-14/Sub-16/Sub-18",
-    meta: "Nacidos 2010-2015",
-    details: [
-      "Inicio escuela: lunes 14 de septiembre de 2026",
-      "Opción 1: lunes y miércoles · escuela 17:30-18:30",
-      "Novedad · opción 2: martes y jueves · escuela 17:30-18:30",
-      "Novedad · opción 3: 2 días o más a escoger entre lunes, martes, miércoles y jueves",
-      "Tecnificación: desde las 18:30",
-      "1 día: 25 €/mes",
-      "2 días: 30 €/mes",
-      "3 días: 35 €/mes",
-      "4-5 días: 40 €/mes",
-      "Matrícula: 25 €",
-    ],
-  },
-  {
-    value: "ATLETISMO MAÓ Tecnificación (a partir de nacidos 2010)",
-    title: "Maó · Tecnificación",
-    meta: "Sub-14 en adelante",
-    details: ["Inicio: 2 de septiembre de 2026", "Martes y jueves", "A partir de las 18:30", "Cuota según los días del grupo del atleta"],
-  },
-  {
-    value: "ATLETISMO MAÓ Adultos AVANZADO (Fondo) 18:30h",
-    title: "Maó · Adultos fondistas",
-    meta: "Nacidos 2009 y anteriores",
-    details: ["Lun/mié/vie 18:30-19:30 · sábado 09:30-11:00", "1 día: 25 €/mes", "2 días: 30 €/mes", "3 días: 35 €/mes", "4-5 días: 40 €/mes", "Matrícula: 25 € solo nuevas altas desde Sub-20"],
-  },
-  {
-    value: "ATLETISMO MAÓ Adultos INICIACIÓN (Esport&Salut) 17:30h",
-    title: "Maó · Madres y padres / Running iniciación",
-    meta: "Mientras entrena la escuela",
-    details: [
-      "Opción 1: lunes y miércoles · 17:30-18:30",
-      "Novedad · opción 2: martes y jueves · 17:30-18:30",
-      "Novedad · opción 3: 2 días o más a escoger entre lunes, martes, miércoles y jueves",
-      "1 día: suplemento de 10 €/mes",
-      "2 días o más: suplemento de 15 €/mes",
-    ],
-  },
-  {
-    value: "ATLETISMO ALAIOR Escolar",
-    title: "Alaior · Escuela",
-    meta: "Nacidos 2010 y posteriores",
-    details: ["Inicio: martes 15 de septiembre de 2026", "Martes y jueves · 17:15-18:15", "1 día: 18 €/mes", "2 días: 25 €/mes", "Matrícula: 25 €"],
-  },
-  {
-    value: "ATLETISMO ALAIOR Adultos (Esport&Salut) 17:15h",
-    title: "Alaior · Adultos 17:15",
-    meta: "Entrenamiento de adultos",
-    details: ["Inicio: martes 1 de septiembre de 2026", "Martes y jueves · 17:15-18:15", "1 día: 15 €/mes", "2 días: 20 €/mes", "3 días: 23 €/mes", "Matrícula: 25 € solo nuevas altas desde Sub-20"],
-  },
-  {
-    value: "ATLETISMO ALAIOR Adultos, grupo fondo 18:00h",
-    title: "Alaior · Adultos running",
-    meta: "Entrenamiento para correr y progresar",
-    details: ["Inicio: martes 1 de septiembre de 2026", "Martes y jueves · 17:15-18:15", "1 día: 15 €/mes", "2 días: 20 €/mes", "3 días: 23 €/mes", "Matrícula: 25 € solo nuevas altas desde Sub-20"],
-  },
-  {
-    value: 'ATLETISMO ALAIOR "WOMEN"',
-    title: "Alaior · Women's iniciación",
-    meta: "Mujeres adultas",
-    details: ["Inicio: sábado 5 de septiembre de 2026", "Sábados · 08:45-09:45", "1 día: 15 €/mes"],
-  },
-  {
-    value: "ATLETISMO MERCADAL Escolar",
-    title: "Es Mercadal · Escuela",
-    meta: "Niños y niñas de 5 a 14 años",
-    details: ["Inicio: martes 15 de septiembre de 2026", "Días y horario por definir", "1 día: 18 €/mes", "2 días: 25 €/mes", "Matrícula: 25 €"],
-  },
-];
-
-const TRIAL_GROUP_OPTIONS = [
-  {
-    value: "ATLETISMO ALAIOR (Escolar)",
-    title: "Alaior · Escuela",
-    meta: "Nacidos 2010 y posteriores",
-    details: ["Martes y jueves · 17:15-18:15", "1 día: 18 €/mes", "2 días: 25 €/mes"],
-  },
-  {
-    value: "ATLETISMO ALAIOR (Adultos)",
-    title: "Alaior · Adultos 17:15 / running",
-    meta: "Entrenamiento de adultos",
-    details: ["Martes y jueves · 17:15-18:15", "1 día: 15 €/mes", "2 días: 20 €/mes", "3 días: 23 €/mes"],
-  },
-  {
-    value: "ATLETISMO WOMENS ALAIOR (Sábados de 8:45h a 9:45h)",
-    title: "Alaior · Women's iniciación",
-    meta: "Mujeres adultas",
-    details: ["Sábados", "08:45-09:45", "Polideportivo municipal", "15 €/mes"],
-  },
-  {
-    value: "ATLETISMO MAÓ (Escolar)",
-    title: "Maó · Escuela Sub-8 a Sub-18",
-    meta: "Nacidos 2010 y posteriores",
-    details: ["Opción 1: lun/mié · opción 2: mar/jue · opción 3: días a escoger", "Escuela 17:30-18:30", "Tecnificación Sub-14 en adelante desde 18:30", "Sub-8 a Sub-12: 1 día 22 € · 2 días o más 27 €", "Sub-14 a Sub-18: 1 día 25 € · 2 días 30 € · 3 días 35 € · 4-5 días 40 €"],
-  },
-  {
-    value: "ATLETISMO MAÓ (Adultos)",
-    title: "Maó · Adultos fondistas/velocistas",
-    meta: "Nacidos 2009 y anteriores",
-    details: ["Lun/mié/vie por la tarde · sábado según grupo", "1 día: 25 €", "2 días: 30 €", "3 días: 35 €", "4-5 días: 40 €"],
-  },
-  {
-    value: "ATLETISMO MERCADAL (Escolar)",
-    title: "Es Mercadal · Escuela",
-    meta: "Niños y niñas de 5 a 14 años",
-    details: ["Días y horario por definir", "1 día: 18 €/mes", "2 días: 25 €/mes"],
-  },
-  {
-    value:
-      "GRUPO ENTRENAMIENTO PARA PAPÁS I MAMÁS A LA MISMA HORA QUE LOS NIÑOS (Alaior) - Grupo completo. Marcar esta opción para quedar en lista de espera. Contactaremos cuando tengamos plazas disponibles",
-    title: "Alaior · Madres y padres",
-    meta: "A la misma hora que la escuela",
-    details: ["Martes y jueves", "17:15-18:15", "Suplemento 10 €/mes 1 día o 15 €/mes 2 días"],
-  },
-  {
-    value: "GRUPO ENTRENAMIENTO PARA PAPÁS I MAMÁS A LA MISMA HORA QUE LOS NIÑOS (Maó)",
-    title: "Maó · Madres y padres / Running iniciación",
-    meta: "A la misma hora que la escuela",
-    details: ["Opción 1: lun/mié · opción 2: mar/jue · opción 3: días a escoger", "17:30-18:30", "Suplemento 10 €/mes 1 día o 15 €/mes 2 días o más"],
-  },
-];
+import {
+  TRAINING_GROUPS,
+  TRAINING_LOCATIONS,
+  getTrainingGroup,
+  getTrainingLocation,
+} from "../data/training-groups.js";
+import { sendFormSubmission } from "./form-submission.js";
 
 export const FORM_DEFINITIONS = {
   inscripcion: {
-    action:
-      "https://docs.google.com/forms/d/e/1FAIpQLSdMWe7S9acL9BdQe7rmp6-As_kgEJrBNBTnpAgoi3nxqNa0wA/formResponse",
     title: "Inscripción",
     eyebrow: "Temporada 2026-27",
     intro: "Completa el alta o la renovación para entrenar con Lô Esport Menorca.",
@@ -154,18 +19,24 @@ export const FORM_DEFINITIONS = {
       "Bienvenido a Lô Esport. Hemos recibido correctamente tus datos y te deseamos una feliz temporada.",
     sections: [
       {
-        title: "Actividad",
-        description: "Selecciona una o varias actividades y dinos tus datos principales.",
+        title: "Elige tu grupo",
+        description: "Confirma el grupo y elige cuántos días y cuáles vas a entrenar.",
         fields: [
           {
-            type: "checkboxes",
+            type: "group-selection",
             entry: "2005620554",
-            label: "Seleccione para hacer inscripción a:",
+            dayCountEntry: "167310009",
+            daysEntry: "712946819",
+            submissionKey: "inscripcion",
+            label: "Dónde y cuándo quieres entrenar",
             required: true,
-            help:
-              "Cada opción incluye sede, edad orientativa, inicio, horario y el precio exacto según los días de entrenamiento.",
-            options: INSCRIPTION_GROUP_OPTIONS,
           },
+        ],
+      },
+      {
+        title: "Datos del participante",
+        description: "Ahora completa los datos de la persona que va a entrenar.",
+        fields: [
           { type: "text", entry: "1045781291", label: "Población de residencia", required: true },
           {
             type: "text",
@@ -283,77 +154,6 @@ export const FORM_DEFINITIONS = {
         ],
       },
       {
-        title: "Entrenamientos",
-        fields: [
-          {
-            type: "checkboxes",
-            entry: "167310009",
-            label: "Indique cuántos días de entrenamiento semanal realizará.",
-            help:
-              "En Maó, las opciones de escuela y madres/padres son: opción 1 lunes y miércoles, opción 2 martes y jueves, y opción 3 dos días o más a escoger entre lunes, martes, miércoles y jueves.",
-            options: [
-              "1 día a la semana",
-              "2 días a la semana",
-              "3 días a la semana",
-              "4 días a la semana (tecnificación)",
-              "5 días a la semana (tecnificación)",
-            ],
-          },
-          {
-            type: "training-options",
-            entry: "712946819",
-            label: "Elige la opción o los días concretos de entrenamiento",
-            help:
-              "Para escuela de Maó y grupo de madres/padres. Si tu grupo no usa estas opciones, elige \"Mi grupo tiene otro horario\" y escríbelo.",
-            required: true,
-            options: [
-              {
-                title: "Opción 1",
-                summary: "Lunes y miércoles",
-                detail: "17:30-18:30",
-                days: ["Lunes", "Miércoles"],
-              },
-              {
-                title: "Novedad · Opción 2",
-                summary: "Martes y jueves",
-                detail: "17:30-18:30",
-                days: ["Martes", "Jueves"],
-              },
-              {
-                title: "Novedad · Opción 3",
-                summary: "2 días o más a escoger",
-                detail: "Entre lunes, martes, miércoles y jueves",
-                customDays: true,
-              },
-              {
-                title: "Mi grupo tiene otro horario",
-                summary: "Lo indicaré manualmente",
-                detail: "Para Alaior, Es Mercadal, adultos fondo/velocidad u otros casos",
-                manual: true,
-              },
-            ],
-          },
-          {
-            type: "radio",
-            entry: "1166853484",
-            label:
-              'Grupo para madres y padres mientras entrena la escuela. Maó: lun/mié o mar/jue, 17:30-18:30. Alaior: martes y jueves, 17:15-18:15. Indique si quiere participar añadiendo el suplemento sobre la cuota de su hijo/a.',
-            options: [
-              "QUIERO PARTICIPAR, 1 día a la semana",
-              "QUIERO PARTICIPAR, 2 días a la semana",
-              "NO quiero participar",
-            ],
-            other: true,
-          },
-          {
-            type: "text",
-            entry: "1858276911",
-            label:
-              'En caso de participar en el "GRUPO PARA PADRES Y MADRES" Indíque su nombre y apellidos (madre, padre o ambos)',
-          },
-        ],
-      },
-      {
         title: "Forma de pago",
         description:
           "Puedes pagar mes a mes o hacer un solo pago al inicio de temporada con una bonificación del 5 % sobre el total de la cuota.",
@@ -365,8 +165,13 @@ export const FORM_DEFINITIONS = {
             required: true,
             options: [
               {
-                label: "Pago mensual por domiciliación bancaria",
-                submissionValue: "Mensual · domiciliación bancaria",
+                label: "Pago mensual por domiciliación bancaria · El club ya tiene mis datos bancarios",
+                submissionValue: "Mensual · domiciliación bancaria, datos bancarios ya disponibles",
+                submitAsOther: true,
+              },
+              {
+                label: "Pago mensual por domiciliación bancaria · Soy nuevo/a en el club",
+                submissionValue: "Mensual · domiciliación bancaria, nuevo/a en el club",
                 submitAsOther: true,
               },
               {
@@ -392,16 +197,20 @@ export const FORM_DEFINITIONS = {
             entry: "43401703",
             label:
               'Para pagos por domiciliación, los recibos se cargarán en cuenta el día 4. Las bajas deben comunicarse antes del día 20 del mes anterior mediante el formulario de "Solicitud de baja". Autorizo a Lô Esport Menorca a cargar los recibos derivados de la actividad en cuenta.',
+            required: true,
+            showWhenEntry: "506119602",
+            showWhenValueIncludes: "domiciliación",
             options: ["AUTORIZO"],
           },
           {
-            type: "textarea",
+            type: "bank-details",
             entry: "1121669907",
-            label:
-              'NÚMERO DE CUENTA BANCARIA\n\nSi has elegido domiciliación y eres nuevo/a, indica el IBAN. Si el club ya tiene tus datos y no han cambiado, escribe "Igual que la temporada anterior". Para pagos en efectivo, escribe "No procede".',
+            label: "Datos bancarios para domiciliación",
             required: true,
-            rows: 2,
-            autocomplete: "off",
+            showWhenEntry: "506119602",
+            showWhenValueIncludes: "nuevo/a en el club",
+            help:
+              "Necesario solo si eliges domiciliación y el club todavía no tiene tus datos bancarios.",
           },
         ],
       },
@@ -472,17 +281,28 @@ export const FORM_DEFINITIONS = {
     ],
   },
   preinscripcion: {
-    action:
-      "https://docs.google.com/forms/d/e/1FAIpQLSdffePyj9_NxbcwiocttaZMJQB6IhWPI8zlme8Q78kThlwl9w/formResponse",
-    title: "Preinscripción",
+    title: "Prueba gratuita",
     eyebrow: "Prueba una semana",
     intro:
-      "Esta preinscripción te permite venir a probar nuestra actividad durante una semana. Después deberás formalizar la inscripción en nuestra web.",
+      "Ven a probar gratis nuestra actividad durante una semana. Después podrás formalizar la inscripción en nuestra web.",
     submitLabel: "Solicitar prueba",
     successTitle: "Solicitud recibida",
     success:
-      "Hemos recibido tu solicitud para probar la actividad. Desde el club contactaremos contigo para asignarte un grupo.",
+      "Hemos recibido tu solicitud con el grupo y los días elegidos. Desde el club contactaremos contigo para confirmar la prueba.",
     sections: [
+      {
+        title: "Elige tu grupo",
+        description: "Confirma el grupo y elige cuántos días y cuáles quieres venir a probar.",
+        fields: [
+          {
+            type: "group-selection",
+            entry: "1264281896",
+            submissionKey: "preinscripcion",
+            label: "Dónde y cuándo quieres entrenar",
+            required: true,
+          },
+        ],
+      },
       {
         title: "Datos del participante",
         fields: [
@@ -503,28 +323,18 @@ export const FORM_DEFINITIONS = {
             options: ["FEMENINO", "MASCULINO"],
           },
           {
-            type: "checkboxes",
-            entry: "1264281896",
-            label: "Quiero probar durante 1 semana la actividad de:",
-            required: true,
-            help:
-              "Cada opción incluye la información básica de horario y cuota para elegir sin tener que revisar otra página.",
-            options: TRIAL_GROUP_OPTIONS,
-          },
-          {
-            type: "text",
-            entry: "831247409",
-            label:
-              'En caso de participar en el "GRUPO PARA PADRES Y MADRES" Indíque su nombre y apellidos (madre, padre o ambos)',
-          },
-          {
             type: "tel",
             entry: "97509970",
             label: "Teléfono de contacto",
             required: true,
             autocomplete: "tel",
           },
-          { type: "textarea", entry: "1933709984", label: "Observaciones o sugerencias:" },
+          {
+            type: "textarea",
+            entry: "1933709984",
+            label: "Observaciones o sugerencias:",
+            appendGroupSelection: true,
+          },
         ],
       },
       {
@@ -562,8 +372,6 @@ export const FORM_DEFINITIONS = {
     ],
   },
   baja: {
-    action:
-      "https://docs.google.com/forms/d/e/1FAIpQLSeU7EANvKoiskWkCxwBshrWIvv724VenGGO_a-GY5CeNYzrpQ/formResponse",
     title: "Solicitud de baja",
     eyebrow: "Gestión de actividad",
     intro: "La baja debe solicitarse antes del día 20 del mes anterior a finalizar la actividad.",
@@ -623,8 +431,6 @@ export const FORM_DEFINITIONS = {
     ],
   },
   licencias: {
-    action:
-      "https://docs.google.com/forms/d/e/1FAIpQLSfs_2fTOwvmd8Vx_XinsH7Fvy4HJMhO3Of6kXteU-xb8IAT2w/formResponse",
     title: "Licencias de atletismo",
     eyebrow: "Temporada 2026-27",
     intro: "Solicita el alta o la renovación de tu licencia autonómica o nacional.",
@@ -823,6 +629,8 @@ export const FORM_DEFINITIONS = {
   },
 };
 
+const groupSelectionControllers = new WeakMap();
+
 function createTextElement(tag, className, text) {
   const element = document.createElement(tag);
   if (className) element.className = className;
@@ -845,6 +653,8 @@ function createInput(field) {
     input.dataset.fileInput = "";
     if (field.requiredWhenNieEntry) input.dataset.requiredWhenNieEntry = field.requiredWhenNieEntry;
     if (field.requiredWhenMinorEntry) input.dataset.requiredWhenMinorEntry = field.requiredWhenMinorEntry;
+  } else if (field.appendGroupSelection) {
+    input.dataset.appendGroupSelection = field.entry;
   } else {
     input.name = `entry.${field.entry}`;
   }
@@ -855,6 +665,388 @@ function createInput(field) {
   if (field.inputmode) input.inputMode = field.inputmode;
   input.id = `entry-${field.entry}`;
   return input;
+}
+
+function createHiddenSubmissionInput(entry) {
+  if (!entry) return null;
+  const input = document.createElement("input");
+  input.type = "hidden";
+  input.name = `entry.${entry}`;
+  return input;
+}
+
+function createFlowStep(number, title, description) {
+  const step = document.createElement("section");
+  step.className = "registration-flow-step";
+
+  const heading = document.createElement("header");
+  heading.className = "registration-flow-heading";
+  const marker = createTextElement("span", "registration-flow-number", String(number).padStart(2, "0"));
+  marker.setAttribute("aria-hidden", "true");
+  heading.append(marker, createTextElement("h3", "", title));
+  if (description) heading.append(createTextElement("p", "", description));
+
+  const options = document.createElement("div");
+  options.className = "registration-flow-options";
+  step.append(heading, options);
+  return { step, heading, options };
+}
+
+function createFlowChoice({ type, name, id, value, title, meta, detail, className = "" }) {
+  const label = document.createElement("label");
+  label.className = `registration-flow-choice ${className}`.trim();
+
+  const input = document.createElement("input");
+  input.type = type;
+  input.name = name;
+  input.id = id;
+  input.value = value;
+
+  const marker = document.createElement("span");
+  marker.className = "registration-flow-marker";
+  marker.setAttribute("aria-hidden", "true");
+
+  const text = document.createElement("span");
+  text.className = "registration-flow-choice-text";
+  text.append(createTextElement("strong", "", title));
+  if (meta) text.append(createTextElement("span", "", meta));
+  if (detail) text.append(createTextElement("small", "", detail));
+
+  label.append(input, marker, text);
+  return { label, input };
+}
+
+function formatDayCount(count) {
+  return `${count} ${count === 1 ? "día" : "días"}`;
+}
+
+function createGroupSelectionField(wrapper, field) {
+  wrapper.classList.add("registration-group-flow-field");
+  wrapper.dataset.groupSelection = "";
+
+  const requestedGroupId = new URLSearchParams(window.location.search).get("grupo");
+  const requestedGroup = getTrainingGroup(requestedGroupId);
+  const contextualGroup = requestedGroup?.formValues[field.submissionKey] ? requestedGroup : null;
+  const stepOffset = contextualGroup ? 1 : 0;
+  const state = {
+    locationId: contextualGroup?.location || "",
+    group: null,
+    dayCount: null,
+    selectedDays: new Set(),
+  };
+
+  const groupSubmission = createHiddenSubmissionInput(field.entry);
+  const dayCountSubmission = createHiddenSubmissionInput(field.dayCountEntry);
+  const daysSubmission = createHiddenSubmissionInput(field.daysEntry);
+
+  const flow = document.createElement("div");
+  flow.className = "registration-group-flow";
+
+  const locationStep = createFlowStep(
+    1,
+    "¿Dónde quieres entrenar?",
+    "Elige una sede para ver únicamente los grupos de ese pueblo.",
+  );
+  locationStep.options.classList.add("registration-location-options");
+
+  const groupStep = createFlowStep(
+    2 - stepOffset,
+    contextualGroup ? "Grupo seleccionado" : "Elige tu grupo",
+    contextualGroup
+      ? "Has llegado desde la página de este grupo."
+      : "Solo aparecen los grupos de la sede que acabas de elegir.",
+  );
+  groupStep.options.classList.add("registration-group-options");
+  groupStep.step.hidden = !contextualGroup;
+
+  const countStep = createFlowStep(
+    3 - stepOffset,
+    "¿Cuántos días quieres entrenar?",
+    "Verás únicamente las opciones disponibles para este grupo.",
+  );
+  countStep.options.classList.add("registration-count-options");
+  countStep.step.hidden = true;
+
+  const daysStep = createFlowStep(
+    4 - stepOffset,
+    "¿Qué días vas a venir?",
+    "Marca los días concretos de entrenamiento.",
+  );
+  daysStep.options.classList.add("registration-specific-day-options");
+  daysStep.step.hidden = true;
+  const dayStatus = createTextElement("p", "registration-day-status", "");
+  daysStep.step.append(dayStatus);
+
+  const error = createTextElement("p", "registration-flow-error", "");
+  error.hidden = true;
+  error.setAttribute("role", "alert");
+
+  function clearError() {
+    error.hidden = true;
+    error.textContent = "";
+  }
+
+  function showError(message, target, focus = false) {
+    error.textContent = message;
+    error.hidden = false;
+    if (focus) target?.focus();
+    return false;
+  }
+
+  function resetSchedule() {
+    state.group = null;
+    state.dayCount = null;
+    state.selectedDays.clear();
+    groupSubmission.value = "";
+    if (dayCountSubmission) dayCountSubmission.value = "";
+    if (daysSubmission) daysSubmission.value = "";
+    countStep.options.replaceChildren();
+    daysStep.options.replaceChildren();
+    dayStatus.textContent = "";
+    countStep.step.hidden = true;
+    daysStep.step.hidden = true;
+  }
+
+  function selectedDayObjects() {
+    if (!state.group) return [];
+    return state.group.days.filter((day) => state.selectedDays.has(day.id));
+  }
+
+  function updateSubmissionValues() {
+    if (!state.group || !state.dayCount) return;
+    const selectedDays = selectedDayObjects();
+    if (dayCountSubmission) {
+      dayCountSubmission.value = `${state.dayCount.count} ${state.dayCount.count === 1 ? "día" : "días"} a la semana`;
+    }
+    if (daysSubmission) {
+      const schedule = selectedDays
+        .map((day) => `${day.label}${day.detail ? ` (${day.detail})` : ""}`)
+        .join(" · ");
+      daysSubmission.value = `${state.group.title} · ${formatDayCount(state.dayCount.count)} por semana · ${schedule}`;
+    }
+    dayStatus.replaceChildren(
+      String(selectedDays.length),
+      " de ",
+      String(state.dayCount.count),
+      " días seleccionados",
+    );
+  }
+
+  function renderDays(dayCount) {
+    state.dayCount = dayCount;
+    state.selectedDays.clear();
+    daysStep.options.replaceChildren();
+    clearError();
+
+    const allowedIds = dayCount.allowedDays || state.group.days.map((day) => day.id);
+    const requiredIds = new Set(dayCount.requiredDays || []);
+    const fixedIds = new Set(requiredIds);
+    if (allowedIds.length === dayCount.count) allowedIds.forEach((id) => fixedIds.add(id));
+    fixedIds.forEach((id) => state.selectedDays.add(id));
+
+    state.group.days
+      .filter((day) => allowedIds.includes(day.id))
+      .forEach((day, index) => {
+        const choice = createFlowChoice({
+          type: "checkbox",
+          name: `training-days-${field.entry}`,
+          id: `training-day-${field.entry}-${day.id}`,
+          value: day.id,
+          title: day.label,
+          meta: day.detail,
+          detail: fixedIds.has(day.id) ? "Incluido en esta opción" : "",
+          className: "registration-specific-day-choice",
+        });
+        choice.input.checked = state.selectedDays.has(day.id);
+        choice.input.disabled = fixedIds.has(day.id);
+        choice.label.classList.toggle("is-fixed", fixedIds.has(day.id));
+        choice.input.addEventListener("change", () => {
+          clearError();
+          if (choice.input.checked && state.selectedDays.size >= dayCount.count) {
+            choice.input.checked = false;
+            showError(`Solo puedes elegir ${formatDayCount(dayCount.count)}.`, choice.input);
+            return;
+          }
+
+          if (choice.input.checked) state.selectedDays.add(day.id);
+          else state.selectedDays.delete(day.id);
+          updateSubmissionValues();
+        });
+        if (index === 0) choice.input.dataset.firstTrainingDay = "";
+        daysStep.options.append(choice.label);
+      });
+
+    daysStep.step.hidden = false;
+    updateSubmissionValues();
+  }
+
+  function selectDayCount(dayCount) {
+    renderDays(dayCount);
+  }
+
+  function renderDayCounts(group) {
+    countStep.options.replaceChildren();
+    daysStep.step.hidden = true;
+    group.dayCounts.forEach((dayCount, index) => {
+      const choice = createFlowChoice({
+        type: "radio",
+        name: `training-count-${field.entry}`,
+        id: `training-count-${field.entry}-${dayCount.count}`,
+        value: String(dayCount.count),
+        title: formatDayCount(dayCount.count),
+        meta: dayCount.price,
+        detail: dayCount.note,
+        className: "registration-count-choice",
+      });
+      choice.input.required = true;
+      choice.input.addEventListener("change", () => {
+        clearError();
+        selectDayCount(dayCount);
+      });
+      countStep.options.append(choice.label);
+
+      if (group.dayCounts.length === 1 && index === 0) {
+        choice.input.checked = true;
+        selectDayCount(dayCount);
+      }
+    });
+    countStep.step.hidden = false;
+  }
+
+  function selectGroup(group) {
+    state.group = group;
+    state.dayCount = null;
+    state.selectedDays.clear();
+    groupSubmission.value = group.formValues[field.submissionKey];
+    if (dayCountSubmission) dayCountSubmission.value = "";
+    if (daysSubmission) daysSubmission.value = "";
+    clearError();
+    renderDayCounts(group);
+  }
+
+  function renderGroups(locationId, fixedGroup = null) {
+    groupStep.options.replaceChildren();
+    resetSchedule();
+    const groups = fixedGroup
+      ? [fixedGroup]
+      : TRAINING_GROUPS.filter((group) => group.location === locationId);
+
+    groups.forEach((group, index) => {
+      const location = getTrainingLocation(group.location);
+      const choice = createFlowChoice({
+        type: "radio",
+        name: `training-group-${field.entry}`,
+        id: `training-group-${field.entry}-${group.id}`,
+        value: group.id,
+        title: group.title,
+        meta: `${location.title} · ${group.category}`,
+        detail: group.schedule,
+        className: "registration-group-choice",
+      });
+      choice.input.required = true;
+      choice.input.addEventListener("change", () => selectGroup(group));
+      groupStep.options.append(choice.label);
+
+      if ((fixedGroup || groups.length === 1) && index === 0) {
+        choice.input.checked = true;
+        selectGroup(group);
+      }
+    });
+    groupStep.step.hidden = false;
+  }
+
+  function selectLocation(locationId) {
+    state.locationId = locationId;
+    clearError();
+    renderGroups(locationId);
+  }
+
+  if (!contextualGroup) {
+    TRAINING_LOCATIONS.forEach((location) => {
+      const choice = createFlowChoice({
+        type: "radio",
+        name: `training-location-${field.entry}`,
+        id: `training-location-${field.entry}-${location.id}`,
+        value: location.id,
+        title: location.title,
+        meta: "Ver grupos de esta sede",
+        className: "registration-location-choice",
+      });
+      choice.input.required = true;
+      choice.input.addEventListener("change", () => selectLocation(location.id));
+      locationStep.options.append(choice.label);
+    });
+    flow.append(locationStep.step);
+  }
+
+  flow.append(groupStep.step, countStep.step, daysStep.step, error);
+
+  if (contextualGroup) {
+    renderGroups(contextualGroup.location, contextualGroup);
+    const changeLink = createTextElement("a", "registration-change-group", "Cambiar de grupo");
+    changeLink.href = window.location.pathname;
+    groupStep.heading.append(changeLink);
+  }
+
+  wrapper.append(flow, groupSubmission);
+  if (dayCountSubmission) wrapper.append(dayCountSubmission);
+  if (daysSubmission) wrapper.append(daysSubmission);
+
+  groupSelectionControllers.set(wrapper, {
+    validate({ focus = false } = {}) {
+      if (!state.locationId) {
+        return showError(
+          "Elige dónde quieres entrenar.",
+          locationStep.options.querySelector("input"),
+          focus,
+        );
+      }
+      if (!state.group) {
+        return showError("Elige un grupo.", groupStep.options.querySelector("input"), focus);
+      }
+      if (!state.dayCount) {
+        return showError(
+          "Elige cuántos días quieres entrenar.",
+          countStep.options.querySelector("input"),
+          focus,
+        );
+      }
+      if (state.selectedDays.size !== state.dayCount.count) {
+        return showError(
+          `Selecciona exactamente ${formatDayCount(state.dayCount.count)}.`,
+          daysStep.options.querySelector("input:not(:disabled)") || countStep.options.querySelector("input:checked"),
+          focus,
+        );
+      }
+
+      if (state.dayCount.restriction === "female") {
+        const selectedSex = wrapper.closest("form")?.querySelector('input[name="entry.984531499"]:checked');
+        if (selectedSex?.value === "MASCULINO") {
+          return showError(
+            "La opción de 3 días de este grupo es solo para mujeres. Elige 1 o 2 días.",
+            countStep.options.querySelector("input:checked"),
+            focus,
+          );
+        }
+      }
+
+      clearError();
+      return true;
+    },
+    getSummary() {
+      if (!state.group || !state.dayCount) return [];
+      const location = getTrainingLocation(state.group.location);
+      const selectedDays = selectedDayObjects().map(
+        (day) => `${day.label}${day.detail ? ` · ${day.detail}` : ""}`,
+      );
+      return [
+        `Sede: ${location.title}`,
+        `Grupo: ${state.group.title}`,
+        `Días por semana: ${state.dayCount.count}`,
+        `Días elegidos: ${selectedDays.join(" | ")}`,
+      ];
+    },
+  });
 }
 
 function createChoice(field, option, index, isOther = false) {
@@ -873,6 +1065,8 @@ function createChoice(field, option, index, isOther = false) {
   const optionValue =
     typeof option === "object" ? option.value || option.submissionValue || option.label || option.title : option;
   input.value = isOther || submitsAsOther ? "__other_option__" : optionValue;
+  input.dataset.optionLabel = optionLabel;
+  input.dataset.submissionValue = optionValue;
   input.id = `entry-${field.entry}-${index}`;
   if (field.required && field.type === "radio") input.required = true;
 
@@ -944,7 +1138,7 @@ function createTrainingOptionsField(wrapper, field) {
   stateInput.name = `entry.${field.entry}`;
   stateInput.id = `entry-${field.entry}`;
   stateInput.className = "registration-training-value";
-  stateInput.placeholder = "Selecciona una opción para continuar";
+  stateInput.placeholder = "Selecciona los días para continuar";
   stateInput.readOnly = true;
   if (field.required) stateInput.required = true;
 
@@ -1004,7 +1198,7 @@ function createTrainingOptionsField(wrapper, field) {
 
     daysPanel.hidden = option?.dataset.customDays !== "true";
     manualPanel.hidden = option?.dataset.manual !== "true";
-    stateInput.setCustomValidity(stateInput.value ? "" : "Selecciona una opción o indica los días concretos.");
+    stateInput.setCustomValidity(stateInput.value ? "" : "Selecciona o indica los días concretos.");
   }
 
   field.options.forEach((option, index) => {
@@ -1048,10 +1242,61 @@ function createTrainingOptionsField(wrapper, field) {
   wrapper.append(choices, daysPanel, manualPanel, stateInput);
 }
 
+function createBankDetailsField(wrapper, field) {
+  const hidden = document.createElement("input");
+  hidden.type = "hidden";
+  hidden.name = `entry.${field.entry}`;
+  hidden.id = `entry-${field.entry}`;
+  hidden.dataset.bankDetailsValue = "";
+
+  const fields = document.createElement("div");
+  fields.className = "registration-bank-grid";
+
+  const accountHolder = document.createElement("label");
+  accountHolder.className = "registration-bank-input";
+  accountHolder.append(createTextElement("span", "", "Titular de la cuenta"));
+  const accountHolderInput = document.createElement("input");
+  accountHolderInput.type = "text";
+  accountHolderInput.autocomplete = "name";
+  accountHolderInput.dataset.conditionalRequiredInput = "";
+  accountHolder.append(accountHolderInput);
+
+  const iban = document.createElement("label");
+  iban.className = "registration-bank-input";
+  iban.append(createTextElement("span", "", "IBAN"));
+  const ibanInput = document.createElement("input");
+  ibanInput.type = "text";
+  ibanInput.autocomplete = "off";
+  ibanInput.inputMode = "text";
+  ibanInput.placeholder = "ES00 0000 0000 0000 0000 0000";
+  ibanInput.dataset.conditionalRequiredInput = "";
+  iban.append(ibanInput);
+
+  function updateValue() {
+    hidden.value = [
+      accountHolderInput.value.trim() ? `Titular: ${accountHolderInput.value.trim()}` : "",
+      ibanInput.value.trim() ? `IBAN: ${ibanInput.value.trim().toUpperCase()}` : "",
+    ]
+      .filter(Boolean)
+      .join("\n");
+  }
+
+  accountHolderInput.addEventListener("input", updateValue);
+  ibanInput.addEventListener("input", updateValue);
+  fields.append(accountHolder, iban);
+  wrapper.classList.add("registration-bank-field");
+  wrapper.append(fields, hidden);
+}
+
 function createField(field) {
   const wrapper = document.createElement("fieldset");
   wrapper.className = `registration-field${field.legal ? " is-legal" : ""}`;
   wrapper.dataset.entry = field.entry;
+  if (field.showWhenEntry) {
+    wrapper.dataset.showWhenEntry = field.showWhenEntry;
+    if (field.showWhenValueIncludes) wrapper.dataset.showWhenValueIncludes = field.showWhenValueIncludes;
+    if (field.required) wrapper.dataset.conditionalRequired = "true";
+  }
 
   const legend = createTextElement("legend", "registration-label", field.label);
   if (field.required) {
@@ -1070,8 +1315,12 @@ function createField(field) {
 
   if (field.type === "notice") {
     wrapper.classList.add("is-notice");
+  } else if (field.type === "group-selection") {
+    createGroupSelectionField(wrapper, field);
   } else if (field.type === "training-options") {
     createTrainingOptionsField(wrapper, field);
+  } else if (field.type === "bank-details") {
+    createBankDetailsField(wrapper, field);
   } else if (field.type === "file") {
     wrapper.classList.add("registration-file-field");
     const input = createInput(field);
@@ -1150,10 +1399,63 @@ function validateTrainingOptions(form) {
   let valid = true;
   form.querySelectorAll(".registration-training-value").forEach((input) => {
     const isComplete = Boolean(input.value.trim());
-    input.setCustomValidity(isComplete ? "" : "Selecciona una opción o indica los días concretos.");
+    input.setCustomValidity(isComplete ? "" : "Selecciona o indica los días concretos.");
     if (!isComplete) valid = false;
   });
   return valid;
+}
+
+function selectedEntryText(form, entry) {
+  const selected = form.querySelector(`[name="entry.${entry}"]:checked`);
+  if (!selected) return "";
+  const otherResponse = selected
+    .closest(".registration-choice")
+    ?.querySelector("[data-other-response]:not(:disabled)");
+  return [
+    selected.value,
+    selected.dataset.submissionValue,
+    selected.dataset.optionLabel,
+    otherResponse?.value,
+  ]
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase();
+}
+
+function updateConditionalFields(form) {
+  form.querySelectorAll("[data-show-when-entry]").forEach((field) => {
+    const selectedText = selectedEntryText(form, field.dataset.showWhenEntry);
+    const expectedText = (field.dataset.showWhenValueIncludes || "").toLowerCase();
+    const isVisible = expectedText ? selectedText.includes(expectedText) : Boolean(selectedText);
+
+    field.hidden = !isVisible;
+    field.querySelectorAll("input, textarea, select").forEach((input) => {
+      const isGeneratedValue = input.dataset.bankDetailsValue !== undefined;
+      input.disabled = !isVisible;
+      if (input.dataset.conditionalRequiredInput !== undefined) {
+        input.required = isVisible && field.dataset.conditionalRequired === "true";
+      } else if (field.dataset.conditionalRequired === "true") {
+        input.required = isVisible && !isGeneratedValue;
+      }
+      if (!isVisible && !isGeneratedValue && input instanceof HTMLInputElement) {
+        if (input.type === "radio" || input.type === "checkbox") input.checked = false;
+        else input.value = "";
+      } else if (!isVisible && isGeneratedValue) {
+        input.value = "";
+      } else if (!isVisible && input instanceof HTMLTextAreaElement) {
+        input.value = "";
+      }
+      input.setCustomValidity("");
+    });
+  });
+}
+
+function validateGroupSelections(form, { focus = false } = {}) {
+  for (const wrapper of form.querySelectorAll("[data-group-selection]")) {
+    const controller = groupSelectionControllers.get(wrapper);
+    if (controller && !controller.validate({ focus })) return false;
+  }
+  return true;
 }
 
 function looksLikeNie(value) {
@@ -1204,25 +1506,71 @@ function validateFileInputs(form) {
   return valid;
 }
 
-function prepareGoogleDates(form) {
-  form.querySelectorAll("[data-generated-date]").forEach((input) => input.remove());
+function choiceValue(input) {
+  const response = input
+    .closest(".registration-choice")
+    ?.querySelector("[data-other-response]:not(:disabled)")
+    ?.value?.trim();
+  return response || input.dataset.optionLabel || input.dataset.submissionValue || input.value;
+}
 
-  form.querySelectorAll("[data-google-date]").forEach((input) => {
-    if (!input.value) return;
-    const [year, month, day] = input.value.split("-");
-    [
-      ["year", year],
-      ["month", month],
-      ["day", day],
-    ].forEach(([part, value]) => {
-      const hidden = document.createElement("input");
-      hidden.type = "hidden";
-      hidden.name = `entry.${input.dataset.googleDate}_${part}`;
-      hidden.value = value;
-      hidden.dataset.generatedDate = "";
-      form.append(hidden);
+function collectRegistrationSubmission(definition, form) {
+  const answers = [];
+  const attachments = [];
+
+  definition.sections.forEach((section) => {
+    section.fields.forEach((field) => {
+      const wrapper = form.querySelector(`[data-entry="${CSS.escape(field.entry)}"]`);
+      if (!wrapper || wrapper.hidden || field.type === "notice") return;
+
+      if (field.type === "group-selection") {
+        const controller = groupSelectionControllers.get(wrapper);
+        (controller?.getSummary() || []).forEach((line) => {
+          const separator = line.indexOf(":");
+          answers.push({
+            section: section.title,
+            label: separator === -1 ? field.label : line.slice(0, separator),
+            value: separator === -1 ? line : line.slice(separator + 1).trim(),
+          });
+        });
+        return;
+      }
+
+      if (field.type === "file") {
+        const input = wrapper.querySelector("[data-file-input]");
+        const files = [...(input?.files || [])];
+        files.forEach((file) => attachments.push({ label: field.label, file }));
+        answers.push({
+          section: section.title,
+          label: field.label,
+          value: files.map((file) => file.name).join(", ") || "Sin archivo",
+        });
+        return;
+      }
+
+      if (field.type === "radio" || field.type === "checkboxes") {
+        const selected = [...wrapper.querySelectorAll('input[type="radio"]:checked, input[type="checkbox"]:checked')];
+        answers.push({
+          section: section.title,
+          label: field.label,
+          value: selected.map(choiceValue).filter(Boolean).join(", ") || "Sin respuesta",
+        });
+        return;
+      }
+
+      const generatedValue = wrapper.querySelector(`[name="entry.${CSS.escape(field.entry)}"]`);
+      const visibleInput = wrapper.querySelector(
+        'input:not([type="hidden"]):not([type="file"]), textarea, select',
+      );
+      answers.push({
+        section: section.title,
+        label: field.label,
+        value: (generatedValue?.value || visibleInput?.value || "").trim() || "Sin respuesta",
+      });
     });
   });
+
+  return { answers, attachments };
 }
 
 function setSubmittingState(form, submitting) {
@@ -1259,24 +1607,16 @@ function createDocumentDownloads(definition) {
   });
   section.append(list);
 
-  const note = createTextElement("p", "registration-document-note", definition.documentsNote);
-  const email = document.createElement("a");
-  email.href = "mailto:loesport@gmail.com?subject=Documentaci%C3%B3n%20licencia%20RFEA";
-  email.textContent = "Enviar documentación por correo";
-  note.append(" ", email);
-  section.append(note);
+  section.append(createTextElement("p", "registration-document-note", definition.documentsNote));
   return section;
 }
 
 function renderForm(root, definition, key) {
-  const frameName = `registration-response-${key}`;
   const form = document.createElement("form");
   form.className = "registration-form";
-  form.action = definition.action;
-  form.method = "POST";
   form.enctype = "multipart/form-data";
-  form.target = frameName;
-  form.dataset.googleForm = "";
+  form.dataset.emailForm = "";
+  form.dataset.formType = key;
   form.dataset.submitLabel = definition.submitLabel;
   form.noValidate = false;
 
@@ -1284,19 +1624,6 @@ function renderForm(root, definition, key) {
   if (documentDownloads) form.append(documentDownloads);
 
   definition.sections.forEach((section, index) => form.append(createSection(section, index)));
-
-  const hiddenFields = {
-    fvv: "1",
-    pageHistory: "0",
-    submissionTimestamp: "-1",
-  };
-  Object.entries(hiddenFields).forEach(([name, value]) => {
-    const input = document.createElement("input");
-    input.type = "hidden";
-    input.name = name;
-    input.value = value;
-    form.append(input);
-  });
 
   const submitArea = document.createElement("div");
   submitArea.className = "registration-submit";
@@ -1328,11 +1655,6 @@ function renderForm(root, definition, key) {
   homeLink.href = "/#gestiones";
   success.append(homeLink);
 
-  const iframe = document.createElement("iframe");
-  iframe.name = frameName;
-  iframe.title = "Respuesta del formulario";
-  iframe.className = "registration-response-frame";
-
   let submitted = false;
   form.querySelectorAll("[data-required-checkboxes]").forEach((group) => {
     group.addEventListener("change", () => validateCheckboxGroups(form));
@@ -1343,6 +1665,13 @@ function renderForm(root, definition, key) {
   form.querySelectorAll(".registration-training-field").forEach((field) => {
     field.addEventListener("change", () => validateTrainingOptions(form));
     field.addEventListener("input", () => validateTrainingOptions(form));
+  });
+  form.querySelectorAll("[data-show-when-entry]").forEach((field) => {
+    const controllingEntry = field.dataset.showWhenEntry;
+    form.querySelectorAll(`[name="entry.${controllingEntry}"]`).forEach((input) => {
+      input.addEventListener("change", () => updateConditionalFields(form));
+      input.addEventListener("input", () => updateConditionalFields(form));
+    });
   });
   form.querySelectorAll("[data-file-input]").forEach((input) => {
     input.addEventListener("change", () => validateFileInputs(form));
@@ -1356,31 +1685,53 @@ function renderForm(root, definition, key) {
     birthDateInput?.addEventListener("input", () => validateFileInputs(form));
   });
 
-  form.addEventListener("submit", (event) => {
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    if (submitted) return;
+    updateConditionalFields(form);
     validateCheckboxGroups(form);
     validateOtherResponses(form);
     validateTrainingOptions(form);
     validateFileInputs(form);
+    if (!validateGroupSelections(form, { focus: true })) {
+      return;
+    }
     if (!form.reportValidity()) {
-      event.preventDefault();
       form.querySelector(":invalid")?.focus();
       return;
     }
 
-    prepareGoogleDates(form);
     submitted = true;
-    setSubmittingState(form, true);
+    note.classList.remove("has-error");
+    note.textContent = "Preparando la captura y los archivos...";
+    try {
+      const submission = collectRegistrationSubmission(definition, form);
+      await sendFormSubmission({
+        form,
+        type: key,
+        title: definition.title,
+        answers: submission.answers,
+        attachments: submission.attachments,
+        onCaptured: () => {
+          setSubmittingState(form, true);
+          note.textContent = "Enviando el formulario y los archivos de forma segura...";
+        },
+      });
+      form.hidden = true;
+      success.hidden = false;
+      success.focus({ preventScroll: true });
+      success.scrollIntoView({ behavior: "smooth", block: "center" });
+    } catch (error) {
+      submitted = false;
+      setSubmittingState(form, false);
+      note.classList.add("has-error");
+      note.textContent = error.message || "No se ha podido enviar el formulario. Inténtalo de nuevo.";
+      note.focus?.();
+    }
   });
 
-  iframe.addEventListener("load", () => {
-    if (!submitted) return;
-    form.hidden = true;
-    success.hidden = false;
-    success.focus({ preventScroll: true });
-    success.scrollIntoView({ behavior: "smooth", block: "center" });
-  });
-
-  root.append(form, success, iframe);
+  root.append(form, success);
+  updateConditionalFields(form);
 }
 
 export function initRegistrationForms() {

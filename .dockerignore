@@ -1,0 +1,9 @@
+.git
+.gitignore
+.agents
+.codex
+node_modules
+dist
+*.log
+.env*
+!.env.example

@@ -1,6 +1,9 @@
 import { resolve } from "node:path";
 import { defineConfig } from "vite";
 
+const formApiTarget = process.env.FORM_API_TARGET || "https://loesport-web-473754422972.europe-southwest1.run.app";
+const formApiOrigin = new URL(formApiTarget).origin;
+
 const pages = {
   main: "index.html",
   gruposMao: "grupos-mao.html",
@@ -22,6 +25,17 @@ const pages = {
 };
 
 export default defineConfig({
+  server: {
+    proxy: {
+      "/api": {
+        target: formApiTarget,
+        changeOrigin: true,
+        headers: {
+          origin: formApiOrigin,
+        },
+      },
+    },
+  },
   build: {
     emptyOutDir: true,
     rollupOptions: {
