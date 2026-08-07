@@ -4,11 +4,54 @@ const FORM_API_ENDPOINT =
   import.meta.env.VITE_FORM_API_ENDPOINT || (localHostname ? "/api/forms" : CLOUD_FORM_API_ENDPOINT);
 const MAX_UPLOAD_BYTES = 17 * 1024 * 1024;
 const REQUEST_TIMEOUT_MS = 90_000;
+const CAPTURE_TIMEOUT_MS = 20_000;
+const SUBMISSION_ID_PATTERN =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+const pendingSubmissionIds = new WeakMap();
+const pendingSubmissionSnapshots = new WeakMap();
+
+export function resetFormSubmissionId(form) {
+  if (form && (typeof form === "object" || typeof form === "function")) {
+    pendingSubmissionIds.delete(form);
+    pendingSubmissionSnapshots.delete(form);
+  }
+}
 
 function cleanText(value) {
   return String(value ?? "")
     .replace(/\s+/g, " ")
     .trim();
+}
+
+export function createSubmissionId() {
+  const cryptoApi = globalThis.crypto;
+  if (typeof cryptoApi?.randomUUID === "function") return cryptoApi.randomUUID();
+  if (typeof cryptoApi?.getRandomValues !== "function") {
+    throw new Error("No se ha podido enviar el formulario.");
+  }
+
+  const bytes = cryptoApi.getRandomValues(new Uint8Array(16));
+  bytes[6] = (bytes[6] & 0x0f) | 0x40;
+  bytes[8] = (bytes[8] & 0x3f) | 0x80;
+  const hex = [...bytes].map((byte) => byte.toString(16).padStart(2, "0"));
+  return [
+    hex.slice(0, 4).join(""),
+    hex.slice(4, 6).join(""),
+    hex.slice(6, 8).join(""),
+    hex.slice(8, 10).join(""),
+    hex.slice(10, 16).join(""),
+  ].join("-");
+}
+
+function resolveSubmissionId(form, submissionId) {
+  const requestedId = cleanText(submissionId);
+  if (requestedId && !SUBMISSION_ID_PATTERN.test(requestedId)) {
+    throw new Error("Los datos del formulario no son válidos.");
+  }
+
+  const resolvedId = requestedId || pendingSubmissionIds.get(form) || createSubmissionId();
+  pendingSubmissionIds.set(form, resolvedId);
+  return resolvedId;
 }
 
 function fieldLabel(form, field) {
@@ -132,6 +175,25 @@ async function captureElement(target) {
   return canvasBlob(canvas);
 }
 
+async function captureElementSafely(target) {
+  let timeoutId;
+  try {
+    return await Promise.race([
+      captureElement(target),
+      new Promise((_, reject) => {
+        timeoutId = window.setTimeout(
+          () => reject(new Error()),
+          CAPTURE_TIMEOUT_MS,
+        );
+      }),
+    ]);
+  } catch {
+    return null;
+  } finally {
+    window.clearTimeout(timeoutId);
+  }
+}
+
 function safeFilePart(value) {
   return cleanText(value)
     .normalize("NFD")
@@ -150,37 +212,54 @@ export async function sendFormSubmission({
   form,
   type,
   title,
+  submissionId,
   answers,
   attachments = [],
   replyTo = "",
   captureTarget = form,
   onCaptured,
 }) {
+  const resolvedSubmissionId = resolveSubmissionId(form, submissionId);
   const selectedFilesSize = totalAttachmentBytes(attachments);
   if (selectedFilesSize > MAX_UPLOAD_BYTES) {
     throw new Error("Los archivos superan el límite total de 17 MB.");
   }
 
-  const snapshot = await captureElement(captureTarget);
-  if (selectedFilesSize + snapshot.size > MAX_UPLOAD_BYTES) {
-    throw new Error("La captura y los archivos superan el límite total de 17 MB.");
+  const cachedSnapshot = pendingSubmissionSnapshots.get(form);
+  let snapshot = cachedSnapshot?.submissionId === resolvedSubmissionId
+    ? cachedSnapshot.blob
+    : await captureElementSafely(captureTarget);
+  if (snapshot && selectedFilesSize + snapshot.size > MAX_UPLOAD_BYTES) {
+    snapshot = null;
+  }
+  if (cachedSnapshot?.submissionId !== resolvedSubmissionId) {
+    pendingSubmissionSnapshots.set(form, {
+      submissionId: resolvedSubmissionId,
+      blob: snapshot,
+    });
   }
   onCaptured?.();
 
   const submittedAt = new Date().toISOString();
   const submissionFiles = attachments.map((attachment, index) => ({
     index,
+    ...(cleanText(attachment.key) ? { key: cleanText(attachment.key) } : {}),
     label: cleanText(attachment.label) || "Archivo adjunto",
     name: attachment.file.name,
   }));
   const payload = {
+    submissionId: resolvedSubmissionId,
     type: cleanText(type),
     title: cleanText(title),
-    answers: answers.map((answer) => ({
-      section: cleanText(answer.section) || "Datos enviados",
-      label: cleanText(answer.label) || "Campo",
-      value: cleanText(answer.value) || "Sin respuesta",
-    })),
+    answers: answers.map((answer) => {
+      const key = cleanText(answer.key);
+      return {
+        ...(key ? { key } : {}),
+        section: cleanText(answer.section) || "Datos enviados",
+        label: cleanText(answer.label) || "Campo",
+        value: cleanText(answer.value) || "Sin respuesta",
+      };
+    }),
     attachments: submissionFiles,
     pageUrl: window.location.href,
     replyTo: cleanText(replyTo),
@@ -190,13 +269,15 @@ export async function sendFormSubmission({
   const data = new FormData();
   data.append("payload", JSON.stringify(payload));
   data.append("website", "");
-  data.append(
-    "snapshot",
-    new File([snapshot], `captura-${safeFilePart(title) || "formulario"}.jpg`, {
-      type: "image/jpeg",
-      lastModified: Date.now(),
-    }),
-  );
+  if (snapshot) {
+    data.append(
+      "snapshot",
+      new File([snapshot], `captura-${safeFilePart(title) || "formulario"}.jpg`, {
+        type: "image/jpeg",
+        lastModified: Date.now(),
+      }),
+    );
+  }
   attachments.forEach(({ file }) => data.append("attachments", file, file.name));
 
   const controller = new AbortController();
@@ -210,8 +291,13 @@ export async function sendFormSubmission({
     });
     const result = await response.json().catch(() => ({}));
     if (!response.ok || !result.ok) {
-      throw new Error(result.message || "No se ha podido enviar el formulario.");
+      const submissionError = new Error(result.message || "No se ha podido enviar el formulario.");
+      submissionError.status = response.status;
+      submissionError.code = cleanText(result.code);
+      submissionError.retryAfterMs = Number(result.retryAfterMs) || 0;
+      throw submissionError;
     }
+    resetFormSubmissionId(form);
     return result;
   } catch (error) {
     if (error.name === "AbortError") {

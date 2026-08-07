@@ -5,7 +5,17 @@ import { catalogue } from "../src/i18n/catalog.js";
 
 const root = process.cwd();
 const sourceRoots = ["src/data", "src/ui"];
-const rootFiles = ["equipment.js", "groups.js", "product-equipment.js", "script.js", "server/index.js"];
+// Audit server modules whose messages can reach the browser. Operational errors
+// from the Sheets adapter are deliberately hidden by the API error middleware.
+const rootFiles = [
+  "equipment.js",
+  "groups.js",
+  "product-equipment.js",
+  "script.js",
+  "server/form-payload.js",
+  "server/form-submission-orchestrator.js",
+  "server/index.js",
+];
 const interfaceProperties = new Set([
   "category",
   "categoryLabel",

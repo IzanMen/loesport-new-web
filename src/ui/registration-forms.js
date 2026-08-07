@@ -7,7 +7,11 @@ import {
   getTrainingLocation,
 } from "../data/training-groups.js";
 import { translatePhrase } from "../i18n/index.js";
-import { sendFormSubmission } from "./form-submission.js";
+import {
+  createSubmissionId,
+  resetFormSubmissionId,
+  sendFormSubmission,
+} from "./form-submission.js";
 
 export const FORM_DEFINITIONS = {
   inscripcion: {
@@ -26,6 +30,7 @@ export const FORM_DEFINITIONS = {
           {
             type: "group-selection",
             entry: "2005620554",
+            key: "training",
             dayCountEntry: "167310009",
             daysEntry: "712946819",
             submissionKey: "inscripcion",
@@ -38,18 +43,32 @@ export const FORM_DEFINITIONS = {
         title: "Datos del participante",
         description: "Ahora completa los datos de la persona que va a entrenar.",
         fields: [
-          { type: "text", entry: "1045781291", label: "Población de residencia", required: true },
+          {
+            type: "text",
+            entry: "1045781291",
+            key: "participant_residence_city",
+            label: "Población de residencia",
+            required: true,
+          },
           {
             type: "text",
             entry: "43453506",
+            key: "participant_full_name",
             label: "Nombre y Apellidos",
             required: true,
             autocomplete: "name",
           },
-          { type: "date-text", entry: "1065046570", label: "Fecha de nacimiento", required: true },
+          {
+            type: "date-text",
+            entry: "1065046570",
+            key: "participant_birth_date",
+            label: "Fecha de nacimiento",
+            required: true,
+          },
           {
             type: "radio",
             entry: "984531499",
+            key: "participant_sex",
             label: "SEXO",
             required: true,
             options: ["FEMENINO", "MASCULINO"],
@@ -57,6 +76,7 @@ export const FORM_DEFINITIONS = {
           {
             type: "text",
             entry: "839337160",
+            key: "participant_document_number",
             label: "Documento de identidad (DNI, NIE o pasaporte)",
             required: true,
             help: "Indica el número del documento y adjunta las dos caras a continuación.",
@@ -64,6 +84,7 @@ export const FORM_DEFINITIONS = {
           {
             type: "file",
             entry: "document-front",
+            key: "participant_document_front",
             label: "Documento de identidad · parte delantera",
             required: true,
             accept: "image/*,.pdf",
@@ -72,6 +93,7 @@ export const FORM_DEFINITIONS = {
           {
             type: "file",
             entry: "document-back",
+            key: "participant_document_back",
             label: "Documento de identidad · parte trasera",
             required: true,
             accept: "image/*,.pdf",
@@ -80,6 +102,7 @@ export const FORM_DEFINITIONS = {
           {
             type: "radio",
             entry: "946002822",
+            key: "club_membership_status",
             label: "Eres nuevo en el club?",
             required: true,
             options: ["Nuevo", "Renovación matrícula"],
@@ -95,6 +118,7 @@ export const FORM_DEFINITIONS = {
           {
             type: "text",
             entry: "2130323805",
+            key: "participant_address",
             label: "Dirección",
             required: true,
             autocomplete: "street-address",
@@ -102,15 +126,23 @@ export const FORM_DEFINITIONS = {
           {
             type: "text",
             entry: "566890397",
+            key: "participant_postal_code",
             label: "Código Postal",
             required: true,
             autocomplete: "postal-code",
             inputmode: "numeric",
           },
-          { type: "text", entry: "948638642", label: "Nacionalidad", required: true },
+          {
+            type: "text",
+            entry: "948638642",
+            key: "participant_nationality",
+            label: "Nacionalidad",
+            required: true,
+          },
           {
             type: "tel",
             entry: "97509970",
+            key: "contact_phone",
             label: "Teléfono de contacto",
             required: true,
             autocomplete: "tel",
@@ -124,16 +156,19 @@ export const FORM_DEFINITIONS = {
           {
             type: "text",
             entry: "432248214",
+            key: "guardian_full_name",
             label: "Menores de 18 años indicar:\nNombre y Apellidos de la madre/padre ó tutor legal ",
           },
           {
             type: "text",
             entry: "851097291",
+            key: "guardian_document_number",
             label: "Menores de 18 años indicar:\nDNI de la madre/padre ó tutor legal ",
           },
           {
             type: "file",
             entry: "guardian-document-front",
+            key: "guardian_document_front",
             label: "DNI/NIE del tutor legal · parte delantera",
             accept: "image/*,.pdf",
             requiredWhenMinorEntry: "1065046570",
@@ -142,6 +177,7 @@ export const FORM_DEFINITIONS = {
           {
             type: "file",
             entry: "guardian-document-back",
+            key: "guardian_document_back",
             label: "DNI/NIE del tutor legal · parte trasera",
             accept: "image/*,.pdf",
             requiredWhenMinorEntry: "1065046570",
@@ -150,6 +186,7 @@ export const FORM_DEFINITIONS = {
           {
             type: "google-date",
             entry: "326584365",
+            key: "guardian_birth_date",
             label: "Menores de 18 años indicar fecha de nacimiento de la madre/padre ó tutor legal",
           },
         ],
@@ -162,6 +199,7 @@ export const FORM_DEFINITIONS = {
           {
             type: "radio",
             entry: "506119602",
+            key: "payment_method",
             label: "Elige la modalidad y forma de pago",
             required: true,
             options: [
@@ -204,6 +242,7 @@ export const FORM_DEFINITIONS = {
           {
             type: "radio",
             entry: "43401703",
+            key: "direct_debit_authorization",
             label:
               'Para pagos por domiciliación, los recibos se cargarán en cuenta el día 4. Las bajas deben comunicarse antes del día 20 del mes anterior mediante el formulario de "Solicitud de baja". Autorizo a Lô Esport Menorca a cargar los recibos derivados de la actividad en cuenta.',
             required: true,
@@ -214,6 +253,7 @@ export const FORM_DEFINITIONS = {
           {
             type: "bank-details",
             entry: "1121669907",
+            key: "bank_details",
             label: "Datos bancarios para domiciliación",
             required: true,
             showWhenEntry: "506119602",
@@ -236,6 +276,7 @@ export const FORM_DEFINITIONS = {
           {
             type: "radio",
             entry: "207757834",
+            key: "image_use_authorization",
             label:
               "Autorizo a que la imagen de mi hijo/a o la mía propia pueda ser publicada en fotografías correspondientes a actividades de la escuela deportiva, así como en filmaciones destinadas a difusión pública, no comercial o de ámbito educativo, en cumplimiento al derecho a la propia imagen reconocido en el artículo 18.1 de la constitución española y regulado en la ley 5/1982 sobre el derecho al honor, intimidad familiar y a la propia imagen",
             required: true,
@@ -244,6 +285,7 @@ export const FORM_DEFINITIONS = {
           {
             type: "radio",
             entry: "1909582878",
+            key: "offsite_activity_authorization",
             label:
               "CATEGORIAS ESCOLARES:\nAutorizo a que mi hijo/a pueda hacer actividades puntuales fuera del lugar habitual de entrenamiento",
             options: ["AUTORIZO", "NO AUTORIZO"],
@@ -251,6 +293,7 @@ export const FORM_DEFINITIONS = {
           {
             type: "radio",
             entry: "661439025",
+            key: "accident_protocol_acknowledgement",
             label:
               "PARA ATLETAS CON LICENCIA DE ATLETISMO SE DEBERÁN CUMPLIR LAS NORMAS DE ACTUACIÓN EN CASO DE ACCIDENTE DEPORTIVO            Solicitar un parte de accidentes al entrenador y acudir al centro médico concertado: Policlínica Virgen de Gracia (Maó). El incumplimiento de esta norma puede generar gastos por parte de la Seguridad Social que irían a cargo y cuenta del adulto responsable del deportista",
             required: true,
@@ -259,9 +302,15 @@ export const FORM_DEFINITIONS = {
           {
             type: "textarea",
             entry: "905211377",
+            key: "participant_health_information",
             label: "Informaciones a tener en cuenta sobre el participante (Enfermadades, alergias ...)",
           },
-          { type: "textarea", entry: "1933709984", label: "Observaciones o sugerencias:" },
+          {
+            type: "textarea",
+            entry: "1933709984",
+            key: "comments",
+            label: "Observaciones o sugerencias:",
+          },
         ],
       },
       {
@@ -270,6 +319,7 @@ export const FORM_DEFINITIONS = {
           {
             type: "radio",
             entry: "577217566",
+            key: "privacy_consent",
             label:
               "De conformidad con la LO 3/2018 y el Reglamento General de Protección de Datos 2016/679, los datos personales recogidos serán tratados por Lô Esport Menorca para gestionar la temporada 2026-27 y tramitar las licencias deportivas. Puedes ejercer tus derechos escribiendo a loesport@gmail.com.",
             required: true,
@@ -279,6 +329,7 @@ export const FORM_DEFINITIONS = {
           {
             type: "radio",
             entry: "818465818",
+            key: "terms_consent",
             label:
               "Condiciones de uso: quien cumplimenta este formulario declara que los datos consignados son reales. Al pulsar ENVIAR acepta las condiciones de uso y los reglamentos de Lô Esport Menorca.",
             required: true,
@@ -745,6 +796,10 @@ function formatDayCount(count) {
   return `${count} ${count === 1 ? "día" : "días"}`;
 }
 
+function createSubmissionAnswer(key, label, value) {
+  return { key, label, value };
+}
+
 function createGroupSelectionField(wrapper, field) {
   wrapper.classList.add("registration-group-flow-field");
   wrapper.dataset.groupSelection = "";
@@ -1058,17 +1113,19 @@ function createGroupSelectionField(wrapper, field) {
       clearError();
       return true;
     },
-    getSummary() {
+    getAnswers() {
       if (!state.group || !state.dayCount) return [];
+      const keyPrefix = field.key || "training";
       const location = getTrainingLocation(state.group.location);
       const selectedDays = selectedDayObjects().map(
         (day) => `${day.label}${day.detail ? ` · ${day.detail}` : ""}`,
       );
       return [
-        `Sede: ${location.title}`,
-        `Grupo: ${state.group.title}`,
-        `Días por semana: ${state.dayCount.count}`,
-        `Días elegidos: ${selectedDays.join(" | ")}`,
+        createSubmissionAnswer(`${keyPrefix}_location`, "Sede", location.title),
+        createSubmissionAnswer(`${keyPrefix}_group_id`, "ID del grupo", state.group.id),
+        createSubmissionAnswer(`${keyPrefix}_group_name`, "Grupo", state.group.title),
+        createSubmissionAnswer(`${keyPrefix}_day_count`, "Días por semana", String(state.dayCount.count)),
+        createSubmissionAnswer(`${keyPrefix}_selected_days`, "Días elegidos", selectedDays.join(" | ")),
       ];
     },
   });
@@ -1539,6 +1596,16 @@ function choiceValue(input) {
   return response || input.dataset.optionLabel || input.dataset.submissionValue || input.value;
 }
 
+function fieldSubmissionKey(field) {
+  if (field.key) return field.key;
+  const entry = String(field.entry || "")
+    .trim()
+    .replace(/[^a-z0-9]+/gi, "_")
+    .replace(/^_|_$/g, "")
+    .toLowerCase();
+  return entry ? `entry_${entry}` : "field";
+}
+
 function collectRegistrationSubmission(definition, form) {
   const answers = [];
   const attachments = [];
@@ -1550,12 +1617,12 @@ function collectRegistrationSubmission(definition, form) {
 
       if (field.type === "group-selection") {
         const controller = groupSelectionControllers.get(wrapper);
-        (controller?.getSummary() || []).forEach((line) => {
-          const separator = line.indexOf(":");
+        (controller?.getAnswers() || []).forEach((answer) => {
           answers.push({
+            key: answer.key,
             section: section.title,
-            label: separator === -1 ? field.label : line.slice(0, separator),
-            value: separator === -1 ? line : line.slice(separator + 1).trim(),
+            label: answer.label,
+            value: answer.value,
           });
         });
         return;
@@ -1564,8 +1631,13 @@ function collectRegistrationSubmission(definition, form) {
       if (field.type === "file") {
         const input = wrapper.querySelector("[data-file-input]");
         const files = [...(input?.files || [])];
-        files.forEach((file) => attachments.push({ label: field.label, file }));
+        files.forEach((file) => attachments.push({
+          key: fieldSubmissionKey(field),
+          label: field.label,
+          file,
+        }));
         answers.push({
+          key: fieldSubmissionKey(field),
           section: section.title,
           label: field.label,
           value: files.map((file) => file.name).join(", ") || "Sin archivo",
@@ -1576,6 +1648,7 @@ function collectRegistrationSubmission(definition, form) {
       if (field.type === "radio" || field.type === "checkboxes") {
         const selected = [...wrapper.querySelectorAll('input[type="radio"]:checked, input[type="checkbox"]:checked')];
         answers.push({
+          key: fieldSubmissionKey(field),
           section: section.title,
           label: field.label,
           value: selected.map(choiceValue).filter(Boolean).join(", ") || "Sin respuesta",
@@ -1588,6 +1661,7 @@ function collectRegistrationSubmission(definition, form) {
         'input:not([type="hidden"]):not([type="file"]), textarea, select',
       );
       answers.push({
+        key: fieldSubmissionKey(field),
         section: section.title,
         label: field.label,
         value: (generatedValue?.value || visibleInput?.value || "").trim() || "Sin respuesta",
@@ -1681,6 +1755,16 @@ function renderForm(root, definition, key) {
   success.append(homeLink);
 
   let submitted = false;
+  let submissionId = "";
+  let previousAttemptFailed = false;
+  const resetSubmissionAfterEdit = () => {
+    if (!previousAttemptFailed && !submitted) return;
+    submissionId = "";
+    resetFormSubmissionId(form);
+    previousAttemptFailed = false;
+  };
+  form.addEventListener("input", resetSubmissionAfterEdit);
+  form.addEventListener("change", resetSubmissionAfterEdit);
   form.querySelectorAll("[data-required-checkboxes]").forEach((group) => {
     group.addEventListener("change", () => validateCheckboxGroups(form));
   });
@@ -1730,11 +1814,14 @@ function renderForm(root, definition, key) {
     note.classList.remove("has-error");
     note.textContent = "Preparando la captura y los archivos...";
     try {
+      submissionId ||= createSubmissionId();
+      previousAttemptFailed = false;
       const submission = collectRegistrationSubmission(definition, form);
       await sendFormSubmission({
         form,
         type: key,
         title: definition.title,
+        submissionId,
         answers: submission.answers,
         attachments: submission.attachments,
         onCaptured: () => {
@@ -1742,15 +1829,29 @@ function renderForm(root, definition, key) {
           note.textContent = "Enviando el formulario y los archivos de forma segura...";
         },
       });
+      submissionId = "";
       form.hidden = true;
       success.hidden = false;
       success.focus({ preventScroll: true });
       success.scrollIntoView({ behavior: "smooth", block: "center" });
     } catch (error) {
       submitted = false;
+      previousAttemptFailed = true;
+      if (["SUBMISSION_FINGERPRINT_CONFLICT", "DRIVE_PAYLOAD_CONFLICT"].includes(error.code)) {
+        submissionId = "";
+        resetFormSubmissionId(form);
+      }
       setSubmittingState(form, false);
       note.classList.add("has-error");
-      note.textContent = error.message || "No se ha podido enviar el formulario. Inténtalo de nuevo.";
+      const errorMessage =
+        error.code === "SUBMISSION_FINGERPRINT_CONFLICT"
+          ? "El identificador del envío ya existe con datos diferentes."
+          : error.code === "DRIVE_PAYLOAD_CONFLICT"
+            ? "Los archivos del envío han cambiado durante el reintento."
+          : error.code === "SUBMISSION_IN_PROGRESS"
+            ? "Este envío todavía se está procesando. Inténtalo de nuevo en unos instantes."
+            : error.message || "No se ha podido enviar el formulario. Inténtalo de nuevo.";
+      note.textContent = translatePhrase(errorMessage);
       note.focus?.();
     }
   });

@@ -448,6 +448,11 @@ export function createSupplementalCatalogue() {
   add("No se han podido procesar los archivos. Revisa su tamaño y vuelve a intentarlo.", "No s'han pogut processar els arxius. Revisa'n la mida i torna-ho a provar.", "Non se puideron procesar os ficheiros. Revisa o seu tamaño e volve intentalo.", "Ezin izan dira fitxategiak prozesatu. Egiaztatu tamaina eta saiatu berriro.");
   add("Formulario web", "Formulari web", "Formulario web", "Web-formularioa");
   add("El servicio de correo todavía no está autorizado.", "El servei de correu encara no està autoritzat.", "O servizo de correo aínda non está autorizado.", "Posta-zerbitzua oraindik ez dago baimenduta.");
+  add("El identificador del envío ya existe con datos diferentes.", "L'identificador de l'enviament ja existeix amb dades diferents.", "O identificador do envío xa existe con datos diferentes.", "Bidalketaren identifikatzailea lehendik dago beste datu batzuekin.");
+  add("Este envío todavía se está procesando. Inténtalo de nuevo en unos instantes.", "Aquest enviament encara s'està processant. Torna-ho a provar d'aquí a uns instants.", "Este envío aínda se está procesando. Inténtao de novo nuns intres.", "Bidalketa hau oraindik prozesatzen ari da. Saiatu berriro une batzuk barru.");
+  add("Fila duplicada; no se ha reenviado el correo.", "Fila duplicada; no s'ha tornat a enviar el correu.", "Fila duplicada; non se reenviou o correo.", "Errenkada bikoiztua; posta ez da berriro bidali.");
+  add("Los archivos del envío han cambiado durante el reintento.", "Els arxius de l'enviament han canviat durant el reintent.", "Os ficheiros do envío cambiaron durante o novo intento.", "Bidalketako fitxategiak aldatu egin dira berriro saiatzean.");
+  add("Las referencias de Google Drive no se han guardado en la hoja.", "Les referències de Google Drive no s'han desat al full.", "As referencias de Google Drive non se gardaron na folla.", "Google Drive-ko erreferentziak ez dira kalkulu-orrian gorde.");
 
   return catalogue;
 }

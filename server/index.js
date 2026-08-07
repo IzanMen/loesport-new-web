@@ -1,4 +1,3 @@
-import crypto from "node:crypto";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -6,30 +5,26 @@ import express from "express";
 import { google } from "googleapis";
 import multer from "multer";
 import MailComposer from "nodemailer/lib/mail-composer/index.js";
+import { summarizeError } from "./error-summary.js";
+import { cleanText, parsePayload, safeFilename, validEmail } from "./form-payload.js";
+import { createFormSubmissionOrchestrator } from "./form-submission-orchestrator.js";
+import { createInscripcionDriveStore } from "./inscripcion-drive.js";
+import { createInscripcionSheetStore } from "./inscripcion-sheet.js";
+import { normalizeUploadedFile } from "./upload-validation.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const distDirectory = path.resolve(__dirname, "../dist");
 const port = Number(process.env.PORT) || 8080;
+const blockedRecipients = new Set(["sanchezginesizan@gmail.com"]);
 const recipients = (process.env.FORM_RECIPIENT || "loesport@gmail.com")
   .split(",")
   .map((email) => validEmail(email))
-  .filter(Boolean);
+  .filter((email) => email && !blockedRecipients.has(email.toLowerCase()));
 const sender = process.env.GMAIL_SENDER || "sanchezginesizan@gmail.com";
 const maxUploadBytes = 17 * 1024 * 1024;
 const maxRequestBytes = 20 * 1024 * 1024;
 const rateWindowMs = 15 * 60 * 1000;
 const maxRequestsPerWindow = 10;
-const allowedFormTypes = new Set([
-  "inscripcion",
-  "preinscripcion",
-  "baja",
-  "licencias",
-  "newsletter",
-  "contacto",
-  "socio",
-  "patrocinio",
-  "equipacion",
-]);
 const allowedOrigins = new Set(
   (process.env.ALLOWED_ORIGINS || "")
     .split(",")
@@ -49,7 +44,7 @@ const upload = multer({
   },
 });
 
-const app = express();
+export const app = express();
 app.disable("x-powered-by");
 app.set("trust proxy", 1);
 
@@ -60,23 +55,6 @@ function escapeHtml(value) {
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#039;");
-}
-
-function cleanText(value, maxLength) {
-  return String(value ?? "")
-    .replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, "")
-    .trim()
-    .slice(0, maxLength);
-}
-
-function safeFilename(value, fallback = "archivo") {
-  const filename = path.basename(cleanText(value, 180)).replace(/[^\p{L}\p{N}._() -]+/gu, "-");
-  return filename || fallback;
-}
-
-function validEmail(value) {
-  const email = cleanText(value, 254);
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ? email : "";
 }
 
 function requestOrigin(request) {
@@ -108,47 +86,6 @@ function withinRateLimit(request) {
   return true;
 }
 
-function parsePayload(rawPayload) {
-  let input;
-  try {
-    input = JSON.parse(rawPayload);
-  } catch {
-    throw Object.assign(new Error("Los datos del formulario no son válidos."), { status: 400 });
-  }
-
-  const type = cleanText(input.type, 50).toLowerCase();
-  if (!allowedFormTypes.has(type)) {
-    throw Object.assign(new Error("El tipo de formulario no es válido."), { status: 400 });
-  }
-
-  if (!Array.isArray(input.answers) || !input.answers.length || input.answers.length > 140) {
-    throw Object.assign(new Error("Las respuestas del formulario no son válidas."), { status: 400 });
-  }
-
-  const answers = input.answers.map((answer) => ({
-    section: cleanText(answer.section, 140) || "Datos enviados",
-    label: cleanText(answer.label, 1_500) || "Campo",
-    value: cleanText(answer.value, 8_000) || "Sin respuesta",
-  }));
-  const attachments = Array.isArray(input.attachments)
-    ? input.attachments.slice(0, 12).map((file, index) => ({
-        index,
-        label: cleanText(file.label, 300) || "Archivo adjunto",
-        name: safeFilename(file.name, `archivo-${index + 1}`),
-      }))
-    : [];
-
-  return {
-    type,
-    title: cleanText(input.title, 140) || "Formulario web",
-    answers,
-    attachments,
-    pageUrl: cleanText(input.pageUrl, 1_000),
-    replyTo: validEmail(input.replyTo),
-    submittedAt: cleanText(input.submittedAt, 40),
-  };
-}
-
 function formattedDate(value) {
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return "Fecha no disponible";
@@ -169,6 +106,9 @@ function answerSections(answers) {
 }
 
 function emailHtml(payload, files, snapshotCid) {
+  const submissionReference = payload.type === "inscripcion"
+    ? `ID de envío: ${escapeHtml(payload.submissionId)}<br />`
+    : "";
   const sections = [...answerSections(payload.answers)].map(([section, answers]) => {
     const rows = answers
       .map(
@@ -190,6 +130,18 @@ function emailHtml(payload, files, snapshotCid) {
         .join("")}</ul></td></tr>`
     : "";
 
+  const snapshotBlock = snapshotCid
+    ? `<tr><td style="padding:24px 24px 8px;">
+              <p style="margin:0 0 14px;font:700 13px Arial,sans-serif;color:#4e504b;text-transform:uppercase;">Captura exacta del formulario enviado</p>
+              <img src="cid:${escapeHtml(snapshotCid)}" alt="Captura del formulario rellenado" width="930" style="display:block;width:100%;height:auto;border:1px solid #d7d7d2;" />
+            </td></tr>`
+    : "";
+  const includedFilesText = snapshotCid
+    ? "La captura y los archivos originales se incluyen en este correo."
+    : files.length
+      ? "Los archivos originales se incluyen en este correo."
+      : "La información se incluye campo por campo en este correo.";
+
   return `<!doctype html>
   <html lang="es">
     <body style="margin:0;padding:0;background:#efeee8;">
@@ -201,14 +153,12 @@ function emailHtml(payload, files, snapshotCid) {
               <h1 style="margin:0;font:800 30px Arial,sans-serif;color:#ffffff;">${escapeHtml(payload.title)}</h1>
               <p style="margin:9px 0 0;font:13px Arial,sans-serif;color:#c7c9c5;">Recibido el ${escapeHtml(formattedDate(payload.submittedAt))}</p>
             </td></tr>
-            <tr><td style="padding:24px 24px 8px;">
-              <p style="margin:0 0 14px;font:700 13px Arial,sans-serif;color:#4e504b;text-transform:uppercase;">Captura exacta del formulario enviado</p>
-              <img src="cid:${escapeHtml(snapshotCid)}" alt="Captura del formulario rellenado" width="930" style="display:block;width:100%;height:auto;border:1px solid #d7d7d2;" />
-            </td></tr>
+            ${snapshotBlock}
             ${sections.join("")}
             ${fileList}
             <tr><td style="padding:18px 24px;background:#f5f5f1;border-top:1px solid #d7d7d2;font:12px/1.5 Arial,sans-serif;color:#62645f;">
-              Enviado desde ${escapeHtml(payload.pageUrl || "la web de Lô Esport Menorca")}. La captura y los archivos originales se incluyen en este correo.
+              ${submissionReference}
+              Enviado desde ${escapeHtml(payload.pageUrl || "la web de Lô Esport Menorca")}. ${includedFilesText}
             </td></tr>
           </table>
         </td></tr>
@@ -235,7 +185,9 @@ function emailText(payload, files) {
     lines.push("", "ARCHIVOS ADJUNTOS");
     files.forEach((file) => lines.push(`${file.label}: ${file.name}`));
   }
-  lines.push("", `Página: ${payload.pageUrl || "No disponible"}`);
+  lines.push("");
+  if (payload.type === "inscripcion") lines.push(`ID de envío: ${payload.submissionId}`);
+  lines.push(`Página: ${payload.pageUrl || "No disponible"}`);
   return lines.join("\n");
 }
 
@@ -250,16 +202,23 @@ function gmailClient() {
   const clientSecret = process.env.GMAIL_CLIENT_SECRET;
   const refreshToken = process.env.GMAIL_REFRESH_TOKEN;
   if (!clientId || !clientSecret || !refreshToken) {
-    throw Object.assign(new Error("El servicio de correo todavía no está autorizado."), { status: 503 });
+    throw Object.assign(new Error("El servicio de correo todavía no está autorizado."), {
+      status: 503,
+      expose: true,
+    });
   }
   const oauth = new google.auth.OAuth2(clientId, clientSecret);
   oauth.setCredentials({ refresh_token: refreshToken });
   return google.gmail({ version: "v1", auth: oauth });
 }
 
-async function sendSubmissionEmail(payload, snapshot, uploadedFiles) {
-  const submissionId = crypto.randomUUID();
-  const snapshotCid = `formulario-${submissionId}@loesport.es`;
+export async function sendSubmissionEmail(
+  payload,
+  snapshot,
+  uploadedFiles,
+  submissionId = payload.submissionId,
+) {
+  const snapshotCid = snapshot ? `formulario-${submissionId}@loesport.es` : "";
   const files = uploadedFiles.map((file, index) => ({
     label: payload.attachments[index]?.label || "Archivo adjunto",
     name: safeFilename(payload.attachments[index]?.name || file.originalname, `archivo-${index + 1}`),
@@ -267,20 +226,24 @@ async function sendSubmissionEmail(payload, snapshot, uploadedFiles) {
     contentType: file.mimetype,
   }));
   const message = new MailComposer({
+    messageId: `<formulario-${submissionId}@loesport.es>`,
     from: `"Web Lô Esport Menorca" <${sender}>`,
     to: recipients,
     replyTo: payload.replyTo || undefined,
     subject: subjectFor(payload),
+    headers: { "X-Loesport-Submission-Id": submissionId },
     text: emailText(payload, files),
     html: emailHtml(payload, files, snapshotCid),
     attachments: [
-      {
-        filename: safeFilename(snapshot.originalname, "captura-formulario.jpg"),
-        content: snapshot.buffer,
-        contentType: snapshot.mimetype,
-        contentDisposition: "inline",
-        cid: snapshotCid,
-      },
+      ...(snapshot
+        ? [{
+            filename: safeFilename(snapshot.originalname, "captura-formulario.jpg"),
+            content: snapshot.buffer,
+            contentType: snapshot.mimetype,
+            contentDisposition: "inline",
+            cid: snapshotCid,
+          }]
+        : []),
       ...files.map((file) => ({
         filename: file.name,
         content: file.content,
@@ -294,8 +257,16 @@ async function sendSubmissionEmail(payload, snapshot, uploadedFiles) {
     userId: "me",
     requestBody: { raw: rawMessage.toString("base64url") },
   });
-  return { submissionId, gmailMessageId: response.data.id };
+  return { submissionId, gmailMessageId: response.data.id || "" };
 }
+
+const inscripcionSheetStore = createInscripcionSheetStore();
+const inscripcionDriveStore = createInscripcionDriveStore();
+const formSubmissionOrchestrator = createFormSubmissionOrchestrator({
+  sendEmail: sendSubmissionEmail,
+  sheetStore: inscripcionSheetStore,
+  driveStore: inscripcionDriveStore,
+});
 
 app.use("/api", (request, response, next) => {
   const origin = requestOrigin(request);
@@ -325,6 +296,8 @@ app.get("/api/health", (_request, response) => {
     emailConfigured: Boolean(
       process.env.GMAIL_CLIENT_ID && process.env.GMAIL_CLIENT_SECRET && process.env.GMAIL_REFRESH_TOKEN,
     ),
+    spreadsheetConfigured: inscripcionSheetStore.configured,
+    driveConfigured: inscripcionDriveStore.configured,
   });
 });
 
@@ -357,21 +330,22 @@ app.post(
     }
 
     const payload = parsePayload(request.body.payload);
-    const snapshot = request.files?.snapshot?.[0];
-    const attachments = request.files?.attachments || [];
-    if (!snapshot || !["image/jpeg", "image/png"].includes(snapshot.mimetype)) {
-      response.status(400).json({ ok: false, message: "Falta la captura del formulario." });
-      return;
-    }
+    response.locals.submissionId = payload.submissionId;
+    const rawSnapshot = request.files?.snapshot?.[0];
+    const rawAttachments = request.files?.attachments || [];
+    const snapshot = normalizeUploadedFile(rawSnapshot, { snapshot: true });
+    const attachments = rawAttachments.map((file) => normalizeUploadedFile(file));
     if (attachments.length !== payload.attachments.length) {
       response.status(400).json({ ok: false, message: "No se han recibido correctamente todos los archivos." });
       return;
     }
-    const allFiles = [snapshot, ...attachments];
-    const totalBytes = allFiles.reduce((total, file) => total + file.size, 0);
-    const invalidFile = attachments.find(
-      (file) => file.mimetype !== "application/pdf" && !file.mimetype.startsWith("image/"),
-    );
+    const invalidFile = (rawSnapshot && !snapshot) || attachments.find((file) => !file);
+    const totalBytes = invalidFile
+      ? 0
+      : [...(snapshot ? [snapshot] : []), ...attachments].reduce(
+          (total, file) => total + file.size,
+          0,
+        );
     if (totalBytes > maxUploadBytes || invalidFile) {
       response.status(400).json({
         ok: false,
@@ -382,8 +356,14 @@ app.post(
       return;
     }
 
-    const result = await sendSubmissionEmail(payload, snapshot, attachments);
-    response.status(201).json({ ok: true, submissionId: result.submissionId });
+    const result = await formSubmissionOrchestrator.submit(payload, snapshot, attachments);
+    response.status(result.deduplicated ? 200 : 201).json({
+      ok: true,
+      submissionId: result.submissionId,
+      deduplicated: Boolean(result.deduplicated),
+      spreadsheetStored: Boolean(result.sheetStored),
+      driveStored: Boolean(result.driveStored),
+    });
   },
 );
 
@@ -392,18 +372,34 @@ app.use("/api", (_request, response) => {
 });
 
 app.use((error, _request, response, _next) => {
-  const status = error.status || (error instanceof multer.MulterError ? 413 : 500);
-  if (status >= 500) console.error("Form API error", error);
+  const status =
+    error instanceof multer.MulterError
+      ? 413
+      : error.expose && Number.isInteger(error.status)
+        ? error.status
+        : 500;
+  if (status >= 500) {
+    console.error(
+      "Form API error",
+      summarizeError(error, { submissionId: response.locals.submissionId }),
+    );
+  }
   const clientMessage = error instanceof multer.MulterError
     ? "No se han podido procesar los archivos. Revisa su tamaño y vuelve a intentarlo."
     : error.message;
-  response.status(status).json({
+  const body = {
     ok: false,
     message:
       status >= 500
         ? "No se ha podido enviar el formulario. Inténtalo de nuevo en unos minutos."
         : clientMessage,
-  });
+  };
+  if (error.expose && error.code) body.code = error.code;
+  if (error.expose && Number.isFinite(error.retryAfterMs)) {
+    body.retryAfterMs = Math.max(0, Math.ceil(error.retryAfterMs));
+    response.setHeader("Retry-After", String(Math.max(1, Math.ceil(body.retryAfterMs / 1_000))));
+  }
+  response.status(status).json(body);
 });
 
 app.use(
@@ -416,6 +412,12 @@ app.use(
   }),
 );
 
-app.listen(port, "0.0.0.0", () => {
-  console.log(`Lô Esport web listening on port ${port}`);
-});
+export function startServer() {
+  return app.listen(port, "0.0.0.0", () => {
+    console.log(`Lô Esport web listening on port ${port}`);
+  });
+}
+
+if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+  startServer();
+}

@@ -8,11 +8,15 @@
     "dev:api": "node --watch server/index.js",
     "start": "node server/index.js",
     "authorize:gmail": "node server/authorize-gmail.js",
+    "authorize:drive": "node server/authorize-drive.js",
+    "configure:form-storage-access": "node server/configure-form-storage-access.js",
+    "verify:form-storage": "node server/verify-form-storage.js",
     "clean": "rm -rf dist",
     "build": "vite build",
+    "test": "node --test",
     "check:i18n": "node scripts/source-i18n-audit.mjs",
     "audit:i18n:browser": "node scripts/browser-i18n-audit.mjs",
-    "check": "npm run check:i18n && npm run build",
+    "check": "npm run check:i18n && npm test && npm run build",
     "preview": "vite preview --host 0.0.0.0"
   },
   "devDependencies": {
