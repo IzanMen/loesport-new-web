@@ -232,14 +232,6 @@ export const FORM_DEFINITIONS = {
             other: true,
           },
           {
-            type: "notice",
-            entry: "bank-fee-notice",
-            label: "Gastos bancarios",
-            help: "Si eliges pagar por domiciliación bancaria, hay que sumar 0,50 € por gastos bancarios.",
-            showWhenEntry: "506119602",
-            showWhenValueIncludes: "domicili",
-          },
-          {
             type: "radio",
             entry: "43401703",
             key: "direct_debit_authorization",
@@ -664,14 +656,6 @@ export const FORM_DEFINITIONS = {
               "DOMICILACION BANCARIA, soy nuevo en el club.",
             ],
             other: true,
-          },
-          {
-            type: "notice",
-            entry: "license-bank-fee-notice",
-            label: "Gastos bancarios",
-            help: "Si eliges pagar por domiciliación bancaria, hay que sumar 0,50 € por gastos bancarios.",
-            showWhenEntry: "1180835478",
-            showWhenValueIncludes: "domicili",
           },
           {
             type: "text",
