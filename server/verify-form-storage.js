@@ -1,17 +1,36 @@
-import { createInscripcionDriveStore } from "./inscripcion-drive.js";
+import {
+  createInscripcionDriveStore,
+  createPreinscripcionDriveStore,
+} from "./inscripcion-drive.js";
 import { createInscripcionSheetStore } from "./inscripcion-sheet.js";
+import { createPreinscripcionSheetStore } from "./preinscripcion-sheet.js";
 
-const sheetStore = createInscripcionSheetStore();
-const driveStore = createInscripcionDriveStore();
+const stores = [
+  {
+    type: "inscripcion",
+    sheet: createInscripcionSheetStore(),
+    drive: createInscripcionDriveStore(),
+  },
+  {
+    type: "preinscripcion",
+    sheet: createPreinscripcionSheetStore(),
+    drive: createPreinscripcionDriveStore(),
+  },
+];
 
 try {
-  await sheetStore.verifyWritable();
-  await driveStore.ensureReady();
+  await Promise.all(
+    stores.flatMap(({ sheet, drive }) => [sheet.verifyWritable(), drive.ensureReady()]),
+  );
   console.log(
     JSON.stringify({
       ok: true,
-      sheetName: sheetStore.sheetName,
-      driveAuthMode: driveStore.authMode,
+      forms: Object.fromEntries(
+        stores.map(({ type, sheet, drive }) => [
+          type,
+          { sheetName: sheet.sheetName, driveAuthMode: drive.authMode },
+        ]),
+      ),
     }),
   );
 } catch (error) {

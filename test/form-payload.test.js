@@ -182,16 +182,18 @@ test("rechaza una key de más de 80 caracteres en vez de truncarla", () => {
   );
 });
 
-test("rechaza claves duplicadas normalizadas únicamente en inscripcion", () => {
+test("rechaza claves duplicadas normalizadas en los formularios persistentes", () => {
   const answers = [
     { key: "participant_full_name", value: "Ada" },
     { key: "PARTICIPANT_FULL_NAME", value: "Grace" },
   ];
 
-  assertBadRequest(
-    () => parsePayload(payload({ type: "inscripcion", answers })),
-    "Las respuestas del formulario no son válidas.",
-  );
+  for (const type of ["inscripcion", "preinscripcion"]) {
+    assertBadRequest(
+      () => parsePayload(payload({ type, answers })),
+      "Las respuestas del formulario no son válidas.",
+    );
+  }
 
   const parsed = parsePayload(payload({ type: "contacto", answers }));
   assert.deepEqual(
@@ -202,7 +204,6 @@ test("rechaza claves duplicadas normalizadas únicamente en inscripcion", () => 
 
 test("los formularios excluidos de Sheets siguen aceptando respuestas sin key", async (t) => {
   const excludedTypes = [
-    "preinscripcion",
     "baja",
     "licencias",
     "newsletter",

@@ -143,10 +143,8 @@ export const TRAINING_GROUPS = [
     schedule: "Lunes, martes, miércoles y jueves · 17:30–18:30",
     days: maoSchoolDays,
     dayCounts: [
-      dayCount(1, "+10 €/mes"),
-      dayCount(2, "+15 €/mes"),
-      dayCount(3, "+15 €/mes"),
-      dayCount(4, "+15 €/mes"),
+      dayCount(1, "20 €/mes", { note: "Con hijo/a en la escuela: suplemento de 10 €/mes" }),
+      dayCount(2, "27 €/mes", { note: "Con hijo/a en la escuela: suplemento de 15 €/mes" }),
     ],
     formValues: {
       inscripcion: "ATLETISMO MAÓ Adultos INICIACIÓN (Esport&Salut) 17:30h",
@@ -195,8 +193,8 @@ export const TRAINING_GROUPS = [
   {
     id: "alaior-adultos-running",
     location: "alaior",
-    title: "Adultos 17:15",
-    category: "Adultos",
+    title: "Adultos 17:15 / Madres y padres",
+    category: "Adultos · Madres y padres",
     schedule: "Martes y jueves · tercer día solo para mujeres el sábado",
     days: [
       trainingDay("martes", "17:15–18:15"),
@@ -204,8 +202,14 @@ export const TRAINING_GROUPS = [
       trainingDay("sabado", "Solo mujeres · Grupo Women · 08:45–09:45"),
     ],
     dayCounts: [
-      dayCount(1, "15 €/mes", { allowedDays: ["martes", "jueves"] }),
-      dayCount(2, "20 €/mes", { allowedDays: ["martes", "jueves"] }),
+      dayCount(1, "15 €/mes", {
+        note: "Con hijo/a en la escuela: suplemento de 10 €/mes",
+        allowedDays: ["martes", "jueves"],
+      }),
+      dayCount(2, "20 €/mes", {
+        note: "Con hijo/a en la escuela: suplemento de 15 €/mes",
+        allowedDays: ["martes", "jueves"],
+      }),
       dayCount(3, "23 €/mes", {
         note: "Solo para mujeres",
         allowedDays: ["martes", "jueves", "sabado"],

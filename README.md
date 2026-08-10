@@ -33,12 +33,15 @@ Sitio estático multipágina construido con Vite.
 
 La web y `POST /api/forms` se publican juntos en el servicio de Cloud Run
 `loesport-web`, región `europe-southwest1`, dentro del proyecto `loesport`.
-Cada envío genera una captura del formulario, incluye las respuestas en el cuerpo
-del correo y adjunta los archivos originales. Además, los envíos de tipo
-`inscripcion` se guardan como una fila en Google Sheets y sus archivos se archivan
-en Google Drive; ningún otro tipo de formulario usa Sheets o Drive por ahora.
+Cada envío intenta generar una captura del formulario, incluye las respuestas en
+el cuerpo del correo y adjunta los archivos originales. La captura es opcional:
+si el navegador no puede generarla o hace superar el límite de tamaño, el envío
+continúa con normalidad sin ella. Además, los envíos de tipo `inscripcion` y
+`preinscripcion` se guardan en vistas separadas de Google Sheets y sus archivos o
+capturas se archivan en Google Drive; los demás formularios continúan usando solo
+el correo.
 
-La instalacion activa usa la identidad dedicada de Cloud Run para Sheets y un
+La instalación activa usa la identidad dedicada de Cloud Run para Sheets y un
 OAuth independiente para la carpeta privada de Mi unidad. El servicio esta
 limitado a una instancia maxima y la integracion se verifico con envios reales en
 ambos formatos de frontend. El estado y los UUID de esas pruebas se conservan en
@@ -73,7 +76,10 @@ Configuración necesaria:
 5. Opcionalmente, configura `GOOGLE_SHEETS_INSCRIPCION_TAB`; por defecto se usa
    `Inscripciones`. La pestaña técnica oculta usa
    `GOOGLE_SHEETS_INSCRIPCION_SYSTEM_TAB` o `_Inscripciones sistema` por defecto.
-6. Crea una carpeta privada para inscripciones y configura su ID en
+   El formulario de prueba usa `GOOGLE_SHEETS_PREINSCRIPCION_TAB` o
+   `Periodos de prueba`, y una pestaña técnica
+   `GOOGLE_SHEETS_PREINSCRIPCION_SYSTEM_TAB` o `_Pruebas sistema`.
+6. Crea una carpeta privada para formularios y configura su ID en
    `GOOGLE_DRIVE_INSCRIPCION_FOLDER_ID`.
 7. Si usas una unidad compartida, configura obligatoriamente
    `GOOGLE_DRIVE_INSCRIPCION_SHARED_DRIVE_ID` para impedir que un error de ID
@@ -107,16 +113,25 @@ grupo y los cuatro campos de documentos muestran directamente sus enlaces
 privados de Drive. No se muestran UUID, huellas, versiones, estados ni otros datos
 técnicos.
 
+La pestaña visible `Periodos de prueba` contiene los datos de la prueba, la
+captura privada y la carpeta de Drive. Su estado técnico se conserva en
+`_Pruebas sistema`. Por defecto reutiliza la misma carpeta privada de Drive que
+inscripción y distingue cada envío con una subcarpeta `preinscripcion-UUID`; se
+puede separar mediante `GOOGLE_DRIVE_PREINSCRIPCION_FOLDER_ID` y, si corresponde,
+`GOOGLE_DRIVE_PREINSCRIPCION_SHARED_DRIVE_ID`.
+
 Para conservar la deduplicación y los reintentos sin ensuciar la vista, la API
 mantiene esos datos en `_Inscripciones sistema`, una pestaña oculta. Al desplegar
 este esquema, la pestaña técnica anterior se renombra y oculta automáticamente,
 se crea la vista mínima y se proyectan las filas ya archivadas. Cada inscripción
-sigue creando una subcarpeta por UUID con la captura y los documentos. Si alguna
+sigue creando una subcarpeta por UUID con los documentos y, cuando el navegador
+puede generarla, la captura. Si alguna
 cabecera no coincide con el esquema esperado, el envío se detiene antes del
 correo.
 
-`GET /api/health` expone `spreadsheetConfigured` y `driveConfigured` sin revelar
-identificadores. Solo confirman que existen las variables mínimas; ejecuta
+`GET /api/health` conserva `spreadsheetConfigured` y `driveConfigured` para
+inscripción y añade el detalle de ambos formularios en `formStorage`, sin revelar
+identificadores. Solo confirma que existen las variables mínimas; ejecuta
 `npm run verify:form-storage` con la identidad de producción y termina con un envío
 real de prueba después del despliegue.
 Para consultar u ordenar inscripciones, utiliza vistas de filtro y evita reordenar
@@ -141,6 +156,13 @@ bancarios y de salud. Deben mantenerse privados, con acceso nominal mínimo y un
 política de retención coherente con la documentación de protección de datos. Al
 suprimir una inscripción deben eliminarse de forma coordinada la fila, su carpeta
 de Drive y el correo asociado.
+
+Para recuperar inscripciones históricas desde correos `.eml`, utiliza
+`scripts/import-historical-inscriptions.mjs`. El modo predeterminado es una
+previsualización sin escrituras ni datos personales; `--apply` requiere las
+credenciales mediante variables o archivos de secretos, no reenvía el correo y
+verifica al terminar las filas, enlaces y hashes de Drive. Los UUID se derivan de
+forma estable del `Message-ID`, por lo que repetir una importación no la duplica.
 
 ## Añadir una página
 

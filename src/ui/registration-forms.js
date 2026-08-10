@@ -357,6 +357,7 @@ export const FORM_DEFINITIONS = {
           {
             type: "group-selection",
             entry: "1264281896",
+            key: "training",
             submissionKey: "preinscripcion",
             label: "Dónde y cuándo quieres entrenar",
             required: true,
@@ -369,15 +370,29 @@ export const FORM_DEFINITIONS = {
           {
             type: "text",
             entry: "43453506",
+            key: "participant_full_name",
             label: "Nombre y Apellidos",
             required: true,
             autocomplete: "name",
           },
-          { type: "text", entry: "1329993054", label: "Población de residencia", required: true },
-          { type: "date-text", entry: "1065046570", label: "Fecha de nacimiento", required: true },
+          {
+            type: "text",
+            entry: "1329993054",
+            key: "participant_residence_city",
+            label: "Población de residencia",
+            required: true,
+          },
+          {
+            type: "date-text",
+            entry: "1065046570",
+            key: "participant_birth_date",
+            label: "Fecha de nacimiento",
+            required: true,
+          },
           {
             type: "radio",
             entry: "984531499",
+            key: "participant_sex",
             label: "SEXO",
             required: true,
             options: ["FEMENINO", "MASCULINO"],
@@ -385,6 +400,7 @@ export const FORM_DEFINITIONS = {
           {
             type: "tel",
             entry: "97509970",
+            key: "contact_phone",
             label: "Teléfono de contacto",
             required: true,
             autocomplete: "tel",
@@ -392,6 +408,7 @@ export const FORM_DEFINITIONS = {
           {
             type: "textarea",
             entry: "1933709984",
+            key: "comments",
             label: "Observaciones o sugerencias:",
             appendGroupSelection: true,
           },
@@ -403,6 +420,7 @@ export const FORM_DEFINITIONS = {
           {
             type: "checkboxes",
             entry: "1853047302",
+            key: "trial_commitment",
             label: "Me comprometo:",
             required: true,
             options: [
@@ -412,6 +430,7 @@ export const FORM_DEFINITIONS = {
           {
             type: "radio",
             entry: "577217566",
+            key: "privacy_consent",
             label:
               "De conformidad con lo previsto en la normativa de protección de datos de carácter personal (la LO 3/2018, de 5 de diciembre, de Protección de datos personales y garantía de los derechos digitales, LOPDyGDD y el Reglamento General sobre Protección de Datos 2016/679, de 27 de abril de 2016, RGPD, o norma que los sustituya), LES INFORMAMOS que los datos personales recogidos en el formulario de inscripción serán tratados por parte del club Alaior Esport como responsable del tratamiento con la única finalidad de programar la temporada 2025/26, así como para tramitar las licencias deportivas si fuera necesario. Les informamos que pueden ejercer sus derechos de acceso, rectificación, supresión, limitación del tratamiento, portabilidad de los datos y oposición enviando un correo electrónico a loesport@gmail.com",
             required: true,
@@ -421,6 +440,7 @@ export const FORM_DEFINITIONS = {
           {
             type: "radio",
             entry: "262712769",
+            key: "terms_consent",
             label:
               "Condiciones de uso: Quien ha cumplimentado el presente formulario declara que los datos en él consignado son reales con lo que desde el momento que pulse sobre el botón ENVIAR supone su aceptación y la aceptación de las condiciones de uso y reglamentos del Club ALAIOR ESPORT",
             required: true,

@@ -353,6 +353,7 @@ export function serializeDriveManifest(archive, maxLength = MAX_DRIVE_MANIFEST_C
   const manifest = {
     version: Number(archive.version) || 1,
     submissionId: String(archive.submissionId ?? ""),
+    formType: String(archive.formType ?? ""),
     parentFolderId: String(archive.parentFolderId ?? ""),
     folder: {
       id: String(archive.folder?.id ?? ""),

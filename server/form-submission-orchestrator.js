@@ -166,6 +166,7 @@ export function createFormSubmissionOrchestrator({
   sendEmail,
   sheetStore = createInscripcionSheetStore(),
   driveStore = createInscripcionDriveStore(),
+  persistedFormType = "inscripcion",
   logger = console,
   now = () => Date.now(),
   pendingRetryAfterMs = 120_000,
@@ -175,6 +176,12 @@ export function createFormSubmissionOrchestrator({
 } = {}) {
   if (typeof sendEmail !== "function") {
     throw new TypeError("createFormSubmissionOrchestrator necesita la función sendEmail.");
+  }
+  const normalizedPersistedFormType = String(persistedFormType ?? "")
+    .trim()
+    .toLowerCase();
+  if (!/^[a-z][a-z0-9_-]{0,49}$/.test(normalizedPersistedFormType)) {
+    throw new TypeError("createFormSubmissionOrchestrator necesita un tipo persistente válido.");
   }
   if (typeof now !== "function") {
     throw new TypeError("createFormSubmissionOrchestrator necesita una función now válida.");
@@ -503,7 +510,7 @@ export function createFormSubmissionOrchestrator({
     });
   }
 
-  async function submitInscripcion(payload, snapshot, uploadedFiles) {
+  async function submitPersistentForm(payload, snapshot, uploadedFiles) {
     const submissionId = normalizeSubmissionId(payload?.submissionId);
     const normalizedPayload = { ...payload, submissionId };
     const payloadFingerprint = createPayloadFingerprint(normalizedPayload);
@@ -596,10 +603,10 @@ export function createFormSubmissionOrchestrator({
   }
 
   async function submit(payload, snapshot, uploadedFiles = []) {
-    if (payload?.type !== "inscripcion") {
+    if (payload?.type !== normalizedPersistedFormType) {
       return sendEmail(payload, snapshot, uploadedFiles);
     }
-    return submitInscripcion(payload, snapshot, uploadedFiles);
+    return submitPersistentForm(payload, snapshot, uploadedFiles);
   }
 
   return Object.freeze({ submit });

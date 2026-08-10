@@ -14,6 +14,7 @@ import {
   createEnvironmentDriveAuth,
   createGoogleDriveClient,
   createInscripcionDriveStore,
+  createPreinscripcionDriveStore,
   legacyAttachmentKey,
   normalizeDriveFolderId,
   safeDriveFilename,
@@ -385,6 +386,42 @@ test("reserva todos los IDs y devuelve un plan completo antes de crear archivos"
   });
   assert.equal(fake.filesCreate.mock.callCount(), 0);
   assert.equal(fake.permissionsCreate.mock.callCount(), 0);
+});
+
+test("el periodo de prueba usa carpeta y propiedades propias reutilizando el almacén", async () => {
+  const fake = fakeDriveClient();
+  const store = createPreinscripcionDriveStore({
+    driveClient: fake.client,
+    folderId: PARENT_ID,
+    sharedDriveId: "sharedDrive12345",
+    environment: {},
+    wait: async () => undefined,
+  });
+  const trialPayload = payload({ type: "preinscripcion", attachments: [] });
+
+  const plan = await store.planArchive({
+    payload: trialPayload,
+    snapshot: SNAPSHOT,
+    uploadedFiles: [],
+  });
+  const archive = await store.reconcileArchive({
+    plan,
+    payload: trialPayload,
+    snapshot: SNAPSHOT,
+    uploadedFiles: [],
+  });
+
+  assert.equal(store.formType, "preinscripcion");
+  assert.equal(plan.folder.name, `preinscripcion-${SUBMISSION_ID}`);
+  assert.equal(archive.attachments.length, 0);
+  assert.equal(
+    fake.created.get(plan.folder.id).appProperties.loesport_kind,
+    "preinscripcion_folder",
+  );
+  assert.equal(
+    fake.created.get(plan.snapshot.id).appProperties.loesport_form_type,
+    "preinscripcion",
+  );
 });
 
 test("sin captura archiva los adjuntos y deja la referencia de captura vacía", async () => {

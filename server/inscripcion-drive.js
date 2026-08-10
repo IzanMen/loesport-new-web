@@ -25,6 +25,7 @@ const FILE_FIELDS = [
 const SUBMISSION_PROPERTY = "loesport_submission_id";
 const KIND_PROPERTY = "loesport_kind";
 const SLOT_PROPERTY = "loesport_file_slot";
+const FORM_TYPE_PROPERTY = "loesport_form_type";
 const DEFAULT_RETRY_DELAYS_MS = Object.freeze([150, 500]);
 
 export class GoogleDriveConfigurationError extends Error {
@@ -251,8 +252,16 @@ function plannedFile(descriptor, id) {
   };
 }
 
-function createSubmissionFolderName(submissionId) {
-  return `inscripcion-${submissionId}`;
+function normalizeFormType(value) {
+  const formType = cleanDriveText(value).toLowerCase();
+  if (!/^[a-z][a-z0-9_-]{0,49}$/.test(formType)) {
+    throw new GoogleDriveConfigurationError("El tipo de formulario de Google Drive no es válido.");
+  }
+  return formType;
+}
+
+function createSubmissionFolderName(submissionId, formType) {
+  return `${formType}-${submissionId}`;
 }
 
 function normalizeSubmissionId(value) {
@@ -286,7 +295,7 @@ function normalizeRetryDelays(delays) {
   });
 }
 
-function assertPlanMatches(plan, submissionId, parentFolderId, descriptors) {
+function assertPlanMatches(plan, submissionId, parentFolderId, descriptors, formType) {
   const plannedFiles = [
     ...(plan?.snapshot ? [plan.snapshot] : []),
     ...(Array.isArray(plan?.attachments) ? plan.attachments : []),
@@ -295,6 +304,11 @@ function assertPlanMatches(plan, submissionId, parentFolderId, descriptors) {
     Number(plan?.version) === DRIVE_ARCHIVE_VERSION &&
     plan?.submissionId === submissionId &&
     plan?.parentFolderId === parentFolderId &&
+    (
+      plan?.formType === formType ||
+      (formType === "inscripcion" && !plan?.formType)
+    ) &&
+    plan?.folder?.name === createSubmissionFolderName(submissionId, formType) &&
     DRIVE_ID_PATTERN.test(String(plan?.folder?.id ?? "")) &&
     plannedFiles.length === descriptors.length &&
     plannedFiles.every((file, index) => {
@@ -316,6 +330,7 @@ export function createInscripcionDriveStore({
   driveClient,
   folderId = process.env.GOOGLE_DRIVE_INSCRIPCION_FOLDER_ID,
   sharedDriveId = process.env.GOOGLE_DRIVE_INSCRIPCION_SHARED_DRIVE_ID,
+  formType = "inscripcion",
   environment = process.env,
   authFactory = () => createEnvironmentDriveAuth({ environment }),
   requireSharedDrive,
@@ -334,6 +349,7 @@ export function createInscripcionDriveStore({
     throw new TypeError("authFactory debe ser una función válida.");
   }
   const retryDelays = normalizeRetryDelays(retryDelaysMs);
+  const normalizedFormType = normalizeFormType(formType);
   const normalizedFolderId = cleanDriveText(folderId);
   const normalizedSharedDriveId = cleanDriveText(sharedDriveId);
   const oauthConfigured = Boolean(cleanDriveText(environment.GOOGLE_DRIVE_REFRESH_TOKEN));
@@ -354,7 +370,9 @@ export function createInscripcionDriveStore({
     const parentId = normalizeDriveFolderId(normalizedFolderId);
     if (sharedDriveRequired && !normalizedSharedDriveId) {
       throw new GoogleDriveConfigurationError(
-        "Falta la variable GOOGLE_DRIVE_INSCRIPCION_SHARED_DRIVE_ID.",
+        normalizedFormType === "inscripcion"
+          ? "Falta la variable GOOGLE_DRIVE_INSCRIPCION_SHARED_DRIVE_ID."
+          : "Falta el identificador de la unidad compartida de Google Drive.",
       );
     }
     if (normalizedSharedDriveId) normalizeDriveFolderId(normalizedSharedDriveId);
@@ -407,7 +425,7 @@ export function createInscripcionDriveStore({
       folder.capabilities?.canAddChildren !== true
     ) {
       throw new GoogleDriveConfigurationError(
-        "La carpeta de Google Drive no permite guardar inscripciones.",
+        "La carpeta de Google Drive no permite guardar formularios.",
       );
     }
     if (sharedDriveRequired && !folder.driveId) {
@@ -479,10 +497,11 @@ export function createInscripcionDriveStore({
     return {
       version: DRIVE_ARCHIVE_VERSION,
       submissionId,
+      formType: normalizedFormType,
       parentFolderId: parent.id,
       folder: {
         id: folderFileId,
-        name: createSubmissionFolderName(submissionId),
+        name: createSubmissionFolderName(submissionId, normalizedFormType),
         url: driveFolderUrl(folderFileId),
       },
       snapshot: plannedFiles.find((file) => file.kind === "snapshot") || null,
@@ -507,7 +526,9 @@ export function createInscripcionDriveStore({
   }
 
   function verifyCreatedFile(actual, planned, parentId, submissionId, { folder = false } = {}) {
-    const expectedKind = folder ? "inscripcion_folder" : "inscripcion_file";
+    const expectedKind = folder
+      ? `${normalizedFormType}_folder`
+      : `${normalizedFormType}_file`;
     const matches =
       actual?.id === planned?.id &&
       actual?.trashed !== true &&
@@ -515,6 +536,10 @@ export function createInscripcionDriveStore({
       actual?.parents?.includes(parentId) &&
       actual?.appProperties?.[SUBMISSION_PROPERTY] === submissionId &&
       actual?.appProperties?.[KIND_PROPERTY] === expectedKind &&
+      (
+        actual?.appProperties?.[FORM_TYPE_PROPERTY] === normalizedFormType ||
+        (normalizedFormType === "inscripcion" && !actual?.appProperties?.[FORM_TYPE_PROPERTY])
+      ) &&
       (folder || actual?.appProperties?.[SLOT_PROPERTY] === planned?.slot) &&
       (folder || !Number.isFinite(actual?.size) || actual.size === Number(planned?.size)) &&
       (folder || !actual?.sha256 || actual.sha256 === planned?.sha256);
@@ -540,7 +565,10 @@ export function createInscripcionDriveStore({
             parents: [parentId],
             appProperties: {
               [SUBMISSION_PROPERTY]: submissionId,
-              [KIND_PROPERTY]: folder ? "inscripcion_folder" : "inscripcion_file",
+              [KIND_PROPERTY]: folder
+                ? `${normalizedFormType}_folder`
+                : `${normalizedFormType}_file`,
+              [FORM_TYPE_PROPERTY]: normalizedFormType,
               ...(!folder
                 ? {
                     [SLOT_PROPERTY]: planned.slot,
@@ -583,7 +611,7 @@ export function createInscripcionDriveStore({
     const submissionId = normalizeSubmissionId(payload?.submissionId);
     const parent = await ensureReady();
     const descriptors = createArchiveDescriptors(payload, snapshot, uploadedFiles);
-    assertPlanMatches(plan, submissionId, parent.id, descriptors);
+    assertPlanMatches(plan, submissionId, parent.id, descriptors, normalizedFormType);
 
     const folder = await createWithRetry({
       planned: plan.folder,
@@ -622,9 +650,31 @@ export function createInscripcionDriveStore({
     ),
     folderId: normalizedFolderId,
     sharedDriveId: normalizedSharedDriveId,
+    formType: normalizedFormType,
     authMode: oauthConfigured ? "oauth" : "adc",
     ensureReady,
     planArchive,
     reconcileArchive,
+  });
+}
+
+export function createPreinscripcionDriveStore({
+  environment = process.env,
+  folderId =
+    environment.GOOGLE_DRIVE_PREINSCRIPCION_FOLDER_ID ||
+    environment.GOOGLE_DRIVE_FORMS_FOLDER_ID ||
+    environment.GOOGLE_DRIVE_INSCRIPCION_FOLDER_ID,
+  sharedDriveId =
+    environment.GOOGLE_DRIVE_PREINSCRIPCION_SHARED_DRIVE_ID ||
+    environment.GOOGLE_DRIVE_FORMS_SHARED_DRIVE_ID ||
+    environment.GOOGLE_DRIVE_INSCRIPCION_SHARED_DRIVE_ID,
+  ...options
+} = {}) {
+  return createInscripcionDriveStore({
+    ...options,
+    environment,
+    folderId,
+    sharedDriveId,
+    formType: "preinscripcion",
   });
 }

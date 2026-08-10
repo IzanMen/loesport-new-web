@@ -13,6 +13,8 @@ export const ALLOWED_FORM_TYPES = new Set([
   "equipacion",
 ]);
 
+export const STORED_FORM_TYPES = new Set(["inscripcion", "preinscripcion"]);
+
 const submissionIdPattern =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 const answerKeyPattern = /^[a-z][a-z0-9_]{0,79}$/;
@@ -79,7 +81,7 @@ export function parsePayload(rawPayload, { randomUUID = crypto.randomUUID } = {}
     };
   });
 
-  if (type === "inscripcion") {
+  if (STORED_FORM_TYPES.has(type)) {
     const answerKeys = answers.map((answer) => answer.key).filter(Boolean);
     if (new Set(answerKeys).size !== answerKeys.length) {
       throw badRequest("Las respuestas del formulario no son válidas.");
@@ -108,7 +110,7 @@ export function parsePayload(rawPayload, { randomUUID = crypto.randomUUID } = {}
     };
   });
 
-  if (type === "inscripcion") {
+  if (STORED_FORM_TYPES.has(type)) {
     const attachmentKeys = attachments.map((attachment) => attachment.key).filter(Boolean);
     if (new Set(attachmentKeys).size !== attachmentKeys.length) {
       throw badRequest("Los datos del formulario no son válidos.");

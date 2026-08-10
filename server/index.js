@@ -6,10 +6,20 @@ import { google } from "googleapis";
 import multer from "multer";
 import MailComposer from "nodemailer/lib/mail-composer/index.js";
 import { summarizeError } from "./error-summary.js";
-import { cleanText, parsePayload, safeFilename, validEmail } from "./form-payload.js";
+import {
+  STORED_FORM_TYPES,
+  cleanText,
+  parsePayload,
+  safeFilename,
+  validEmail,
+} from "./form-payload.js";
 import { createFormSubmissionOrchestrator } from "./form-submission-orchestrator.js";
-import { createInscripcionDriveStore } from "./inscripcion-drive.js";
+import {
+  createInscripcionDriveStore,
+  createPreinscripcionDriveStore,
+} from "./inscripcion-drive.js";
 import { createInscripcionSheetStore } from "./inscripcion-sheet.js";
+import { createPreinscripcionSheetStore } from "./preinscripcion-sheet.js";
 import { normalizeUploadedFile } from "./upload-validation.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -106,7 +116,7 @@ function answerSections(answers) {
 }
 
 function emailHtml(payload, files, snapshotCid) {
-  const submissionReference = payload.type === "inscripcion"
+  const submissionReference = STORED_FORM_TYPES.has(payload.type)
     ? `ID de envío: ${escapeHtml(payload.submissionId)}<br />`
     : "";
   const sections = [...answerSections(payload.answers)].map(([section, answers]) => {
@@ -186,7 +196,7 @@ function emailText(payload, files) {
     files.forEach((file) => lines.push(`${file.label}: ${file.name}`));
   }
   lines.push("");
-  if (payload.type === "inscripcion") lines.push(`ID de envío: ${payload.submissionId}`);
+  if (STORED_FORM_TYPES.has(payload.type)) lines.push(`ID de envío: ${payload.submissionId}`);
   lines.push(`Página: ${payload.pageUrl || "No disponible"}`);
   return lines.join("\n");
 }
@@ -262,11 +272,26 @@ export async function sendSubmissionEmail(
 
 const inscripcionSheetStore = createInscripcionSheetStore();
 const inscripcionDriveStore = createInscripcionDriveStore();
-const formSubmissionOrchestrator = createFormSubmissionOrchestrator({
+const inscripcionSubmissionOrchestrator = createFormSubmissionOrchestrator({
   sendEmail: sendSubmissionEmail,
   sheetStore: inscripcionSheetStore,
   driveStore: inscripcionDriveStore,
 });
+const preinscripcionSheetStore = createPreinscripcionSheetStore();
+const preinscripcionDriveStore = createPreinscripcionDriveStore();
+const preinscripcionSubmissionOrchestrator = createFormSubmissionOrchestrator({
+  sendEmail: sendSubmissionEmail,
+  sheetStore: preinscripcionSheetStore,
+  driveStore: preinscripcionDriveStore,
+  persistedFormType: "preinscripcion",
+});
+
+function submitForm(payload, snapshot, attachments) {
+  if (payload.type === "preinscripcion") {
+    return preinscripcionSubmissionOrchestrator.submit(payload, snapshot, attachments);
+  }
+  return inscripcionSubmissionOrchestrator.submit(payload, snapshot, attachments);
+}
 
 app.use("/api", (request, response, next) => {
   const origin = requestOrigin(request);
@@ -298,6 +323,16 @@ app.get("/api/health", (_request, response) => {
     ),
     spreadsheetConfigured: inscripcionSheetStore.configured,
     driveConfigured: inscripcionDriveStore.configured,
+    formStorage: {
+      inscripcion: {
+        spreadsheetConfigured: inscripcionSheetStore.configured,
+        driveConfigured: inscripcionDriveStore.configured,
+      },
+      preinscripcion: {
+        spreadsheetConfigured: preinscripcionSheetStore.configured,
+        driveConfigured: preinscripcionDriveStore.configured,
+      },
+    },
   });
 });
 
@@ -356,7 +391,7 @@ app.post(
       return;
     }
 
-    const result = await formSubmissionOrchestrator.submit(payload, snapshot, attachments);
+    const result = await submitForm(payload, snapshot, attachments);
     response.status(result.deduplicated ? 200 : 201).json({
       ok: true,
       submissionId: result.submissionId,

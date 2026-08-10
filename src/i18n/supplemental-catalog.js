@@ -183,6 +183,7 @@ export function createSupplementalCatalogue() {
   add("14 de septiembre de 2026", "14 de setembre de 2026", "14 de setembro de 2026", "2026ko irailaren 14a");
   add("1 día: 15 € · 2 días: 20 € · 3 días mujeres: 23 €/mes", "1 dia: 15 € · 2 dies: 20 € · 3 dies dones: 23 €/mes", "1 día: 15 € · 2 días: 20 € · 3 días mulleres: 23 €/mes", "Egun 1: 15 € · 2 egun: 20 € · 3 egun emakumeentzat: 23 €/hilean");
   add("1 día: 15 € · 2 días: 20 €/mes", "1 dia: 15 € · 2 dies: 20 €/mes", "1 día: 15 € · 2 días: 20 €/mes", "Egun 1: 15 € · 2 egun: 20 €/hilean");
+  add("1 o 2 días", "1 o 2 dies", "1 ou 2 días", "Egun 1 edo 2");
   add("1 día: 18 €/mes · 2 días: 25 €/mes", "1 dia: 18 €/mes · 2 dies: 25 €/mes", "1 día: 18 €/mes · 2 días: 25 €/mes", "Egun 1: 18 €/hilean · 2 egun: 25 €/hilean");
   add("15 € · 20 € / mes", "15 € · 20 € / mes", "15 € · 20 € / mes", "15 € · 20 € / hilean");
   add("18 € · 25 € / mes", "18 € · 25 € / mes", "18 € · 25 € / mes", "18 € · 25 € / hilean");
@@ -394,6 +395,19 @@ export function createSupplementalCatalogue() {
   add("Maó lunes, miércoles y viernes · Alaior martes y jueves", "Maó dilluns, dimecres i divendres · Alaior dimarts i dijous", "Maó luns, mércores e venres · Alaior martes e xoves", "Maó astelehen, asteazken eta ostiral · Alaior astearte eta ostegun");
   add("Martes y jueves · tercer día solo para mujeres el sábado", "Dimarts i dijous · tercer dia només per a dones el dissabte", "Martes e xoves · terceiro día só para mulleres o sábado", "Asteartea eta osteguna · hirugarren eguna emakumeentzat bakarrik larunbatean");
   add("Sábado Women · más días con Adultos 17:15", "Dissabte Women · més dies amb Adults 17:15", "Sábado Women · máis días con Adultos 17:15", "Women larunbata · egun gehiago 17:15eko helduekin");
+  add("Adultos 17:15 / Madres y padres", "Adults 17:15 / Mares i pares", "Adultos 17:15 / Nais e pais", "Helduak 17:15 / Gurasoak");
+  add("Cuota normal o suplemento familiar", "Quota normal o suplement familiar", "Cota normal ou suplemento familiar", "Ohiko kuota edo familiako gehigarria");
+  add("1 día: 20 € · 2 días: 27 €/mes", "1 dia: 20 € · 2 dies: 27 €/mes", "1 día: 20 € · 2 días: 27 €/mes", "Egun 1: 20 € · 2 egun: 27 €/hilean");
+  add("Con hijo/a: 1 día +10 € · 2 días +15 €/mes", "Amb fill/a: 1 dia +10 € · 2 dies +15 €/mes", "Con fillo/a: 1 día +10 € · 2 días +15 €/mes", "Seme-alabarekin: egun 1 +10 € · 2 egun +15 €/hilean");
+  add("Sin hijos en la escuela: 1 día 20 € · 2 días 27 €/mes · Con hijo/a: 1 día +10 € · 2 días +15 €/mes", "Sense fills a l'escola: 1 dia 20 € · 2 dies 27 €/mes · Amb fill/a: 1 dia +10 € · 2 dies +15 €/mes", "Sen fillos na escola: 1 día 20 € · 2 días 27 €/mes · Con fillo/a: 1 día +10 € · 2 días +15 €/mes", "Seme-alabarik eskolan gabe: egun 1 20 € · 2 egun 27 €/hilean · Seme-alabarekin: egun 1 +10 € · 2 egun +15 €/hilean");
+  add("Cuota normal: 1 día 15 € · 2 días 20 €/mes · Con hijo/a: 1 día +10 € · 2 días +15 €/mes", "Quota normal: 1 dia 15 € · 2 dies 20 €/mes · Amb fill/a: 1 dia +10 € · 2 dies +15 €/mes", "Cota normal: 1 día 15 € · 2 días 20 €/mes · Con fillo/a: 1 día +10 € · 2 días +15 €/mes", "Ohiko kuota: egun 1 15 € · 2 egun 20 €/hilean · Seme-alabarekin: egun 1 +10 € · 2 egun +15 €/hilean");
+  add("Sin hijos en la escuela · 1 día/semana", "Sense fills a l'escola · 1 dia/setmana", "Sen fillos na escola · 1 día/semana", "Seme-alabarik eskolan gabe · egun 1/astean");
+  add("Sin hijos en la escuela · 2 días/semana", "Sense fills a l'escola · 2 dies/setmana", "Sen fillos na escola · 2 días/semana", "Seme-alabarik eskolan gabe · 2 egun/astean");
+  add("Con hijo/a en la escuela · 1 día/semana", "Amb fill/a a l'escola · 1 dia/setmana", "Con fillo/a na escola · 1 día/semana", "Seme-alaba eskolan · egun 1/astean");
+  add("Con hijo/a en la escuela · 2 días/semana", "Amb fill/a a l'escola · 2 dies/setmana", "Con fillo/a na escola · 2 días/semana", "Seme-alaba eskolan · 2 egun/astean");
+  add("Con hijo/a en la escuela: suplemento de 10 €/mes", "Amb fill/a a l'escola: suplement de 10 €/mes", "Con fillo/a na escola: suplemento de 10 €/mes", "Seme-alaba eskolan: 10 €/hileko gehigarria");
+  add("Con hijo/a en la escuela: suplemento de 15 €/mes", "Amb fill/a a l'escola: suplement de 15 €/mes", "Con fillo/a na escola: suplemento de 15 €/mes", "Seme-alaba eskolan: 15 €/hileko gehigarria");
+  add("Entrenamiento para adultos, incluidas madres y padres mientras entrena la escuela. El sábado es un tercer día solo para mujeres con el grupo Women.", "Entrenament per a adults, incloses mares i pares mentre entrena l'escola. El dissabte és un tercer dia només per a dones amb el grup Women.", "Adestramento para adultos, incluídos nais e pais mentres adestra a escola. O sábado é un terceiro día só para mulleres co grupo Women.", "Helduentzako entrenamendua, eskola entrenatzen ari den bitartean gurasoak barne. Larunbata hirugarren eguna da emakumeentzat bakarrik, Women taldearekin.");
   add("Consentimiento", "Consentiment", "Consentimento", "Baimena");
   add("Solicitud enviada correctamente.", "Sol·licitud enviada correctament.", "Solicitude enviada correctamente.", "Eskaera behar bezala bidali da.");
   add("No se ha podido enviar la solicitud.", "No s'ha pogut enviar la sol·licitud.", "Non se puido enviar a solicitude.", "Ezin izan da eskaera bidali.");
