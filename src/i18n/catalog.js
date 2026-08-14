@@ -214,8 +214,8 @@ export function createCatalogue() {
   add("Instagram de Lô Esport, abre en una pestaña nueva", "Instagram de Lô Esport, s'obre en una pestanya nova", "Instagram de Lô Esport, abre nunha nova pestana", "Lô Esporten Instagram, fitxa berri batean irekitzen da");
   add("Facebook de Lô Esport, abre en una pestaña nueva", "Facebook de Lô Esport, s'obre en una pestanya nova", "Facebook de Lô Esport, abre nunha nova pestana", "Lô Esporten Facebook, fitxa berri batean irekitzen da");
 
-  add("Lô Esport Menorca — Atletismo de élite", "Lô Esport Menorca — Atletisme d'elit", "Lô Esport Menorca — Atletismo de elite", "Lô Esport Menorca — Eliteko atletismoa");
-  add("Lô Esport Menorca, club de atletismo de División de Honor. Entrenamiento, escuela y competición en Maó, Alaior y Es Mercadal.", "Lô Esport Menorca, club d'atletisme de Divisió d'Honor. Entrenament, escola i competició a Maó, Alaior i Es Mercadal.", "Lô Esport Menorca, club de atletismo de División de Honra. Adestramento, escola e competición en Maó, Alaior e Es Mercadal.", "Lô Esport Menorca, Ohorezko Mailako atletismo kluba. Entrenamendua, eskola eta lehiaketa Maón, Alaiorren eta Es Mercadalen.");
+  add("Lô Esport Menorca | Atletismo en Maó, Alaior y Mercadal", "Lô Esport Menorca | Atletisme a Maó, Alaior i Mercadal", "Lô Esport Menorca | Atletismo en Maó, Alaior e Mercadal", "Lô Esport Menorca | Atletismoa Maón, Alaiorren eta Mercadalen");
+  add("Club de atletismo en Menorca con escuelas, entrenamientos y competición para niños, jóvenes, adultos y familias en Maó, Alaior y Mercadal.", "Club d'atletisme a Menorca amb escoles, entrenaments i competició per a infants, joves, adults i famílies a Maó, Alaior i Mercadal.", "Club de atletismo en Menorca con escolas, adestramentos e competición para nenos, mozos, adultos e familias en Maó, Alaior e Mercadal.", "Menorcako atletismo kluba, eskolak, entrenamenduak eta lehiaketa eskaintzen dituena haur, gazte, heldu eta familientzat Maón, Alaiorren eta Mercadalen.");
   add("Atletismo", "Atletisme", "Atletismo", "Atletismoa");
   add("entre los", "entre els", "entre os", "onenen");
   add("mejores.", "millors.", "mellores.", "artean.");
