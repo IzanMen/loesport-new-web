@@ -703,7 +703,7 @@ export const FORM_DEFINITIONS = {
 
 const groupSelectionControllers = new WeakMap();
 
-function createTextElement(tag, className, text) {
+export function createTextElement(tag, className, text) {
   const element = document.createElement(tag);
   if (className) element.className = className;
   element.textContent = text;
@@ -809,11 +809,19 @@ function createGroupSelectionField(wrapper, field) {
   wrapper.dataset.groupSelection = "";
 
   const requestedGroupId = new URLSearchParams(window.location.search).get("grupo");
+  const allowedGroupIds = field.allowedGroupIds?.length ? new Set(field.allowedGroupIds) : null;
   const requestedGroup = getTrainingGroup(requestedGroupId);
-  const contextualGroup = requestedGroup?.formValues[field.submissionKey] ? requestedGroup : null;
-  const stepOffset = contextualGroup ? 1 : 0;
+  const requestedGroupAllowed = !allowedGroupIds || allowedGroupIds.has(requestedGroup?.id);
+  const contextualGroup =
+    field.allowContextGroup !== false &&
+    requestedGroupAllowed &&
+    requestedGroup?.formValues[field.submissionKey]
+      ? requestedGroup
+      : null;
+  const fixedLocationId = contextualGroup?.location || field.fixedLocation || "";
+  const stepOffset = fixedLocationId ? 1 : 0;
   const state = {
-    locationId: contextualGroup?.location || "",
+    locationId: fixedLocationId,
     group: null,
     dayCount: null,
     selectedDays: new Set(),
@@ -838,7 +846,9 @@ function createGroupSelectionField(wrapper, field) {
     contextualGroup ? "Grupo seleccionado" : "Elige tu grupo",
     contextualGroup
       ? "Has llegado desde la página de este grupo."
-      : "Solo aparecen los grupos de la sede que acabas de elegir.",
+      : fixedLocationId
+        ? "Solo aparecen los grupos compatibles con esta inscripción familiar."
+        : "Solo aparecen los grupos de la sede que acabas de elegir.",
   );
   groupStep.options.classList.add("registration-group-options");
   groupStep.step.hidden = !contextualGroup;
@@ -971,15 +981,21 @@ function createGroupSelectionField(wrapper, field) {
   function renderDayCounts(group) {
     countStep.options.replaceChildren();
     daysStep.step.hidden = true;
-    group.dayCounts.forEach((dayCount, index) => {
+    const availableDayCounts = field.allowedDayCounts?.length
+      ? group.dayCounts.filter((dayCount) => field.allowedDayCounts.includes(dayCount.count))
+      : group.dayCounts;
+    availableDayCounts.forEach((dayCount, index) => {
       const choice = createFlowChoice({
         type: "radio",
         name: `training-count-${field.entry}`,
         id: `training-count-${field.entry}-${dayCount.count}`,
         value: String(dayCount.count),
         title: formatDayCount(dayCount.count),
-        meta: dayCount.price,
-        detail: dayCount.note,
+        meta: field.familyPricing && dayCount.familyPrice ? dayCount.familyPrice : dayCount.price,
+        detail:
+          field.familyPricing && dayCount.familyPrice
+            ? "Tarifa para madres y padres con un hijo o hija en la escuela"
+            : dayCount.note,
         className: "registration-count-choice",
       });
       choice.input.required = true;
@@ -989,7 +1005,7 @@ function createGroupSelectionField(wrapper, field) {
       });
       countStep.options.append(choice.label);
 
-      if (group.dayCounts.length === 1 && index === 0) {
+      if (availableDayCounts.length === 1 && index === 0) {
         choice.input.checked = true;
         selectDayCount(dayCount);
       }
@@ -1013,7 +1029,9 @@ function createGroupSelectionField(wrapper, field) {
     resetSchedule();
     const groups = fixedGroup
       ? [fixedGroup]
-      : TRAINING_GROUPS.filter((group) => group.location === locationId);
+      : TRAINING_GROUPS.filter(
+          (group) => group.location === locationId && (!allowedGroupIds || allowedGroupIds.has(group.id)),
+        );
 
     groups.forEach((group, index) => {
       const location = getTrainingLocation(group.location);
@@ -1045,7 +1063,7 @@ function createGroupSelectionField(wrapper, field) {
     renderGroups(locationId);
   }
 
-  if (!contextualGroup) {
+  if (!fixedLocationId) {
     TRAINING_LOCATIONS.forEach((location) => {
       const choice = createFlowChoice({
         type: "radio",
@@ -1070,6 +1088,8 @@ function createGroupSelectionField(wrapper, field) {
     const changeLink = createTextElement("a", "registration-change-group", "Cambiar de grupo");
     changeLink.href = window.location.pathname;
     groupStep.heading.append(changeLink);
+  } else if (fixedLocationId) {
+    renderGroups(fixedLocationId);
   }
 
   wrapper.append(flow, groupSubmission);
@@ -1374,7 +1394,7 @@ function createBankDetailsField(wrapper, field) {
   wrapper.append(fields, hidden);
 }
 
-function createField(field) {
+export function createField(field) {
   const wrapper = document.createElement("fieldset");
   wrapper.className = `registration-field${field.legal ? " is-legal" : ""}`;
   wrapper.dataset.entry = field.entry;
@@ -1439,10 +1459,10 @@ function createField(field) {
   return wrapper;
 }
 
-function createSection(section, index) {
+export function createSection(section, index, idPrefix = "registration") {
   const wrapper = document.createElement("section");
   wrapper.className = "registration-section";
-  wrapper.setAttribute("aria-labelledby", `registration-section-${index}`);
+  wrapper.setAttribute("aria-labelledby", `${idPrefix}-section-${index}`);
 
   const heading = document.createElement("header");
   heading.className = "registration-section-heading";
@@ -1450,6 +1470,7 @@ function createSection(section, index) {
     createTextElement("span", "registration-section-number", String(index + 1).padStart(2, "0")),
     createTextElement("h2", "", section.title),
   );
+  heading.querySelector("h2").id = `${idPrefix}-section-${index}`;
   if (section.description) heading.append(createTextElement("p", "", section.description));
 
   const fields = document.createElement("div");
@@ -1459,7 +1480,7 @@ function createSection(section, index) {
   return wrapper;
 }
 
-function validateCheckboxGroups(form) {
+export function validateCheckboxGroups(form) {
   let valid = true;
   form.querySelectorAll("[data-required-checkboxes]").forEach((group) => {
     const first = group.querySelector('input[type="checkbox"]');
@@ -1470,7 +1491,7 @@ function validateCheckboxGroups(form) {
   return valid;
 }
 
-function validateOtherResponses(form) {
+export function validateOtherResponses(form) {
   let valid = true;
   form.querySelectorAll(".registration-other-input").forEach((input) => {
     const otherOption = input.closest(".registration-choice")?.querySelector('input[type="radio"]');
@@ -1481,7 +1502,7 @@ function validateOtherResponses(form) {
   return valid;
 }
 
-function validateTrainingOptions(form) {
+export function validateTrainingOptions(form) {
   let valid = true;
   form.querySelectorAll(".registration-training-value").forEach((input) => {
     const isComplete = Boolean(input.value.trim());
@@ -1508,7 +1529,7 @@ function selectedEntryText(form, entry) {
     .toLowerCase();
 }
 
-function updateConditionalFields(form) {
+export function updateConditionalFields(form) {
   form.querySelectorAll("[data-show-when-entry]").forEach((field) => {
     const selectedText = selectedEntryText(form, field.dataset.showWhenEntry);
     const expectedText = (field.dataset.showWhenValueIncludes || "").toLowerCase();
@@ -1536,7 +1557,7 @@ function updateConditionalFields(form) {
   });
 }
 
-function validateGroupSelections(form, { focus = false } = {}) {
+export function validateGroupSelections(form, { focus = false } = {}) {
   for (const wrapper of form.querySelectorAll("[data-group-selection]")) {
     const controller = groupSelectionControllers.get(wrapper);
     if (controller && !controller.validate({ focus })) return false;
@@ -1559,7 +1580,7 @@ function isMinorFromDate(value) {
   return age < 18;
 }
 
-function validateFileInputs(form) {
+export function validateFileInputs(form) {
   let valid = true;
   form.querySelectorAll("[data-file-input]").forEach((input) => {
     let message = "";
@@ -1610,7 +1631,7 @@ function fieldSubmissionKey(field) {
   return entry ? `entry_${entry}` : "field";
 }
 
-function collectRegistrationSubmission(definition, form) {
+export function collectRegistrationSubmission(definition, form) {
   const answers = [];
   const attachments = [];
 

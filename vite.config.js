@@ -16,6 +16,7 @@ const pages = {
   equipamiento: "equipamiento.html",
   productoEquipacion: "producto-equipacion.html",
   inscripcion: "inscripcion.html",
+  inscripcionFamiliar: "inscripcion-familiar.html",
   preinscripcion: "preinscripcion.html",
   baja: "baja.html",
   licencias: "licencias.html",

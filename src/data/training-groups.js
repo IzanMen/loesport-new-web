@@ -31,6 +31,8 @@ export const TRAINING_GROUPS = [
   {
     id: "mao-iniciacion",
     location: "mao",
+    familyRole: "school",
+    simultaneousAdultGroupId: "mao-running-iniciacion",
     title: "Iniciación / Sub-8",
     category: "2020 y posteriores",
     schedule: "Lunes, martes, miércoles y jueves · 17:30–18:30",
@@ -44,6 +46,8 @@ export const TRAINING_GROUPS = [
   {
     id: "mao-sub10",
     location: "mao",
+    familyRole: "school",
+    simultaneousAdultGroupId: "mao-running-iniciacion",
     title: "Sub-10",
     category: "2018–2019",
     schedule: "Lunes, martes, miércoles y jueves · 17:30–18:30",
@@ -57,6 +61,8 @@ export const TRAINING_GROUPS = [
   {
     id: "mao-sub12",
     location: "mao",
+    familyRole: "school",
+    simultaneousAdultGroupId: "mao-running-iniciacion",
     title: "Sub-12",
     category: "2016–2017",
     schedule: "Lunes, martes, miércoles y jueves · 17:30–18:30",
@@ -70,6 +76,8 @@ export const TRAINING_GROUPS = [
   {
     id: "mao-sub14-sub16",
     location: "mao",
+    familyRole: "school",
+    simultaneousAdultGroupId: "mao-running-iniciacion",
     title: "Sub-14 y Sub-16",
     category: "2012–2015",
     schedule: "Lunes, martes, miércoles y jueves · 17:30–18:30",
@@ -138,13 +146,21 @@ export const TRAINING_GROUPS = [
   {
     id: "mao-running-iniciacion",
     location: "mao",
+    familyRole: "parent",
+    familySchedule: "lunes, martes, miércoles y jueves · 17:30–18:30",
     title: "Madres y padres / Running iniciación",
     category: "Adultos · Madres y padres",
     schedule: "Lunes, martes, miércoles y jueves · 17:30–18:30",
     days: maoSchoolDays,
     dayCounts: [
-      dayCount(1, "20 €/mes", { note: "Con hijo/a en la escuela: suplemento de 10 €/mes" }),
-      dayCount(2, "27 €/mes", { note: "Con hijo/a en la escuela: suplemento de 15 €/mes" }),
+      dayCount(1, "20 €/mes", {
+        note: "Con hijo/a en la escuela: suplemento de 10 €/mes",
+        familyPrice: "Suplemento de 10 €/mes",
+      }),
+      dayCount(2, "27 €/mes", {
+        note: "Con hijo/a en la escuela: suplemento de 15 €/mes",
+        familyPrice: "Suplemento de 15 €/mes",
+      }),
     ],
     formValues: {
       inscripcion: "ATLETISMO MAÓ Adultos INICIACIÓN (Esport&Salut) 17:30h",
@@ -154,6 +170,8 @@ export const TRAINING_GROUPS = [
   {
     id: "alaior-iniciacion",
     location: "alaior",
+    familyRole: "school",
+    simultaneousAdultGroupId: "alaior-adultos-running",
     title: "Iniciación",
     category: "2020 y posteriores",
     schedule: "Martes y jueves · 17:15–18:15",
@@ -167,6 +185,8 @@ export const TRAINING_GROUPS = [
   {
     id: "alaior-sub10-sub12",
     location: "alaior",
+    familyRole: "school",
+    simultaneousAdultGroupId: "alaior-adultos-running",
     title: "Sub-10 y Sub-12",
     category: "2016–2019",
     schedule: "Martes y jueves · 17:15–18:15",
@@ -180,6 +200,8 @@ export const TRAINING_GROUPS = [
   {
     id: "alaior-sub14-sub16-sub18",
     location: "alaior",
+    familyRole: "school",
+    simultaneousAdultGroupId: "alaior-adultos-running",
     title: "Sub-14, Sub-16 y Sub-18",
     category: "2010–2015",
     schedule: "Martes y jueves · 17:15–18:15",
@@ -193,6 +215,8 @@ export const TRAINING_GROUPS = [
   {
     id: "alaior-adultos-running",
     location: "alaior",
+    familyRole: "parent",
+    familySchedule: "martes y jueves · 17:15–18:15",
     title: "Adultos 17:15 / Madres y padres",
     category: "Adultos · Madres y padres",
     schedule: "Martes y jueves · tercer día solo para mujeres el sábado",
@@ -204,10 +228,12 @@ export const TRAINING_GROUPS = [
     dayCounts: [
       dayCount(1, "15 €/mes", {
         note: "Con hijo/a en la escuela: suplemento de 10 €/mes",
+        familyPrice: "Suplemento de 10 €/mes",
         allowedDays: ["martes", "jueves"],
       }),
       dayCount(2, "20 €/mes", {
         note: "Con hijo/a en la escuela: suplemento de 15 €/mes",
+        familyPrice: "Suplemento de 15 €/mes",
         allowedDays: ["martes", "jueves"],
       }),
       dayCount(3, "23 €/mes", {
@@ -276,4 +302,16 @@ export function getTrainingGroup(groupId) {
 
 export function getTrainingLocation(locationId) {
   return TRAINING_LOCATIONS.find((location) => location.id === locationId);
+}
+
+export function getFamilySchoolGroups(locationId) {
+  return TRAINING_GROUPS.filter(
+    (group) => group.location === locationId && group.familyRole === "school",
+  );
+}
+
+export function getFamilyAdultGroup(locationId) {
+  return TRAINING_GROUPS.find(
+    (group) => group.location === locationId && group.familyRole === "parent",
+  );
 }

@@ -26,6 +26,7 @@ const MENU_SECTIONS = [
     areas: ["registration", "paperwork"],
     links: [
       ["Inscribirme en el club", "/inscripcion.html"],
+      ["Inscribir a mi familia", "/inscripcion-familiar.html"],
       ["Solicitar un entrenamiento de prueba", "/preinscripcion.html"],
       ["Gestionar la licencia", "/licencias.html"],
       ["Solicitar la baja", "/baja.html"],
@@ -58,7 +59,9 @@ function getCurrentArea() {
   const path = window.location.pathname;
 
   if (path.includes("grupos-")) return "groups";
-  if (path.endsWith("/inscripcion.html")) return "registration";
+  if (["/inscripcion.html", "/inscripcion-familiar.html"].some((page) => path.endsWith(page))) {
+    return "registration";
+  }
   if (["/preinscripcion.html", "/baja.html", "/licencias.html"].some((page) => path.endsWith(page))) {
     return "paperwork";
   }

@@ -113,6 +113,15 @@ grupo y los cuatro campos de documentos muestran directamente sus enlaces
 privados de Drive. No se muestran UUID, huellas, versiones, estados ni otros datos
 técnicos.
 
+`inscripcion-familiar.html` simplifica las altas conjuntas de las escuelas de
+Alaior y Maó. El navegador envía una inscripción estándar por participante, por
+lo que cada persona mantiene su propia fila y su carpeta de Drive sin cambiar el
+esquema de la hoja. Todas las filas incluyen en `Observaciones` una referencia
+`FAM-XXXXXXXX`; las de madres y padres indican además la tarifa simultánea con
+hijo/a en la escuela y, cuando hay tres o más participantes, el descuento
+familiar. Los UUID individuales se conservan durante los reintentos para que un
+fallo parcial no duplique las personas ya guardadas.
+
 La pestaña visible `Periodos de prueba` contiene los datos de la prueba, la
 captura privada y la carpeta de Drive. Su estado técnico se conserva en
 `_Pruebas sistema`. Por defecto reutiliza la misma carpeta privada de Drive que
