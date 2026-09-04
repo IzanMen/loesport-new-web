@@ -216,6 +216,8 @@ export function createCatalogue() {
 
   add("Lô Esport Menorca | Atletismo en Maó, Alaior y Mercadal", "Lô Esport Menorca | Atletisme a Maó, Alaior i Mercadal", "Lô Esport Menorca | Atletismo en Maó, Alaior e Mercadal", "Lô Esport Menorca | Atletismoa Maón, Alaiorren eta Mercadalen");
   add("Club de atletismo en Menorca con escuelas, entrenamientos y competición para niños, jóvenes, adultos y familias en Maó, Alaior y Mercadal.", "Club d'atletisme a Menorca amb escoles, entrenaments i competició per a infants, joves, adults i famílies a Maó, Alaior i Mercadal.", "Club de atletismo en Menorca con escolas, adestramentos e competición para nenos, mozos, adultos e familias en Maó, Alaior e Mercadal.", "Menorcako atletismo kluba, eskolak, entrenamenduak eta lehiaketa eskaintzen dituena haur, gazte, heldu eta familientzat Maón, Alaiorren eta Mercadalen.");
+  add("El mejor atletismo", "El millor atletisme", "O mellor atletismo", "Atletismorik onena");
+  add("en Baleares", "de les Balears", "das Baleares", "Balear Uharteetan");
   add("Atletismo", "Atletisme", "Atletismo", "Atletismoa");
   add("entre los", "entre els", "entre os", "onenen");
   add("mejores.", "millors.", "mellores.", "artean.");
