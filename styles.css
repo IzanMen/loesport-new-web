@@ -294,6 +294,26 @@ body.has-scrolled .registration-tabs {
   border-left: 4px solid #879500;
 }
 
+.registration-aside-note {
+  margin-top: 28px;
+  padding: 20px;
+  color: var(--white);
+  background: var(--ink);
+  border-left: 4px solid var(--yellow);
+}
+
+.registration-aside-note strong {
+  font-size: 13px;
+  text-transform: uppercase;
+}
+
+.registration-aside-note p {
+  margin: 9px 0 0;
+  color: #d4d5ce;
+  font-size: 12px;
+  line-height: 1.55;
+}
+
 .family-aside-note strong {
   font-size: 13px;
 }
@@ -1762,9 +1782,14 @@ button[aria-busy="true"] {
     grid-column: 1;
   }
 
+  .registration-aside-note,
+  .family-aside-note {
+    grid-column: 1;
+  }
+
   .registration-contact {
     grid-column: 2;
-    grid-row: 1 / span 3;
+    grid-row: 1 / span 4;
     margin-top: 0;
     padding: 22px;
     align-content: center;
@@ -3442,6 +3467,13 @@ body.has-scrolled .mobile-menu {
   background: var(--yellow);
 }
 
+.management-card.featured .eyebrow,
+.management-card.yellow .eyebrow,
+.family-management-card .eyebrow {
+  color: currentColor;
+  opacity: 0.72;
+}
+
 .management-card h3 {
   max-width: 520px;
   margin: 0 0 12px;
@@ -3471,15 +3503,21 @@ body.has-scrolled .mobile-menu {
   text-transform: uppercase;
 }
 
+.family-management-card > a {
+  margin-top: 12px;
+}
+
 .management-card.wide {
   grid-column: 1 / -1;
+  margin-top: 16px;
   min-height: 190px;
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
   gap: 42px;
-  color: var(--ink);
-  background: var(--yellow);
+  color: var(--white);
+  background: var(--ink);
+  border-top: 6px solid var(--yellow);
 }
 
 .management-card.wide h3 {
@@ -9704,6 +9742,39 @@ body.has-scrolled .mobile-menu {
   line-height: 1.65;
 }
 
+.group-matricula-note {
+  margin-top: 28px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  border: 1px solid var(--line);
+}
+
+.group-matricula-note article {
+  padding: 28px;
+}
+
+.group-matricula-note article + article {
+  border-left: 1px solid var(--line);
+}
+
+.group-matricula-note h3 {
+  max-width: 520px;
+  margin: 0 0 14px;
+  color: var(--yellow);
+  font-family: "Barlow Condensed", Impact, sans-serif;
+  font-size: clamp(26px, 2.4vw, 36px);
+  line-height: 0.98;
+  text-transform: uppercase;
+}
+
+.group-matricula-note p {
+  max-width: 680px;
+  margin: 0;
+  color: #d4d5ce;
+  font-size: 14px;
+  line-height: 1.65;
+}
+
 .group-cta-section {
   padding: 106px 0;
   color: var(--ink);
@@ -10232,6 +10303,19 @@ body.has-scrolled .mobile-menu {
 
   .group-practical-grid h3 {
     margin-top: 44px;
+  }
+
+  .group-matricula-note {
+    grid-template-columns: 1fr;
+  }
+
+  .group-matricula-note article {
+    padding: 26px 0;
+  }
+
+  .group-matricula-note article + article {
+    border-top: 1px solid var(--line);
+    border-left: 0;
   }
 
   .group-cta-actions {
