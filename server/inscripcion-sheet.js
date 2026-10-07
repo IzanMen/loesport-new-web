@@ -7,14 +7,14 @@ import { createPublicSheetSync } from "./public-sheet-sync.js";
 export const GOOGLE_SHEETS_SCOPE = "https://www.googleapis.com/auth/spreadsheets";
 export const DEFAULT_INSCRIPCION_SHEET_NAME = "Inscripciones";
 export const DEFAULT_INSCRIPCION_SYSTEM_SHEET_NAME = "_Inscripciones sistema";
-export const INSCRIPCION_SHEET_SCHEMA_VERSION = "2";
+export const INSCRIPCION_SHEET_SCHEMA_VERSION = "3";
 export const MAX_UNMAPPED_ANSWERS_CHARS = 45_000;
 export const MAX_DRIVE_MANIFEST_CHARS = 45_000;
 
 const METADATA_COLUMNS = [
   ["submission_id", "ID de envío"],
   ["payload_fingerprint", "Huella del contenido"],
-  ["schema_version", "Versión de esquema · v2"],
+  ["schema_version", "Versión de esquema · v3"],
   ["server_received_at", "Recibido por el servidor"],
   ["client_submitted_at", "Enviado desde el navegador"],
   ["form_type", "Tipo de formulario"],
@@ -66,6 +66,10 @@ const PUBLIC_ANSWER_COLUMNS = ANSWER_COLUMNS.filter(
   ([key]) => key !== "training_group_id",
 );
 
+const CONTACT_COLUMNS = [
+  ["contact_email", "Correo electrónico de contacto"],
+];
+
 const DRIVE_COLUMNS = [
   ["drive_status", "Estado de Drive"],
   ["drive_error", "Error de Drive"],
@@ -91,10 +95,17 @@ export const INSCRIPCION_SHEET_V1_COLUMNS = freezeColumns([
   ...ANSWER_COLUMNS,
 ]);
 
+const INSCRIPCION_SHEET_V2_COLUMNS = freezeColumns([
+  ...METADATA_COLUMNS,
+  ...ANSWER_COLUMNS,
+  ...DRIVE_COLUMNS,
+]);
+
 export const INSCRIPCION_SHEET_COLUMNS = freezeColumns([
   ...METADATA_COLUMNS,
   ...ANSWER_COLUMNS,
   ...DRIVE_COLUMNS,
+  ...CONTACT_COLUMNS,
 ]);
 
 export const INSCRIPCION_SHEET_V1_HEADERS = Object.freeze(
@@ -107,19 +118,33 @@ export const INSCRIPCION_SHEET_HEADERS = Object.freeze(
   INSCRIPCION_SHEET_COLUMNS.map(({ header }) => header),
 );
 
+const INSCRIPCION_SHEET_V2_HEADERS = Object.freeze(
+  INSCRIPCION_SHEET_V2_COLUMNS.map(({ key, header }) =>
+    key === "schema_version" ? "Versión de esquema · v2" : header,
+  ),
+);
+
 export const INSCRIPCION_PUBLIC_COLUMNS = freezeColumns([
   ["received_at", "Fecha y hora de recepción"],
   ...PUBLIC_ANSWER_COLUMNS,
+  ...CONTACT_COLUMNS,
 ]);
 
 export const INSCRIPCION_PUBLIC_HEADERS = Object.freeze(
   INSCRIPCION_PUBLIC_COLUMNS.map(({ header }) => header),
 );
 
+const INSCRIPCION_PUBLIC_V2_HEADERS = Object.freeze(
+  INSCRIPCION_PUBLIC_HEADERS.slice(0, -CONTACT_COLUMNS.length),
+);
+
 const COLUMN_INDEX = new Map(
   INSCRIPCION_SHEET_COLUMNS.map(({ key }, index) => [key, index]),
 );
-const ANSWER_KEYS = new Set(ANSWER_COLUMNS.map(([key]) => key));
+const ANSWER_KEYS = new Set([
+  ...ANSWER_COLUMNS.map(([key]) => key),
+  ...CONTACT_COLUMNS.map(([key]) => key),
+]);
 const LOOKUP_COLUMNS = INSCRIPCION_SHEET_COLUMNS.slice(
   0,
   Math.max(
@@ -128,9 +153,7 @@ const LOOKUP_COLUMNS = INSCRIPCION_SHEET_COLUMNS.slice(
     COLUMN_INDEX.get("email_error"),
   ) + 1,
 );
-const DRIVE_SHEET_COLUMNS = INSCRIPCION_SHEET_COLUMNS.slice(
-  INSCRIPCION_SHEET_V1_COLUMNS.length,
-);
+const DRIVE_SHEET_COLUMNS = freezeColumns(DRIVE_COLUMNS);
 
 const UUID_PATTERN =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
@@ -332,6 +355,18 @@ export function serializeUnmappedAnswers(
   return serialized;
 }
 
+function answerValueFromSerializedUnmapped(serialized, key) {
+  if (!serialized) return "";
+  try {
+    const answers = JSON.parse(String(serialized));
+    if (!Array.isArray(answers)) return "";
+    const match = answers.find((answer) => normalizeAnswerKey(answer?.key) === key);
+    return match ? String(match.value ?? "") : "";
+  } catch {
+    return "";
+  }
+}
+
 function driveManifestEntry(file, fallbackKind) {
   if (!file || typeof file !== "object") return null;
   return {
@@ -436,6 +471,7 @@ export function buildInscripcionPublicRow(record, { timeZone = "Europe/Madrid" }
       const driveUrlKey = PUBLIC_FILE_URL_KEYS[key];
       return String((driveUrlKey && source[driveUrlKey]) || source[key] || "");
     }),
+    ...CONTACT_COLUMNS.map(([key]) => String(source[key] || "")),
   ].map(escapeSpreadsheetValue);
 }
 
@@ -507,6 +543,7 @@ export function buildInscripcionRecord({
   ANSWER_KEYS.forEach((key) => {
     record[key] = answerMap.get(key) ?? "";
   });
+  record.contact_email = record.contact_email || String(payload?.replyTo ?? "");
   Object.assign(
     record,
     driveArchiveToRecord(driveArchive, { status: driveStatus, error: driveError }),
@@ -521,9 +558,16 @@ export function recordToSheetRow(record) {
 }
 
 export function sheetRowToRecord(row, columns = INSCRIPCION_SHEET_COLUMNS) {
-  return Object.fromEntries(
+  const record = Object.fromEntries(
     columns.map(({ key }, index) => [key, String(row?.[index] ?? "")]),
   );
+  if (!record.contact_email && "unmapped_answers" in record) {
+    record.contact_email = answerValueFromSerializedUnmapped(
+      record.unmapped_answers,
+      "contact_email",
+    );
+  }
+  return record;
 }
 
 export function isDuplicateSubmissionRecord(record) {
@@ -814,7 +858,10 @@ export async function ensureInscripcionSheet({
         values: [[...INSCRIPCION_SHEET_HEADERS]],
       },
     });
-  } else if (headersMatch(actualHeaders, INSCRIPCION_SHEET_V1_HEADERS)) {
+  } else if (
+    headersMatch(actualHeaders, INSCRIPCION_SHEET_V1_HEADERS) ||
+    headersMatch(actualHeaders, INSCRIPCION_SHEET_V2_HEADERS)
+  ) {
     await sheetsClient.spreadsheets.values.update({
       spreadsheetId: normalizedSpreadsheetId,
       range: headerRange,
@@ -944,6 +991,16 @@ export async function ensureInscripcionPublicSheet({
         values: [[...INSCRIPCION_PUBLIC_HEADERS]],
       },
     });
+  } else if (headersMatch(header.headers, INSCRIPCION_PUBLIC_V2_HEADERS)) {
+    await sheetsClient.spreadsheets.values.update({
+      spreadsheetId: normalizedSpreadsheetId,
+      range: header.range,
+      valueInputOption: "RAW",
+      requestBody: {
+        majorDimension: "ROWS",
+        values: [[...INSCRIPCION_PUBLIC_HEADERS]],
+      },
+    });
   } else if (!headersMatch(header.headers, INSCRIPCION_PUBLIC_HEADERS)) {
     throw new GoogleSheetsSchemaError(
       `La cabecera de la pestaña ${normalizedSheetName} no coincide con la vista esperada.`,
@@ -994,6 +1051,9 @@ export function createInscripcionSheetStore({
   const lastColumn = columnName(INSCRIPCION_SHEET_COLUMNS.length);
   const lastLookupColumn = columnName(LOOKUP_COLUMNS.length);
   const firstDriveColumn = columnName(INSCRIPCION_SHEET_V1_COLUMNS.length + 1);
+  const lastDriveColumn = columnName(
+    COLUMN_INDEX.get(DRIVE_COLUMNS.at(-1)[0]) + 1,
+  );
   let client = sheetsClient;
   let quotedSystemSheetName;
   let readyPromise;
@@ -1089,7 +1149,7 @@ export function createInscripcionSheetStore({
       spreadsheetId: normalizedSpreadsheetId,
       ranges: [
         `${quotedSystemSheetName}!A2:${lastLookupColumn}`,
-        `${quotedSystemSheetName}!${firstDriveColumn}2:${lastColumn}`,
+        `${quotedSystemSheetName}!${firstDriveColumn}2:${lastDriveColumn}`,
       ],
       majorDimension: "ROWS",
     });

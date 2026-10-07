@@ -49,7 +49,7 @@ const SPREADSHEET_ID = "spreadsheet-test";
 const EXPECTED_COLUMNS = [
   ["submission_id", "ID de envío"],
   ["payload_fingerprint", "Huella del contenido"],
-  ["schema_version", "Versión de esquema · v2"],
+  ["schema_version", "Versión de esquema · v3"],
   ["server_received_at", "Recibido por el servidor"],
   ["client_submitted_at", "Enviado desde el navegador"],
   ["form_type", "Tipo de formulario"],
@@ -103,6 +103,7 @@ const EXPECTED_COLUMNS = [
   ["guardian_document_front_drive_url", "Documento delantero del tutor en Drive"],
   ["guardian_document_back_drive_url", "Documento trasero del tutor en Drive"],
   ["drive_files_manifest", "Archivos guardados en Drive"],
+  ["contact_email", "Correo electrónico de contacto"],
 ];
 
 function registrationPayload(overrides = {}) {
@@ -190,7 +191,7 @@ function fakeSheetsClient({
       },
     },
   },
-  updatedRange = "'_Inscripciones sistema'!A42:BD42",
+  updatedRange = "'_Inscripciones sistema'!A42:BE42",
 } = {}) {
   const spreadsheetGet = mock.fn(async () => ({
     data: { sheets: [sheet, publicSheet].filter(Boolean) },
@@ -212,9 +213,9 @@ function fakeSheetsClient({
     },
   }));
   const valuesGet = mock.fn(async ({ range }) => {
-    if (range.includes("!AG1:AJ1")) return { data: { values: [PUBLIC_MANAGEMENT_HEADERS] } };
-    if (range.includes("!AG2:AJ")) return { data: { values: [[SUBMISSION_ID, "pendiente", "pending", "pending"]] } };
-    if (/!A\d+:BD\d+$/.test(range) && !range.includes("!A1:")) {
+    if (range.includes("!AH1:AK1")) return { data: { values: [PUBLIC_MANAGEMENT_HEADERS] } };
+    if (range.includes("!AH2:AK")) return { data: { values: [[SUBMISSION_ID, "pendiente", "pending", "pending"]] } };
+    if (/!A\d+:BE\d+$/.test(range) && !range.includes("!A1:")) {
       return { data: { values: [recordToSheetRow(buildInscripcionRecord({
         payload: registrationPayload(), receivedAt: "2026-08-07T11:00:00.000Z",
       }))] } };
@@ -291,8 +292,8 @@ test("mantiene el contrato completo y ordenado de columnas y cabeceras", () => {
 
   const keys = INSCRIPCION_SHEET_COLUMNS.map(({ key }) => key);
   assert.equal(new Set(keys).size, keys.length);
-  assert.equal(keys.length, 56);
-  assert.equal(columnName(keys.length), "BD");
+  assert.equal(keys.length, 57);
+  assert.equal(columnName(keys.length), "BE");
   assert.equal(INSCRIPCION_SHEET_V1_COLUMNS.length, 45);
   assert.deepEqual(INSCRIPCION_SHEET_V1_HEADERS, [
     ...INSCRIPCION_SHEET_HEADERS.slice(0, 2),
@@ -306,8 +307,8 @@ test("mantiene el contrato completo y ordenado de columnas y cabeceras", () => {
 test("la vista visible contiene solo fecha, respuestas y enlaces de los documentos", () => {
   const keys = INSCRIPCION_PUBLIC_COLUMNS.map(({ key }) => key);
   assert.equal(keys[0], "received_at");
-  assert.equal(keys.length, 32);
-  assert.equal(columnName(keys.length), "AF");
+  assert.equal(keys.length, 33);
+  assert.equal(columnName(keys.length), "AG");
   assert.equal(keys.includes("training_group_id"), false);
   [
     "submission_id",
@@ -319,6 +320,7 @@ test("la vista visible contiene solo fecha, respuestas y enlaces de los document
     "drive_files_manifest",
   ].forEach((technicalKey) => assert.equal(keys.includes(technicalKey), false));
   assert.equal(INSCRIPCION_PUBLIC_HEADERS[0], "Fecha y hora de recepción");
+  assert.equal(INSCRIPCION_PUBLIC_HEADERS.at(-1), "Correo electrónico de contacto");
 
   const record = {
     server_received_at: "2026-08-07T17:12:09.000Z",
@@ -327,6 +329,7 @@ test("la vista visible contiene solo fecha, respuestas y enlaces de los document
     participant_document_back: "dni-trasero.pdf",
     participant_document_front_drive_url: "https://drive.google.com/file/d/front/view",
     participant_document_back_drive_url: "https://drive.google.com/file/d/back/view",
+    contact_email: "ada@example.com",
   };
   const row = buildInscripcionPublicRow(record);
   const publicIndex = (key) =>
@@ -342,6 +345,7 @@ test("la vista visible contiene solo fecha, respuestas y enlaces de los document
     row[publicIndex("participant_document_back")],
     record.participant_document_back_drive_url,
   );
+  assert.equal(row[publicIndex("contact_email")], "ada@example.com");
   assert.equal(formatInscripcionReceivedAt("fecha no válida"), "fecha no válida");
 });
 
@@ -477,11 +481,12 @@ test("construye y serializa una fila fija con legacy, adjuntos y unmapped", () =
 
   assert.equal(record.submission_id, SUBMISSION_ID);
   assert.equal(record.payload_fingerprint, "fingerprint-test");
-  assert.equal(record.schema_version, "2");
+  assert.equal(record.schema_version, "3");
   assert.equal(record.email_status, "pending");
   assert.equal(record.drive_status, "pending");
   assert.equal(record.training_group_id, "mao-sub14");
   assert.equal(record.participant_full_name, "Ada Lovelace");
+  assert.equal(record.contact_email, "");
   assert.equal(record.comments, '=HYPERLINK("https://invalid")');
   assert.equal(record.guardian_full_name, "");
   assert.equal(record.attachment_names, "dni-frontal.pdf | dni-trasero.jpg");
@@ -498,6 +503,29 @@ test("construye y serializa una fila fija con legacy, adjuntos y unmapped", () =
   assert.equal(row.length, INSCRIPCION_SHEET_COLUMNS.length);
   assert.equal(row[columnIndex("comments")], '=HYPERLINK("https://invalid")');
   assert.deepEqual(sheetRowToRecord(row), record);
+});
+
+test("recupera el email de contacto desde unmapped_answers en filas antiguas", () => {
+  const record = buildInscripcionRecord({
+    payload: registrationPayload({
+      answers: [
+        { key: "future_field", label: "Campo futuro", value: "sin mapear" },
+      ],
+    }),
+  });
+  record.contact_email = "";
+  record.unmapped_answers = JSON.stringify([
+    {
+      key: "contact_email",
+      section: "Datos de contacto",
+      label: "Correo electrónico de contacto",
+      value: "familia-antigua@example.com",
+    },
+  ]);
+
+  const parsed = sheetRowToRecord(recordToSheetRow(record));
+  assert.equal(parsed.contact_email, "familia-antigua@example.com");
+  assert.equal(buildInscripcionPublicRow(parsed).at(-1), "familia-antigua@example.com");
 });
 
 test("rechaza unmapped_answers serializado por encima de 45.000 caracteres", () => {
@@ -556,7 +584,7 @@ test("serializa el plan/archivo Drive de forma estable y proyecta IDs y enlaces"
     driveArchive: archive,
   });
   assert.equal(record.drive_status, "stored");
-  assert.equal(record.schema_version, "2");
+  assert.equal(record.schema_version, "3");
   assert.equal(record.drive_files_manifest, serialized);
 });
 
@@ -611,11 +639,11 @@ test("ensureInscripcionSheet crea una cabecera vacía con RAW", async () => {
     spreadsheetId: SPREADSHEET_ID,
   });
 
-  assert.equal(result.headerRange, "'_Inscripciones sistema'!A1:BD1");
+  assert.equal(result.headerRange, "'_Inscripciones sistema'!A1:BE1");
   assert.equal(fake.valuesUpdate.mock.callCount(), 1);
   assert.deepEqual(fake.valuesUpdate.mock.calls[0].arguments[0], {
     spreadsheetId: SPREADSHEET_ID,
-    range: "'_Inscripciones sistema'!A1:BD1",
+    range: "'_Inscripciones sistema'!A1:BE1",
     valueInputOption: "RAW",
     requestBody: {
       majorDimension: "ROWS",
@@ -665,13 +693,13 @@ test("crea la pestaña visible con una cabecera mínima y fija", async () => {
   });
 
   assert.equal(result.created, true);
-  assert.equal(result.headerRange, "'Inscripciones'!A1:AF1");
+  assert.equal(result.headerRange, "'Inscripciones'!A1:AG1");
   const request = fake.valuesUpdate.mock.calls[0].arguments[0];
-  assert.equal(request.range, "'Inscripciones'!A1:AF1");
+  assert.equal(request.range, "'Inscripciones'!A1:AG1");
   assert.deepEqual(request.requestBody.values, [[...INSCRIPCION_PUBLIC_HEADERS]]);
 });
 
-test("ensureInscripcionSheet migra una cabecera v1 a la cabecera v2 completa con RAW", async () => {
+test("ensureInscripcionSheet migra una cabecera v1 a la cabecera v3 completa con RAW", async () => {
   const fake = fakeSheetsClient({
     headers: INSCRIPCION_SHEET_V1_HEADERS,
     sheet: {
@@ -689,14 +717,14 @@ test("ensureInscripcionSheet migra una cabecera v1 a la cabecera v2 completa con
   assert.deepEqual(fake.batchUpdate.mock.calls[0].arguments[0].requestBody.requests, [
     {
       updateSheetProperties: {
-        properties: { sheetId: 7, gridProperties: { columnCount: 56 } },
+        properties: { sheetId: 7, gridProperties: { columnCount: 57 } },
         fields: "gridProperties.columnCount",
       },
     },
   ]);
   assert.deepEqual(fake.valuesUpdate.mock.calls[0].arguments[0], {
     spreadsheetId: SPREADSHEET_ID,
-    range: "'_Inscripciones sistema'!A1:BD1",
+    range: "'_Inscripciones sistema'!A1:BE1",
     valueInputOption: "RAW",
     requestBody: {
       majorDimension: "ROWS",
@@ -771,11 +799,11 @@ test("verifyWritable confirma permiso de escritura reescribiendo la misma cabece
 
   const ready = await store.verifyWritable();
 
-  assert.equal(ready.system.headerRange, "'_Inscripciones sistema'!A1:BD1");
-  assert.equal(ready.public.headerRange, "'Inscripciones'!A1:AF1");
+  assert.equal(ready.system.headerRange, "'_Inscripciones sistema'!A1:BE1");
+  assert.equal(ready.public.headerRange, "'Inscripciones'!A1:AG1");
   assert.deepEqual(fake.valuesUpdate.mock.calls[0].arguments[0], {
     spreadsheetId: SPREADSHEET_ID,
-    range: "'_Inscripciones sistema'!A1:BD1",
+    range: "'_Inscripciones sistema'!A1:BE1",
     valueInputOption: "RAW",
     requestBody: {
       majorDimension: "ROWS",
@@ -784,7 +812,7 @@ test("verifyWritable confirma permiso de escritura reescribiendo la misma cabece
   });
   assert.deepEqual(fake.valuesUpdate.mock.calls[1].arguments[0], {
     spreadsheetId: SPREADSHEET_ID,
-    range: "'Inscripciones'!A1:AF1",
+    range: "'Inscripciones'!A1:AG1",
     valueInputOption: "RAW",
     requestBody: {
       majorDimension: "ROWS",
@@ -900,7 +928,7 @@ test("la configuración es lazy y normaliza espacios del spreadsheet y la pesta�
 
   assert.equal(fake.spreadsheetGet.mock.calls[0].arguments[0].spreadsheetId, SPREADSHEET_ID);
   const headerRequest = fake.valuesGet.mock.calls.find(
-    ({ arguments: [request] }) => request.range === "'Inscripciones 2026'!A1:AF1",
+    ({ arguments: [request] }) => request.range === "'Inscripciones 2026'!A1:AG1",
   );
   assert.ok(headerRequest);
 });
@@ -943,7 +971,10 @@ test("el lookup batch mantiene A:K ligero y alinea Drive desde AT:BD", async () 
     driveArchive: archive,
   });
   const metadataRow = recordToSheetRow(record).slice(0, 11);
-  const driveRow = recordToSheetRow(record).slice(45);
+  const driveRow = recordToSheetRow(record).slice(
+    columnIndex("drive_status"),
+    columnIndex("drive_files_manifest") + 1,
+  );
   const fake = fakeSheetsClient({
     rows: ({ range }) => {
       if (range === "'_Inscripciones sistema'!A2:K") return [metadataRow];
@@ -972,9 +1003,11 @@ test("appendPending inserta una sola fila literal con RAW e INSERT_ROWS", async 
     clock: () => new Date("2026-08-07T11:00:00.000Z"),
   });
   const payload = registrationPayload({
+    replyTo: "familia@example.com",
     answers: [
       { key: "comments", label: "Observaciones", value: '=IMPORTXML("https://invalid")' },
       { key: "contact_phone", label: "Teléfono", value: "+34971000000" },
+      { key: "contact_email", label: "Email", value: "familia@example.com" },
       { key: "bank_details", label: "IBAN", value: "-ES0000000000000000000000" },
       { key: "participant_health_information", label: "Salud", value: "@texto" },
     ],
@@ -986,13 +1019,14 @@ test("appendPending inserta una sola fila literal con RAW e INSERT_ROWS", async 
 
   const request = fake.valuesAppend.mock.calls[0].arguments[0];
   assert.equal(request.spreadsheetId, SPREADSHEET_ID);
-  assert.equal(request.range, "'_Inscripciones sistema'!A:BD");
+  assert.equal(request.range, "'_Inscripciones sistema'!A:BE");
   assert.equal(request.valueInputOption, "RAW");
   assert.equal(request.insertDataOption, "INSERT_ROWS");
   assert.equal(request.requestBody.majorDimension, "ROWS");
   assert.equal(request.requestBody.values.length, 1);
   assert.equal(request.requestBody.values[0][columnIndex("comments")], '=IMPORTXML("https://invalid")');
   assert.equal(request.requestBody.values[0][columnIndex("contact_phone")], "+34971000000");
+  assert.equal(request.requestBody.values[0][columnIndex("contact_email")], "familia@example.com");
   assert.equal(request.requestBody.values[0][columnIndex("bank_details")], "-ES0000000000000000000000");
   assert.equal(request.requestBody.values[0][columnIndex("participant_health_information")], "@texto");
 });
