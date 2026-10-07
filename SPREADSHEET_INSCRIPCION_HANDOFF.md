@@ -54,9 +54,9 @@ Cloud Run `loesport-web-sheet-repair-r2` recibe el 100 % del trafico y atiende t
   `Periodos de prueba` y el estado tecnico en `_Pruebas sistema`. La vista incluye
   todos los campos rellenados, la captura y la carpeta privadas de Drive, mas
   cuatro columnas de identificacion y gestion gestionadas por `public-sheet-sync.js`.
-- `server/inscripcion-sheet.js` mantiene el esquema tecnico de 56 columnas en una
-  pestana oculta y proyecta una vista visible de 32 columnas de datos: fecha/hora, campos
-  que rellena la persona y enlaces privados en los cuatro campos de documentos.
+- `server/inscripcion-sheet.js` mantiene el esquema tecnico de 57 columnas en una
+  pestana oculta y proyecta una vista visible de 33 columnas de datos: fecha/hora, campos
+  que rellena la persona, correo electronico de contacto y enlaces privados en los cuatro campos de documentos.
   Migra la pestana anterior, mapea por clave, conserva respuestas desconocidas y
   escribe con `RAW`. `public-sheet-sync.js` añade cuatro columnas de gestion y
   actualiza los enlaces y estados por UUID, conservando las anotaciones manuales.

@@ -107,10 +107,10 @@ Este token usa el permiso completo de Drive para poder escribir en una carpeta y
 existente de Mi unidad. Debe ser exclusivo de este servicio, mantenerse en estado
 **En producción** y tratarse como un secreto de alto impacto.
 
-La pestaña visible `Inscripciones` contiene 32 columnas de datos: la fecha y hora de
+La pestaña visible `Inscripciones` contiene 33 columnas de datos: la fecha y hora de
 recepción y todos los datos que rellena la persona. Se omite el ID interno del
 grupo y los cuatro campos de documentos muestran directamente sus enlaces
-privados de Drive. Al final se añaden `ID de envío`, `Estado gestión`,
+privados de Drive. También incluye `Correo electrónico de contacto`. Al final se añaden `ID de envío`, `Estado gestión`,
 `Estado de Drive` y `Estado del correo`. Las actualizaciones buscan el UUID,
 independientemente de la posición de la fila visible.
 
