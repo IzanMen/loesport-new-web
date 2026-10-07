@@ -272,9 +272,12 @@ async function verifyStoredImport(entry, { sheetStore, sheetsClient, driveClient
     .replaceAll("'", "''");
   const publicResponse = await sheetsClient.spreadsheets.values.get({
     spreadsheetId: process.env.GOOGLE_SHEETS_SPREADSHEET_ID,
-    range: `'${publicSheetName}'!A${stored.rowNumber}:AF${stored.rowNumber}`,
+    range: `'${publicSheetName}'!A2:AJ`,
   });
-  const publicRow = publicResponse.data.values?.[0] || [];
+  const matches = (publicResponse.data.values || []).filter((row) =>
+    String(row[INSCRIPCION_PUBLIC_COLUMNS.length] || "").toLowerCase() === entry.payload.submissionId.toLowerCase());
+  if (matches.length !== 1) throw new Error("El envío no tiene una única fila visible por UUID.");
+  const publicRow = matches[0];
   const documentKeys = entry.payload.attachments.map(({ key }) => key);
   const publicDocumentLinks = documentKeys.filter((key) => {
     const index = INSCRIPCION_PUBLIC_COLUMNS.findIndex((column) => column.key === key);

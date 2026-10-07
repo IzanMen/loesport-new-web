@@ -107,11 +107,12 @@ Este token usa el permiso completo de Drive para poder escribir en una carpeta y
 existente de Mi unidad. Debe ser exclusivo de este servicio, mantenerse en estado
 **En producción** y tratarse como un secreto de alto impacto.
 
-La pestaña visible `Inscripciones` contiene solo 32 columnas: la fecha y hora de
+La pestaña visible `Inscripciones` contiene 32 columnas de datos: la fecha y hora de
 recepción y todos los datos que rellena la persona. Se omite el ID interno del
 grupo y los cuatro campos de documentos muestran directamente sus enlaces
-privados de Drive. No se muestran UUID, huellas, versiones, estados ni otros datos
-técnicos.
+privados de Drive. Al final se añaden `ID de envío`, `Estado gestión`,
+`Estado de Drive` y `Estado del correo`. Las actualizaciones buscan el UUID,
+independientemente de la posición de la fila visible.
 
 `inscripcion-familiar.html` simplifica las altas conjuntas de las escuelas de
 Alaior y Maó. El navegador envía una inscripción estándar por participante, por
@@ -132,7 +133,8 @@ puede separar mediante `GOOGLE_DRIVE_PREINSCRIPCION_FOLDER_ID` y, si corresponde
 Para conservar la deduplicación y los reintentos sin ensuciar la vista, la API
 mantiene esos datos en `_Inscripciones sistema`, una pestaña oculta. Al desplegar
 este esquema, la pestaña técnica anterior se renombra y oculta automáticamente,
-se crea la vista mínima y se proyectan las filas ya archivadas. Cada inscripción
+se crea la vista de gestión y se proyectan todos los envíos, incluidos los
+pendientes y fallidos. Cada inscripción
 sigue creando una subcarpeta por UUID con los documentos y, cuando el navegador
 puede generarla, la captura. Si alguna
 cabecera no coincide con el esquema esperado, el envío se detiene antes del
@@ -146,6 +148,34 @@ real de prueba después del despliegue.
 Para consultar u ordenar inscripciones, utiliza vistas de filtro y evita reordenar
 o eliminar físicamente filas mientras haya envíos en curso.
 
+### Reconciliar las vistas de gestión
+
+`npm run reconcile:form-sheets` analiza ambas vistas sin escribir, usando
+`GOOGLE_SHEETS_SPREADSHEET_ID` y credenciales ADC con acceso al documento.
+`npm run reconcile:form-sheets -- --apply` aplica la reconciliación, crea una
+copia de cada vista con datos y verifica los IDs escritos. No envía correos ni
+modifica archivos de Drive o registros técnicos.
+
+La migración enlaza las filas antiguas por fecha de recepción (incluidas fechas
+nativas de Sheets), desambiguando por nombre cuando coinciden los segundos.
+Se detiene ante correspondencias dudosas. Conserva los datos editados en la
+vista, compacta los huecos y añade los UUID que faltan desde la hoja técnica.
+Los registros con UUID distintos nunca se fusionan por DNI, teléfono o nombre.
+`Estado gestión` comienza en `pendiente` y admite `sí`, `duplicado`, `prueba`,
+`error` y `pendiente`; la API conserva esa decisión al actualizar los estados
+de entrega y los enlaces. Ningún nombre se excluye automáticamente.
+
+Para activar este cambio en producción, retirar primero las revisiones antiguas
+que escriben por número de fila y dejar terminar sus envíos en curso. Aplicar la
+migración con las escrituras detenidas y activar después el backend actualizado.
+El backend también prepara las columnas y migra una vista antigua en su primera
+validación. No compactar la hoja mientras siga escribiendo el backend anterior.
+
+`FORM_STORAGE_MAINTENANCE=1` permite pausar temporalmente `POST /api/forms`
+con HTTP 503 y `Retry-After: 60`, manteniendo la web y `/api/health` disponibles.
+Retirar la variable al terminar. El endpoint de salud expone
+`formStorageMaintenance` para comprobarlo.
+
 La deduplicación estricta entre varias instancias requeriría un almacén con
 escritura condicional, como Firestore. Mientras Sheets sea el único almacén, se
 debe limitar `loesport-web` a una instancia máxima a nivel de servicio
@@ -154,6 +184,23 @@ dentro de esa instancia y recupera filas pendientes antiguas.
 
 `FORM_RECIPIENT` admite uno o varios correos separados por comas. Por ejemplo:
 `loesport@gmail.com`.
+
+El correo interno del club sigue usando `GMAIL_SENDER` y `GMAIL_REFRESH_TOKEN`.
+Las confirmaciones automáticas al usuario se envían desde Google Apps Script con
+la cuenta `inscripcio.loesport@gmail.com`, sin tocar Cloud Run:
+
+1. Crea un proyecto en <https://script.google.com/> con esa cuenta.
+2. Copia el contenido de `apps-script/confirmation-email.gs`.
+3. Publica como Web App con acceso "Cualquier persona".
+4. Configura o revisa en el frontend:
+
+```bash
+VITE_CONFIRMATION_WEBHOOK_ENDPOINT="https://script.google.com/macros/s/AKfycbzkhPaLY-DbzSHK1N1eN8Sn2YErPms2O6QvNvSZ_TT-6nUhpskpBkqGoRX7Qy8RVCHx/exec"
+VITE_CONFIRMATION_WEBHOOK_TOKEN="ASDFLMKÑDASF134KJNÑNÑ413NÑKNÑLK34M56"
+```
+
+Este envío es adicional al envío principal: si Apps Script falla, el formulario
+igualmente queda enviado al club.
 
 El cliente OAuth debe permanecer en estado **En producción** para que el token de
 una aplicación externa no caduque a los siete días. Para renovar la autorización,

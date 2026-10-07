@@ -1,9 +1,38 @@
 # Volcado a Google Sheets y Drive de formularios
 
-Estado: activo en produccion. Desde el 10 de agosto de 2026, la revision de Cloud
-Run `loesport-web-00010-qqg` recibe el 100 % del trafico y atiende tanto
-`inscripcion` como `preinscripcion`. El frontend de produccion de Vercel tambien
-esta actualizado.
+Estado: activo en produccion. Desde el 23 de septiembre de 2026, la revision de
+Cloud Run `loesport-web-sheet-repair-r2` recibe el 100 % del trafico y atiende tanto
+`inscripcion` como `preinscripcion`, sincronizando las vistas por UUID.
+
+## Reparacion del 23 de septiembre de 2026
+
+- Imagen activa: `europe-southwest1-docker.pkg.dev/loesport/cloud-run-source-deploy/loesport-web@sha256:9a7dde918ff07a81363399bf9f2e935f6b1e9ba3c9941538ab36f35541caf85f`.
+- Se partio de la imagen de produccion y se reemplazaron exclusivamente los
+  modulos del backend afectados y el script de reconciliacion. Los otros cambios
+  locales del frontend y Apps Script no forman parte de este despliegue.
+- Se pausaron los formularios mediante `FORM_STORAGE_MAINTENANCE=1`, se retiraron
+  las rutas etiquetadas de revisiones antiguas y se esperaron mas de 120 segundos
+  antes de modificar las vistas. La variable ya no esta configurada.
+- `Inscripciones`: 214 filas visibles y 214 UUID, recuperadas las 21 ausentes.
+  `Periodos de prueba`: 43 filas visibles y 43 UUID, recuperadas las 2 ausentes.
+- Verificados cero huecos, cero UUID ausentes, conservacion de todas las filas
+  visibles originales y ausencia de cambios en los valores de las hojas tecnicas.
+- Las cuatro columnas adicionales son `ID de envío`, `Estado gestión`,
+  `Estado de Drive` y `Estado del correo`. La gestion comienza en `pendiente`;
+  no se excluyeron automaticamente pruebas ni posibles duplicados.
+- Copias ocultas: `_Copia Inscripciones 1790184196996`,
+  `_Copia Inscripciones 1790184392846` y
+  `_Copia Periodos de prueba 1790184396655`.
+- La primera ejecucion se detuvo en la verificacion posterior a escribir
+  inscripciones: el filtro reordeno las filas. Se corrigio la comprobacion para
+  contrastar UUID y contenido completo sin exigir el mismo orden, se agrego una
+  prueba de regresion y la ejecucion final `loesport-sheet-repair-20260923-t4wmc`
+  termino correctamente. El job temporal se elimino.
+- API verificada con mantenimiento desactivado y una peticion invalida que
+  devuelve 400 antes de almacenar o enviar correo. No se enviaron formularios
+  reales ni correos durante la reparacion.
+- Se mantiene una instancia maxima y la cuenta de servicio existente. No volver
+  a una revision anterior que escriba por numero de fila sobre estas vistas.
 
 ## Alcance acordado
 
@@ -21,14 +50,16 @@ esta actualizado.
 - `server/form-payload.js` valida y sanea el contrato del endpoint.
 - `server/form-sheet-store.js` aporta el almacen estructurado reutilizable para
   formularios nuevos sin alterar el esquema existente de inscripciones.
-- `server/preinscripcion-sheet.js` define una vista visible de 16 columnas en
+- `server/preinscripcion-sheet.js` define una vista visible de 16 columnas de datos en
   `Periodos de prueba` y el estado tecnico en `_Pruebas sistema`. La vista incluye
-  todos los campos rellenados, la captura y la carpeta privadas de Drive.
+  todos los campos rellenados, la captura y la carpeta privadas de Drive, mas
+  cuatro columnas de identificacion y gestion gestionadas por `public-sheet-sync.js`.
 - `server/inscripcion-sheet.js` mantiene el esquema tecnico de 56 columnas en una
-  pestana oculta y proyecta una vista visible de 32 columnas: fecha/hora, campos
+  pestana oculta y proyecta una vista visible de 32 columnas de datos: fecha/hora, campos
   que rellena la persona y enlaces privados en los cuatro campos de documentos.
   Migra la pestana anterior, mapea por clave, conserva respuestas desconocidas y
-  escribe con `RAW`.
+  escribe con `RAW`. `public-sheet-sync.js` añade cuatro columnas de gestion y
+  actualiza los enlaces y estados por UUID, conservando las anotaciones manuales.
 - `server/inscripcion-drive.js` crea una subcarpeta idempotente por tipo y UUID,
   guarda los adjuntos y la captura opcional y nunca publica permisos. Las pruebas
   se guardan como `preinscripcion-UUID`.

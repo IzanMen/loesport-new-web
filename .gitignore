@@ -9,3 +9,6 @@ Thumbs.db
 npm-debug.log*
 .vercel
 .env*
+client_secret*.json
+oauth-client*.json
+google-oauth-client*.json

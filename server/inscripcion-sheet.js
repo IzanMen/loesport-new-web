@@ -2,6 +2,7 @@ import crypto from "node:crypto";
 
 import { google } from "googleapis";
 import { summarizeError } from "./error-summary.js";
+import { createPublicSheetSync } from "./public-sheet-sync.js";
 
 export const GOOGLE_SHEETS_SCOPE = "https://www.googleapis.com/auth/spreadsheets";
 export const DEFAULT_INSCRIPCION_SHEET_NAME = "Inscripciones";
@@ -991,14 +992,13 @@ export function createInscripcionSheetStore({
     );
   }
   const lastColumn = columnName(INSCRIPCION_SHEET_COLUMNS.length);
-  const lastPublicColumn = columnName(INSCRIPCION_PUBLIC_COLUMNS.length);
   const lastLookupColumn = columnName(LOOKUP_COLUMNS.length);
   const firstDriveColumn = columnName(INSCRIPCION_SHEET_V1_COLUMNS.length + 1);
   let client = sheetsClient;
   let quotedSystemSheetName;
-  let quotedPublicSheetName;
   let readyPromise;
   let readyExpiresAt = 0;
+  let publicSync;
 
   function prepareRuntime() {
     if (!normalizedSpreadsheetId) {
@@ -1007,45 +1007,12 @@ export function createInscripcionSheetStore({
       );
     }
     quotedSystemSheetName ||= quoteSheetName(normalizedSystemSheetName);
-    quotedPublicSheetName ||= quoteSheetName(normalizedPublicSheetName);
     client ||= createGoogleSheetsClient();
-  }
-
-  async function writePublicRow(rowNumber, record) {
-    await client.spreadsheets.values.update({
-      spreadsheetId: normalizedSpreadsheetId,
-      range: `${quotedPublicSheetName}!A${rowNumber}:${lastPublicColumn}${rowNumber}`,
-      valueInputOption: "RAW",
-      requestBody: {
-        majorDimension: "ROWS",
-        values: [buildInscripcionPublicRow(record)],
-      },
-    });
-  }
-
-  async function syncExistingPublicRows() {
-    const response = await client.spreadsheets.values.get({
-      spreadsheetId: normalizedSpreadsheetId,
-      range: `${quotedSystemSheetName}!A2:${lastColumn}`,
-      majorDimension: "ROWS",
-    });
-    const rows = response.data.values || [];
-    if (!rows.length) return;
-    const publicRows = rows.map((row) => {
-      const record = sheetRowToRecord(row);
-      const stored = String(record.drive_status ?? "").trim().toLowerCase() === "stored";
-      return stored
-        ? buildInscripcionPublicRow(record)
-        : Array(INSCRIPCION_PUBLIC_COLUMNS.length).fill("");
-    });
-    await client.spreadsheets.values.update({
-      spreadsheetId: normalizedSpreadsheetId,
-      range: `${quotedPublicSheetName}!A2:${lastPublicColumn}${rows.length + 1}`,
-      valueInputOption: "RAW",
-      requestBody: {
-        majorDimension: "ROWS",
-        values: publicRows,
-      },
+    publicSync ||= createPublicSheetSync({
+      client, spreadsheetId: normalizedSpreadsheetId,
+      sheetName: normalizedPublicSheetName, systemSheetName: normalizedSystemSheetName,
+      columns: INSCRIPCION_PUBLIC_COLUMNS, systemColumns: INSCRIPCION_SHEET_COLUMNS,
+      buildRow: buildInscripcionPublicRow, parseRow: sheetRowToRecord,
     });
   }
 
@@ -1077,9 +1044,7 @@ export function createInscripcionSheetStore({
             spreadsheetId: normalizedSpreadsheetId,
             sheetName: normalizedPublicSheetName,
           });
-          if (system.migratedFromLegacy || system.publicCreated || publicSheet.created) {
-            await syncExistingPublicRows();
-          }
+          await publicSync.ensureReady();
           readyExpiresAt = readinessTime() + readinessTtlMs;
           return { system, public: publicSheet };
         })
@@ -1181,6 +1146,7 @@ export function createInscripcionSheetStore({
     if (!rowNumber) {
       throw new Error("Google Sheets no ha devuelto la fila añadida.");
     }
+    await publicSync.upsert(record);
     return { rowNumber, record, row };
   }
 
@@ -1214,15 +1180,29 @@ export function createInscripcionSheetStore({
     await verifySubmissionRow(rowNumber, expectedSubmissionId);
     const firstColumn = columnName(COLUMN_INDEX.get(firstKey) + 1);
     const finalColumn = columnName(COLUMN_INDEX.get(finalKey) + 1);
-    await client.spreadsheets.values.update({
+    const writeSystem = () => client.spreadsheets.values.update({
       spreadsheetId: normalizedSpreadsheetId,
       range: `${quotedSystemSheetName}!${firstColumn}${rowNumber}:${finalColumn}${rowNumber}`,
       valueInputOption: "RAW",
-      requestBody: {
-        majorDimension: "ROWS",
-        values: [values.map(escapeSpreadsheetValue)],
-      },
+      requestBody: { majorDimension: "ROWS", values: [values.map(escapeSpreadsheetValue)] },
     });
+    const publishingArchive = firstKey === "drive_status" && values[0] === "stored";
+    // Persist delivery outcomes even if the derived view is temporarily unavailable.
+    if (!publishingArchive) await writeSystem();
+    const source = await client.spreadsheets.values.get({
+      spreadsheetId: normalizedSpreadsheetId,
+      range: `${quotedSystemSheetName}!A${rowNumber}:${lastColumn}${rowNumber}`,
+      majorDimension: "ROWS",
+    });
+    const record = sheetRowToRecord(source.data.values?.[0] || []);
+    if (expectedSubmissionId && normalizeSubmissionId(record.submission_id) !== normalizeSubmissionId(expectedSubmissionId)) {
+      throw new GoogleSheetsRowMismatchError(rowNumber);
+    }
+    values.forEach((value, index) => {
+      record[INSCRIPCION_SHEET_COLUMNS[COLUMN_INDEX.get(firstKey) + index].key] = value;
+    });
+    await publicSync.upsert(record);
+    if (publishingArchive) await writeSystem();
   }
 
   async function updateEmailState(
@@ -1260,17 +1240,6 @@ export function createInscripcionSheetStore({
   }
 
   async function markDriveStored(rowNumber, archive, expectedSubmissionId) {
-    await verifySubmissionRow(rowNumber, expectedSubmissionId);
-    const response = await client.spreadsheets.values.get({
-      spreadsheetId: normalizedSpreadsheetId,
-      range: `${quotedSystemSheetName}!A${rowNumber}:${lastColumn}${rowNumber}`,
-      majorDimension: "ROWS",
-    });
-    const record = {
-      ...sheetRowToRecord(response.data.values?.[0] || []),
-      ...driveArchiveToRecord(archive, { status: "stored" }),
-    };
-    await writePublicRow(rowNumber, record);
     await updateDriveArchive(rowNumber, archive, "stored", expectedSubmissionId);
   }
 

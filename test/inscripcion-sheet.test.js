@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { PUBLIC_MANAGEMENT_HEADERS } from "../server/public-sheet-sync.js";
 import test, { mock } from "node:test";
 
 import {
@@ -174,7 +175,7 @@ function fakeSheetsClient({
       sheetId: 7,
       title: DEFAULT_INSCRIPCION_SYSTEM_SHEET_NAME,
       hidden: true,
-      gridProperties: { columnCount: INSCRIPCION_SHEET_COLUMNS.length },
+      gridProperties: { columnCount: INSCRIPCION_SHEET_COLUMNS.length, rowCount: 1000 },
     },
   },
   publicSheet = {
@@ -183,7 +184,8 @@ function fakeSheetsClient({
       title: "Inscripciones",
       hidden: false,
       gridProperties: {
-        columnCount: INSCRIPCION_PUBLIC_COLUMNS.length,
+        columnCount: INSCRIPCION_PUBLIC_COLUMNS.length + 4,
+        rowCount: 1000,
         frozenRowCount: 1,
       },
     },
@@ -210,11 +212,18 @@ function fakeSheetsClient({
     },
   }));
   const valuesGet = mock.fn(async ({ range }) => {
+    if (range.includes("!AG1:AJ1")) return { data: { values: [PUBLIC_MANAGEMENT_HEADERS] } };
+    if (range.includes("!AG2:AJ")) return { data: { values: [[SUBMISSION_ID, "pendiente", "pending", "pending"]] } };
+    if (/!A\d+:BD\d+$/.test(range) && !range.includes("!A1:")) {
+      return { data: { values: [recordToSheetRow(buildInscripcionRecord({
+        payload: registrationPayload(), receivedAt: "2026-08-07T11:00:00.000Z",
+      }))] } };
+    }
     if (range.startsWith(`'${DEFAULT_INSCRIPCION_SYSTEM_SHEET_NAME}'!A1:`)) {
       const currentHeaders = typeof headers === "function" ? headers() : headers;
       return { data: { values: currentHeaders == null ? [] : [[...currentHeaders]] } };
     }
-    if (range.startsWith("'Inscripciones'!A1:")) {
+    if (range.startsWith(`'${publicSheet?.properties.title || "Inscripciones"}'!A1:`)) {
       const currentHeaders =
         typeof publicHeaders === "function" ? publicHeaders() : publicHeaders;
       return { data: { values: currentHeaders == null ? [] : [[...currentHeaders]] } };
@@ -253,6 +262,7 @@ function fakeSheetsClient({
           batchGet: valuesBatchGet,
           update: valuesUpdate,
           append: valuesAppend,
+          batchUpdate: mock.fn(async () => ({ data: {} })),
         },
       },
     },
@@ -747,7 +757,7 @@ test("el store reutiliza la validación de cabecera para operaciones dentro del 
   const headerReads = fake.valuesGet.mock.calls.filter(({ arguments: [request] }) =>
     request.range.includes("!A1:"),
   );
-  assert.equal(fake.spreadsheetGet.mock.callCount(), 2);
+  assert.equal(fake.spreadsheetGet.mock.callCount(), 3);
   assert.equal(headerReads.length, 2);
   assert.equal(fake.valuesUpdate.mock.callCount(), 1);
 });
@@ -810,7 +820,7 @@ test("al expirar el TTL revalida y detecta una cabecera que pasó a ser incompat
   const headerReads = fake.valuesGet.mock.calls.filter(({ arguments: [request] }) =>
     request.range.includes("!A1:"),
   );
-  assert.equal(fake.spreadsheetGet.mock.callCount(), 3);
+  assert.equal(fake.spreadsheetGet.mock.callCount(), 4);
   assert.equal(headerReads.length, 3);
   assert.equal(fake.valuesUpdate.mock.callCount(), 0);
 });
@@ -870,7 +880,8 @@ test("la configuración es lazy y normaliza espacios del spreadsheet y la pesta�
         title: sheetName,
         hidden: false,
         gridProperties: {
-          columnCount: INSCRIPCION_PUBLIC_COLUMNS.length,
+          columnCount: INSCRIPCION_PUBLIC_COLUMNS.length + 4,
+          rowCount: 1000,
           frozenRowCount: 1,
         },
       },
@@ -1038,22 +1049,20 @@ test("markDrivePlanned/Stored escriben AT:BD y markDriveError solo AT:AU con RAW
   await store.markDriveError(42, externalError, SUBMISSION_ID);
 
   const updates = fake.valuesUpdate.mock.calls.map(({ arguments: [request] }) => request);
-  assert.equal(updates.length, 4);
+  assert.equal(updates.length, 3);
   assert.equal(updates[0].range, "'_Inscripciones sistema'!AT42:BD42");
   assert.equal(updates[0].valueInputOption, "RAW");
   assert.equal(updates[0].requestBody.values[0][0], "planned");
   assert.equal(updates[0].requestBody.values[0].length, 11);
   assert.equal(updates[0].requestBody.values[0].at(-1), serializeDriveManifest(archive));
-  assert.equal(updates[1].range, "'Inscripciones'!A42:AF42");
-  assert.equal(updates[1].requestBody.values[0].length, INSCRIPCION_PUBLIC_COLUMNS.length);
-  assert.equal(updates[2].range, "'_Inscripciones sistema'!AT42:BD42");
-  assert.equal(updates[2].requestBody.values[0][0], "stored");
-  assert.equal(updates[3].range, "'_Inscripciones sistema'!AT42:AU42");
-  assert.deepEqual(updates[3].requestBody.values, [[
+  assert.equal(updates[1].range, "'_Inscripciones sistema'!AT42:BD42");
+  assert.equal(updates[1].requestBody.values[0][0], "stored");
+  assert.equal(updates[2].range, "'_Inscripciones sistema'!AT42:AU42");
+  assert.deepEqual(updates[2].requestBody.values, [[
     "error",
     "E_DRIVE (503): External API request failed.",
   ]]);
-  assert.doesNotMatch(updates[3].requestBody.values[0][1], /12345678Z|raw MIME secreto/);
+  assert.doesNotMatch(updates[2].requestBody.values[0][1], /12345678Z|raw MIME secreto/);
 });
 
 test("verifica expectedSubmissionId antes de actualizar una fila", async (t) => {

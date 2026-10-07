@@ -19,18 +19,23 @@ if (oauthCredentialsFile) {
 }
 
 if (!clientId || !clientSecret) {
-  console.error("Define GMAIL_CLIENT_ID y GMAIL_CLIENT_SECRET antes de ejecutar este comando.");
+  console.error(
+    "Define GMAIL_CLIENT_ID y GMAIL_CLIENT_SECRET antes de ejecutar este comando. " +
+      "Puedes sacarlos de Secret Manager o usar GOOGLE_OAUTH_CLIENT_FILE con el JSON del cliente OAuth.",
+  );
   process.exit(1);
 }
 
 const oauth = new google.auth.OAuth2(clientId, clientSecret, redirectUri);
 const state = crypto.randomBytes(24).toString("hex");
+const accountLabel = process.env.GMAIL_AUTH_ACCOUNT || "sanchezginesizan@gmail.com";
 const authorizationUrl = oauth.generateAuthUrl({
   access_type: "offline",
   include_granted_scopes: true,
   prompt: "consent",
   scope: ["https://www.googleapis.com/auth/gmail.send"],
   state,
+  login_hint: accountLabel,
 });
 
 const server = http.createServer(async (request, response) => {
@@ -74,7 +79,8 @@ const server = http.createServer(async (request, response) => {
 });
 
 server.listen(port, "127.0.0.1", () => {
-  console.log("Abre esta URL en el navegador e inicia sesión con sanchezginesizan@gmail.com:\n");
+  console.log(`Abre esta URL en el navegador e inicia sesión con ${accountLabel}:\n`);
   console.log(authorizationUrl);
+  console.log(`\nRedirect URI usado por este script: ${redirectUri}`);
   console.log(`\nEsperando la autorización en ${redirectUri} ...`);
 });

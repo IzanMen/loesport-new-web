@@ -1378,6 +1378,17 @@ body.has-scrolled .registration-tabs {
   text-transform: uppercase;
 }
 
+.registration-group-notice {
+  margin: 0;
+  padding: 13px 24px;
+  color: #665400;
+  background: #fff8d8;
+  border-top: 1px solid rgba(148, 121, 0, 0.24);
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1.45;
+}
+
 .registration-flow-error {
   margin: 0;
   padding: 13px 24px;

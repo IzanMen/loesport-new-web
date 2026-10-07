@@ -134,6 +134,7 @@ test("mapea todas las respuestas y conserva compatibilidad con las claves entry 
 
 test("crea las pestañas si faltan y añade el envío pendiente con RAW", async () => {
   let tabs = [];
+  const storedHeaders = new Map();
   const updates = [];
   const spreadsheetsGet = mock.fn(async () => ({ data: { sheets: tabs } }));
   const batchUpdate = mock.fn(async ({ requestBody }) => {
@@ -146,11 +147,12 @@ test("crea las pestañas si faltan y añade el envío pendiente con RAW", async 
     return { data: { replies: [{}] } };
   });
   const valuesGet = mock.fn(async ({ range }) => {
-    if (range.includes("!A1:")) return { data: { values: [] } };
+    if (range.includes("!A1:")) return { data: { values: storedHeaders.get(range.split("!")[0]) || [] } };
     return { data: { values: [] } };
   });
   const valuesUpdate = mock.fn(async (request) => {
     updates.push(request);
+    if (request.range.includes("!A1:")) storedHeaders.set(request.range.split("!")[0], request.requestBody.values);
     return { data: {} };
   });
   const valuesAppend = mock.fn(async () => ({
@@ -181,7 +183,7 @@ test("crea las pestañas si faltan y añade el envío pendiente con RAW", async 
   assert.equal(appended.rowNumber, 2);
   assert.equal(appended.record.form_type, "preinscripcion");
   assert.equal(appended.record.participant_full_name, "Ada Lovelace");
-  assert.equal(valuesAppend.mock.callCount(), 1);
+  assert.equal(valuesAppend.mock.callCount(), 2);
   assert.equal(valuesAppend.mock.calls[0].arguments[0].valueInputOption, "RAW");
   assert.deepEqual(
     tabs.map(({ properties }) => [properties.title, properties.hidden]),

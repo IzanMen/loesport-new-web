@@ -13,6 +13,14 @@ import {
   sendFormSubmission,
 } from "./form-submission.js";
 
+const DEFAULT_CONFIRMATION_WEBHOOK_ENDPOINT =
+  "https://script.google.com/macros/s/AKfycbzkhPaLY-DbzSHK1N1eN8Sn2YErPms2O6QvNvSZ_TT-6nUhpskpBkqGoRX7Qy8RVCHx/exec";
+const CONFIRMATION_WEBHOOK_ENDPOINT =
+  import.meta.env.VITE_CONFIRMATION_WEBHOOK_ENDPOINT || DEFAULT_CONFIRMATION_WEBHOOK_ENDPOINT;
+const CONFIRMATION_WEBHOOK_TOKEN =
+  import.meta.env.VITE_CONFIRMATION_WEBHOOK_TOKEN || "ASDFLMKÑDASF134KJNÑNÑ413NÑKNÑLK34M56";
+const CONFIRMATION_FORM_TYPES = new Set(["inscripcion", "preinscripcion"]);
+
 export const FORM_DEFINITIONS = {
   inscripcion: {
     title: "Inscripción",
@@ -146,6 +154,15 @@ export const FORM_DEFINITIONS = {
             label: "Teléfono de contacto",
             required: true,
             autocomplete: "tel",
+          },
+          {
+            type: "email",
+            entry: "contact-email",
+            key: "contact_email",
+            label: "Correo electrónico de contacto",
+            required: true,
+            autocomplete: "email",
+            help: "Enviaremos a este correo la confirmación automática del formulario.",
           },
         ],
       },
@@ -396,6 +413,15 @@ export const FORM_DEFINITIONS = {
             label: "Teléfono de contacto",
             required: true,
             autocomplete: "tel",
+          },
+          {
+            type: "email",
+            entry: "contact-email",
+            key: "contact_email",
+            label: "Correo electrónico de contacto",
+            required: true,
+            autocomplete: "email",
+            help: "Enviaremos a este correo la confirmación automática del formulario.",
           },
           {
             type: "textarea",
@@ -871,6 +897,10 @@ function createGroupSelectionField(wrapper, field) {
   const dayStatus = createTextElement("p", "registration-day-status", "");
   daysStep.step.append(dayStatus);
 
+  const groupNotice = createTextElement("p", "registration-group-notice", "");
+  groupNotice.hidden = true;
+  groupNotice.setAttribute("role", "status");
+
   const error = createTextElement("p", "registration-flow-error", "");
   error.hidden = true;
   error.setAttribute("role", "alert");
@@ -897,6 +927,8 @@ function createGroupSelectionField(wrapper, field) {
     countStep.options.replaceChildren();
     daysStep.options.replaceChildren();
     dayStatus.textContent = "";
+    groupNotice.hidden = true;
+    groupNotice.textContent = "";
     countStep.step.hidden = true;
     daysStep.step.hidden = true;
   }
@@ -1021,6 +1053,8 @@ function createGroupSelectionField(wrapper, field) {
     if (dayCountSubmission) dayCountSubmission.value = "";
     if (daysSubmission) daysSubmission.value = "";
     clearError();
+    groupNotice.textContent = group.waitlistNotice || "";
+    groupNotice.hidden = !group.waitlistNotice;
     renderDayCounts(group);
   }
 
@@ -1081,7 +1115,7 @@ function createGroupSelectionField(wrapper, field) {
     flow.append(locationStep.step);
   }
 
-  flow.append(groupStep.step, countStep.step, daysStep.step, error);
+  flow.append(groupStep.step, groupNotice, countStep.step, daysStep.step, error);
 
   if (contextualGroup) {
     renderGroups(contextualGroup.location, contextualGroup);
@@ -1631,9 +1665,39 @@ function fieldSubmissionKey(field) {
   return entry ? `entry_${entry}` : "field";
 }
 
+function confirmationPayload({ definition, key, submissionId, submission }) {
+  return {
+    token: CONFIRMATION_WEBHOOK_TOKEN,
+    submissionId,
+    type: key,
+    title: definition.title,
+    replyTo: submission.replyTo,
+    answers: submission.answers,
+    pageUrl: window.location.href,
+    submittedAt: new Date().toISOString(),
+  };
+}
+
+function sendConfirmationWebhook(details) {
+  if (!CONFIRMATION_WEBHOOK_ENDPOINT || !CONFIRMATION_FORM_TYPES.has(details.key) || !details.submission.replyTo) {
+    return;
+  }
+
+  fetch(CONFIRMATION_WEBHOOK_ENDPOINT, {
+    method: "POST",
+    mode: "no-cors",
+    headers: { "Content-Type": "text/plain;charset=utf-8" },
+    body: JSON.stringify(confirmationPayload(details)),
+    keepalive: true,
+  }).catch(() => {
+    // La confirmación no debe bloquear el alta ni la solicitud de prueba.
+  });
+}
+
 export function collectRegistrationSubmission(definition, form) {
   const answers = [];
   const attachments = [];
+  let replyTo = "";
 
   definition.sections.forEach((section) => {
     section.fields.forEach((field) => {
@@ -1691,10 +1755,11 @@ export function collectRegistrationSubmission(definition, form) {
         label: field.label,
         value: (generatedValue?.value || visibleInput?.value || "").trim() || "Sin respuesta",
       });
+      if (field.key === "contact_email") replyTo = (visibleInput?.value || "").trim();
     });
   });
 
-  return { answers, attachments };
+  return { answers, attachments, replyTo };
 }
 
 function setSubmittingState(form, submitting) {
@@ -1849,11 +1914,13 @@ function renderForm(root, definition, key) {
         submissionId,
         answers: submission.answers,
         attachments: submission.attachments,
+        replyTo: submission.replyTo,
         onCaptured: () => {
           setSubmittingState(form, true);
           note.textContent = "Enviando el formulario y los archivos de forma segura...";
         },
       });
+      sendConfirmationWebhook({ definition, key, submissionId, submission });
       submissionId = "";
       form.hidden = true;
       success.hidden = false;

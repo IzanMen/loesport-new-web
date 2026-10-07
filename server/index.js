@@ -31,8 +31,8 @@ const recipients = (process.env.FORM_RECIPIENT || "loesport@gmail.com")
   .map((email) => validEmail(email))
   .filter((email) => email && !blockedRecipients.has(email.toLowerCase()));
 const sender = process.env.GMAIL_SENDER || "sanchezginesizan@gmail.com";
-const maxUploadBytes = 17 * 1024 * 1024;
-const maxRequestBytes = 20 * 1024 * 1024;
+const maxUploadBytes = 40 * 1024 * 1024;
+const maxRequestBytes = 45 * 1024 * 1024;
 const rateWindowMs = 15 * 60 * 1000;
 const maxRequestsPerWindow = 10;
 const allowedOrigins = new Set(
@@ -318,6 +318,7 @@ app.use("/api", (request, response, next) => {
 app.get("/api/health", (_request, response) => {
   response.json({
     ok: true,
+    formStorageMaintenance: process.env.FORM_STORAGE_MAINTENANCE === "1",
     emailConfigured: Boolean(
       process.env.GMAIL_CLIENT_ID && process.env.GMAIL_CLIENT_SECRET && process.env.GMAIL_REFRESH_TOKEN,
     ),
@@ -339,6 +340,16 @@ app.get("/api/health", (_request, response) => {
 app.post(
   "/api/forms",
   (request, response, next) => {
+    if (process.env.FORM_STORAGE_MAINTENANCE === "1") {
+      response.setHeader("Retry-After", "60");
+      response.status(503).json({
+        ok: false,
+        code: "FORM_STORAGE_MAINTENANCE",
+        message: "No se ha podido enviar el formulario. Inténtalo de nuevo en unos minutos.",
+        retryAfterMs: 60_000,
+      });
+      return;
+    }
     const contentLength = Number(request.get("content-length")) || 0;
     if (contentLength > maxRequestBytes) {
       response.status(413).json({ ok: false, message: "La captura y los archivos superan el límite permitido." });
@@ -386,7 +397,7 @@ app.post(
         ok: false,
         message: invalidFile
           ? "Solo se admiten imágenes y documentos PDF."
-          : "La captura y los archivos superan el límite total de 17 MB.",
+          : "La captura y los archivos superan el límite total de 40 MB.",
       });
       return;
     }

@@ -220,6 +220,8 @@ export const TRAINING_GROUPS = [
     title: "Adultos 17:15 / Madres y padres",
     category: "Adultos · Madres y padres",
     schedule: "Martes y jueves · tercer día solo para mujeres el sábado",
+    waitlistNotice:
+      "El grupo seleccionado está lleno. Puedes completar el formulario y quedarás en lista de espera; te avisaremos cuando haya alguna plaza libre.",
     days: [
       trainingDay("martes", "17:15–18:15"),
       trainingDay("jueves", "17:15–18:15"),

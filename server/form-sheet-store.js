@@ -16,6 +16,7 @@ import {
   serializeUnmappedAnswers,
 } from "./inscripcion-sheet.js";
 import { summarizeError } from "./error-summary.js";
+import { createPublicSheetSync } from "./public-sheet-sync.js";
 
 const METADATA_COLUMNS = [
   ["submission_id", "ID de envío"],
@@ -267,12 +268,12 @@ export function createFormSheetStore({
     schema.systemColumns.map(({ key }, index) => [key, index]),
   );
   const lastColumn = columnName(schema.systemColumns.length);
-  const lastPublicColumn = columnName(schema.publicColumns.length);
   const systemHeaders = schema.systemColumns.map(({ header }) => header);
   const publicHeaders = schema.publicColumns.map(({ header }) => header);
   let client = sheetsClient;
   let readyPromise;
   let readyExpiresAt = 0;
+  let publicSync;
 
   function readinessTime() {
     const currentTime = Number(readinessClock());
@@ -289,6 +290,13 @@ export function createFormSheetStore({
       );
     }
     if (!client) client = createGoogleSheetsClient();
+    publicSync ||= createPublicSheetSync({
+      client, spreadsheetId: normalizedSpreadsheetId,
+      sheetName: normalizedSheetName, systemSheetName: normalizedSystemSheetName,
+      columns: schema.publicColumns, systemColumns: schema.systemColumns,
+      buildRow: (record) => buildFormPublicRow(schema, record),
+      parseRow: (row) => formSheetRowToRecord(schema, row),
+    });
   }
 
   async function spreadsheetTabs() {
@@ -398,6 +406,7 @@ export function createFormSheetStore({
       hidden: false,
       freezeHeader: true,
     });
+    await publicSync.ensureReady();
     return { system, public: publicTab };
   }
 
@@ -486,6 +495,7 @@ export function createFormSheetStore({
     });
     const rowNumber = parseUpdatedRowNumber(response.data.updates?.updatedRange);
     if (!rowNumber) throw new Error("Google Sheets no ha devuelto la fila añadida.");
+    await publicSync.upsert(record);
     return { rowNumber, record, row };
   }
 
@@ -512,27 +522,29 @@ export function createFormSheetStore({
     if (!Number.isInteger(firstIndex) || !Number.isInteger(finalIndex)) {
       throw new TypeError("La actualización de Google Sheets no es válida.");
     }
-    await client.spreadsheets.values.update({
+    const writeSystem = () => client.spreadsheets.values.update({
       spreadsheetId: normalizedSpreadsheetId,
       range: `${quotedSystemSheetName}!${columnName(firstIndex + 1)}${rowNumber}:${columnName(finalIndex + 1)}${rowNumber}`,
       valueInputOption: "RAW",
-      requestBody: {
-        majorDimension: "ROWS",
-        values: [values.map(escapeSpreadsheetValue)],
-      },
+      requestBody: { majorDimension: "ROWS", values: [values.map(escapeSpreadsheetValue)] },
     });
-  }
-
-  async function writePublicRow(rowNumber, record) {
-    await client.spreadsheets.values.update({
+    const publishingArchive = firstKey === "drive_status" && values[0] === "stored";
+    // Persist delivery outcomes even if the derived view is temporarily unavailable.
+    if (!publishingArchive) await writeSystem();
+    const source = await client.spreadsheets.values.get({
       spreadsheetId: normalizedSpreadsheetId,
-      range: `${quotedSheetName}!A${rowNumber}:${lastPublicColumn}${rowNumber}`,
-      valueInputOption: "RAW",
-      requestBody: {
-        majorDimension: "ROWS",
-        values: [buildFormPublicRow(schema, record)],
-      },
+      range: `${quotedSystemSheetName}!A${rowNumber}:${lastColumn}${rowNumber}`,
+      majorDimension: "ROWS",
     });
+    const record = formSheetRowToRecord(schema, source.data.values?.[0] || []);
+    if (expectedSubmissionId && normalizeSubmissionId(record.submission_id) !== normalizeSubmissionId(expectedSubmissionId)) {
+      throw new GoogleSheetsRowMismatchError(rowNumber);
+    }
+    values.forEach((value, index) => {
+      record[schema.systemColumns[firstIndex + index].key] = value;
+    });
+    await publicSync.upsert(record);
+    if (publishingArchive) await writeSystem();
   }
 
   async function updateEmailState(
@@ -570,17 +582,6 @@ export function createFormSheetStore({
   }
 
   async function markDriveStored(rowNumber, archive, expectedSubmissionId) {
-    await verifySubmissionRow(rowNumber, expectedSubmissionId);
-    const response = await client.spreadsheets.values.get({
-      spreadsheetId: normalizedSpreadsheetId,
-      range: `${quotedSystemSheetName}!A${rowNumber}:${lastColumn}${rowNumber}`,
-      majorDimension: "ROWS",
-    });
-    const record = {
-      ...formSheetRowToRecord(schema, response.data.values?.[0] || []),
-      ...driveArchiveToRecord(archive, { status: "stored" }),
-    };
-    await writePublicRow(rowNumber, record);
     await updateDriveArchive(rowNumber, archive, "stored", expectedSubmissionId);
   }
 

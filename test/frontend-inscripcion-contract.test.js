@@ -15,6 +15,7 @@ const REGULAR_ANSWER_KEYS = [
   "participant_postal_code",
   "participant_nationality",
   "contact_phone",
+  "contact_email",
   "guardian_full_name",
   "guardian_document_number",
   "guardian_document_front",
@@ -46,6 +47,7 @@ const PREINSCRIPCION_ANSWER_KEYS = [
   "participant_birth_date",
   "participant_sex",
   "contact_phone",
+  "contact_email",
   "comments",
   "trial_commitment",
   "privacy_consent",
@@ -60,7 +62,7 @@ async function frontendSources() {
   return { registrationForms, formSubmission };
 }
 
-test("el frontend de inscripción mantiene exactamente 32 claves enviadas", async () => {
+test("el frontend de inscripción mantiene exactamente 33 claves enviadas", async () => {
   const { registrationForms } = await frontendSources();
   const definitionStart = registrationForms.indexOf("  inscripcion: {");
   const definitionEnd = registrationForms.indexOf("\n  preinscripcion: {", definitionStart);
@@ -81,8 +83,8 @@ test("el frontend de inscripción mantiene exactamente 32 claves enviadas", asyn
   assert.deepEqual(groupKeys, GROUP_ANSWER_KEYS);
 
   const submittedKeys = [...REGULAR_ANSWER_KEYS, ...groupKeys];
-  assert.equal(submittedKeys.length, 32);
-  assert.equal(new Set(submittedKeys).size, 32);
+  assert.equal(submittedKeys.length, 33);
+  assert.equal(new Set(submittedKeys).size, 33);
 });
 
 test("el periodo de prueba envía todas sus respuestas con claves semánticas", async () => {
@@ -97,8 +99,8 @@ test("el periodo de prueba envía todas sus respuestas con claves semánticas", 
   assert.deepEqual(definitionKeys, ["training", ...PREINSCRIPCION_ANSWER_KEYS]);
 
   const submittedKeys = [...GROUP_ANSWER_KEYS, ...PREINSCRIPCION_ANSWER_KEYS];
-  assert.equal(submittedKeys.length, 14);
-  assert.equal(new Set(submittedKeys).size, 14);
+  assert.equal(submittedKeys.length, 15);
+  assert.equal(new Set(submittedKeys).size, 15);
 });
 
 test("submissionId se reutiliza al reintentar y se reinicia tras éxito, conflicto o edición", async () => {

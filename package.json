@@ -11,6 +11,7 @@
     "authorize:drive": "node server/authorize-drive.js",
     "configure:form-storage-access": "node server/configure-form-storage-access.js",
     "verify:form-storage": "node server/verify-form-storage.js",
+    "reconcile:form-sheets": "node scripts/reconcile-form-sheets.mjs",
     "clean": "rm -rf dist",
     "build": "vite build",
     "test": "node --test",

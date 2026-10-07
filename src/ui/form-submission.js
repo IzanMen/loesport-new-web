@@ -2,7 +2,7 @@ const CLOUD_FORM_API_ENDPOINT = "https://loesport-web-473754422972.europe-southw
 const localHostname = ["localhost", "127.0.0.1"].includes(window.location.hostname);
 const FORM_API_ENDPOINT =
   import.meta.env.VITE_FORM_API_ENDPOINT || (localHostname ? "/api/forms" : CLOUD_FORM_API_ENDPOINT);
-const MAX_UPLOAD_BYTES = 17 * 1024 * 1024;
+const MAX_UPLOAD_BYTES = 40 * 1024 * 1024;
 const REQUEST_TIMEOUT_MS = 90_000;
 const CAPTURE_TIMEOUT_MS = 20_000;
 const SUBMISSION_ID_PATTERN =
@@ -222,7 +222,7 @@ export async function sendFormSubmission({
   const resolvedSubmissionId = resolveSubmissionId(form, submissionId);
   const selectedFilesSize = totalAttachmentBytes(attachments);
   if (selectedFilesSize > MAX_UPLOAD_BYTES) {
-    throw new Error("Los archivos superan el límite total de 17 MB.");
+    throw new Error("Los archivos superan el límite total de 40 MB.");
   }
 
   const cachedSnapshot = pendingSubmissionSnapshots.get(form);
