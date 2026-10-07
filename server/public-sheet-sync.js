@@ -26,6 +26,24 @@ function normalizedText(value) {
   return String(value ?? "").trim().normalize("NFC").toLowerCase();
 }
 
+function headersStartWith(row, columns) {
+  return columns.every(({ header }, index) => row?.[index] === header);
+}
+
+function headersStartWithLegacySchema(row, columns) {
+  return columns.every(({ key, header }, index) =>
+    row?.[index] === header ||
+    (
+      key === "schema_version" &&
+      ["Versión de esquema", "Versión de esquema · v2"].includes(row?.[index])
+    ),
+  );
+}
+
+function managementHeadersMatch(headers) {
+  return !headers.some((value, index) => value && value !== PUBLIC_MANAGEMENT_HEADERS[index]);
+}
+
 export function planPublicSheetSync({ records, publicRows, columns, buildRow }) {
   const width = columns.length;
   const byId = new Map();
@@ -129,17 +147,34 @@ export function createPublicSheetSync({
   async function plan() {
     const { publicTab, systemTab, publicSheet } = await tabs();
     const publicEnd = columnName(publicTab.gridProperties.columnCount);
-    const [publicData, systemData] = await Promise.all([
+    let [publicData, systemData] = await Promise.all([
       read(`${publicName}!A1:${publicEnd}${publicTab.gridProperties.rowCount}`),
       read(`${systemName}!A1:${columnName(systemColumns.length)}${systemTab.gridProperties.rowCount}`),
     ]);
-    for (const [actual, expected] of [[publicData[0], columns], [systemData[0], systemColumns]]) {
-      if (!expected.every(({ header }, i) => actual?.[i] === header)) {
-        throw new Error("La cabecera no coincide con el esquema esperado.");
-      }
+    const legacyPublicWidth = width - 1;
+    const legacyPublicHeaders =
+      legacyPublicWidth > 0 &&
+      headersStartWith(publicData[0], columns.slice(0, legacyPublicWidth)) &&
+      managementHeadersMatch(publicData[0].slice(legacyPublicWidth, legacyPublicWidth + 4));
+    if (legacyPublicHeaders) {
+      publicData = publicData.map((row) => [
+        ...row.slice(0, legacyPublicWidth),
+        "",
+        ...row.slice(legacyPublicWidth),
+      ]);
+    }
+    const legacySystemHeaders =
+      systemColumns.length > 0 &&
+      headersStartWithLegacySchema(systemData[0], systemColumns.slice(0, -1)) &&
+      !populated(systemData[0].slice(systemColumns.length - 1));
+    if (
+      !headersStartWith(publicData[0], columns) ||
+      (!headersStartWith(systemData[0], systemColumns) && !legacySystemHeaders)
+    ) {
+      throw new Error("La cabecera no coincide con el esquema esperado.");
     }
     const extraHeaders = publicData[0].slice(width);
-    if (extraHeaders.some((value, i) => value && value !== PUBLIC_MANAGEMENT_HEADERS[i])) {
+    if (!managementHeadersMatch(extraHeaders)) {
       throw new Error("Las columnas de gestión contienen una cabecera incompatible.");
     }
     if (publicData.some((row) => populated(row.slice(width + 4)))) {
