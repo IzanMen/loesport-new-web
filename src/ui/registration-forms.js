@@ -481,10 +481,17 @@ export const FORM_DEFINITIONS = {
       {
         title: "Datos de la baja",
         fields: [
-          { type: "text", entry: "1045781291", label: "Población de residencia", required: true },
+          {
+            type: "text",
+            entry: "1045781291",
+            key: "participant_residence_city",
+            label: "Población de residencia",
+            required: true,
+          },
           {
             type: "text",
             entry: "43453506",
+            key: "participant_full_name",
             label: "Nombre y Apellidos",
             required: true,
             autocomplete: "name",
@@ -492,12 +499,14 @@ export const FORM_DEFINITIONS = {
           {
             type: "date-text",
             entry: "1065046570",
+            key: "participant_birth_date",
             label: "Fecha de nacimiento",
             required: true,
           },
           {
             type: "textarea",
             entry: "117660033",
+            key: "withdrawal_reason",
             label:
               "Si lo desea, indique aquí el motivo por el que cursa baja de la actividad o si tiene alguna observación.",
           },
@@ -509,6 +518,7 @@ export const FORM_DEFINITIONS = {
           {
             type: "radio",
             entry: "577217566",
+            key: "privacy_consent",
             label:
               "De conformidad con lo previsto en la normativa de protección de datos de carácter personal (la LO 3/2018, de 5 de diciembre, de Protección de datos personales y garantía de los derechos digitales, LOPDyGDD y el Reglamento General sobre Protección de Datos 2016/679, de 27 de abril de 2016, RGPD, o norma que los sustituya), LES INFORMAMOS que los datos personales recogidos en el formulario de inscripción serán tratados por parte del club Alaior Esport como responsable del tratamiento con la única finalidad de programar la temporada 2021/22, así como para tramitar las licencias deportivas si fuera necesario. Les informamos que pueden ejercer sus derechos de acceso, rectificación, supresión, limitación del tratamiento, portabilidad de los datos y oposición enviando un correo electrónico a loesport@gmail.com",
             required: true,
@@ -518,6 +528,7 @@ export const FORM_DEFINITIONS = {
           {
             type: "radio",
             entry: "913392475",
+            key: "terms_consent",
             label:
               "Condiciones de uso: Quien ha cumplimentado el presente formulario declara que los datos en él consignado son reales con lo que desde el momento que pulse sobre el botón ENVIAR supone su aceptación y la aceptación de las condiciones de uso y reglamentos del Club ALAIOR ESPORT",
             required: true,

@@ -237,6 +237,7 @@ export function createFormSheetStore({
   schema,
   sheetsClient,
   spreadsheetId = process.env.GOOGLE_SHEETS_SPREADSHEET_ID,
+  spreadsheetEnvironmentName = "GOOGLE_SHEETS_SPREADSHEET_ID",
   sheetName,
   systemSheetName,
   clock = () => new Date(),
@@ -254,6 +255,8 @@ export function createFormSheetStore({
   }
 
   const normalizedSpreadsheetId = String(spreadsheetId ?? "").trim();
+  const normalizedSpreadsheetEnvironmentName =
+    String(spreadsheetEnvironmentName ?? "").trim() || "GOOGLE_SHEETS_SPREADSHEET_ID";
   const normalizedSheetName = String(sheetName ?? "").trim();
   const normalizedSystemSheetName = String(systemSheetName ?? "").trim();
   const quotedSheetName = quoteSheetName(normalizedSheetName);
@@ -286,7 +289,7 @@ export function createFormSheetStore({
   function prepareRuntime() {
     if (!normalizedSpreadsheetId) {
       throw new GoogleSheetsConfigurationError(
-        "Falta la variable GOOGLE_SHEETS_SPREADSHEET_ID.",
+        `Falta la variable ${normalizedSpreadsheetEnvironmentName}.`,
       );
     }
     if (!client) client = createGoogleSheetsClient();

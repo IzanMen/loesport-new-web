@@ -10,6 +10,8 @@ import {
   GoogleDriveConfigurationError,
   GoogleDriveSecurityError,
   RESUMABLE_UPLOAD_THRESHOLD_BYTES,
+  createBajaDriveStore,
+  createEquipacionDriveStore,
   createArchiveDescriptors,
   createEnvironmentDriveAuth,
   createGoogleDriveClient,
@@ -421,6 +423,72 @@ test("el periodo de prueba usa carpeta y propiedades propias reutilizando el alm
   assert.equal(
     fake.created.get(plan.snapshot.id).appProperties.loesport_form_type,
     "preinscripcion",
+  );
+});
+
+test("la baja usa carpeta y propiedades propias reutilizando el almacén", async () => {
+  const fake = fakeDriveClient();
+  const store = createBajaDriveStore({
+    driveClient: fake.client,
+    folderId: PARENT_ID,
+    sharedDriveId: "sharedDrive12345",
+    environment: {},
+    wait: async () => undefined,
+  });
+  const bajaPayload = payload({ type: "baja", attachments: [] });
+
+  const plan = await store.planArchive({
+    payload: bajaPayload,
+    snapshot: SNAPSHOT,
+    uploadedFiles: [],
+  });
+  const archive = await store.reconcileArchive({
+    plan,
+    payload: bajaPayload,
+    snapshot: SNAPSHOT,
+    uploadedFiles: [],
+  });
+
+  assert.equal(store.formType, "baja");
+  assert.equal(plan.folder.name, `baja-${SUBMISSION_ID}`);
+  assert.equal(archive.attachments.length, 0);
+  assert.equal(fake.created.get(plan.folder.id).appProperties.loesport_kind, "baja_folder");
+  assert.equal(fake.created.get(plan.snapshot.id).appProperties.loesport_form_type, "baja");
+});
+
+test("equipación usa carpeta y propiedades propias reutilizando el almacén", async () => {
+  const fake = fakeDriveClient();
+  const store = createEquipacionDriveStore({
+    driveClient: fake.client,
+    folderId: PARENT_ID,
+    sharedDriveId: "sharedDrive12345",
+    environment: {},
+    wait: async () => undefined,
+  });
+  const equipmentPayload = payload({ type: "equipacion", attachments: [] });
+
+  const plan = await store.planArchive({
+    payload: equipmentPayload,
+    snapshot: SNAPSHOT,
+    uploadedFiles: [],
+  });
+  const archive = await store.reconcileArchive({
+    plan,
+    payload: equipmentPayload,
+    snapshot: SNAPSHOT,
+    uploadedFiles: [],
+  });
+
+  assert.equal(store.formType, "equipacion");
+  assert.equal(plan.folder.name, `equipacion-${SUBMISSION_ID}`);
+  assert.equal(archive.attachments.length, 0);
+  assert.equal(
+    fake.created.get(plan.folder.id).appProperties.loesport_kind,
+    "equipacion_folder",
+  );
+  assert.equal(
+    fake.created.get(plan.snapshot.id).appProperties.loesport_form_type,
+    "equipacion",
   );
 });
 

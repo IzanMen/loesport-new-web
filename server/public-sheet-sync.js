@@ -44,6 +44,16 @@ function managementHeadersMatch(headers) {
   return !headers.some((value, index) => value && value !== PUBLIC_MANAGEMENT_HEADERS[index]);
 }
 
+function firstHeaderMismatch(row, columns) {
+  const index = columns.findIndex(({ header }, columnIndex) => row?.[columnIndex] !== header);
+  if (index === -1) return null;
+  return {
+    column: columnName(index + 1),
+    expected: columns[index].header,
+    actual: String(row?.[index] ?? ""),
+  };
+}
+
 export function planPublicSheetSync({ records, publicRows, columns, buildRow }) {
   const width = columns.length;
   const byId = new Map();
@@ -65,7 +75,8 @@ export function planPublicSheetSync({ records, publicRows, columns, buildRow }) 
     }
   }
   const projected = new Map([...canonical].map(([id, record]) => [id, buildRow(record)]));
-  const nameIndex = columns.findIndex(({ key }) => key === "participant_full_name");
+  const nameIndex = columns.findIndex(({ key }) =>
+    key === "participant_full_name" || key === "contact_full_name");
   const seen = new Set();
   const rows = [];
   let linked = 0;
@@ -157,21 +168,39 @@ export function createPublicSheetSync({
       headersStartWith(publicData[0], columns.slice(0, legacyPublicWidth)) &&
       managementHeadersMatch(publicData[0].slice(legacyPublicWidth, legacyPublicWidth + 4));
     if (legacyPublicHeaders) {
-      publicData = publicData.map((row) => [
+      publicData = publicData.map((row, index) => [
         ...row.slice(0, legacyPublicWidth),
-        "",
+        index === 0 ? columns[legacyPublicWidth].header : "",
         ...row.slice(legacyPublicWidth),
+      ]);
+    } else if (
+      publicData[0]?.[legacyPublicWidth] === "" &&
+      headersStartWith(publicData[0], columns.slice(0, legacyPublicWidth)) &&
+      managementHeadersMatch(publicData[0].slice(width, width + 4))
+    ) {
+      publicData = publicData.map((row, index) => [
+        ...row.slice(0, legacyPublicWidth),
+        index === 0 ? columns[legacyPublicWidth].header : row[legacyPublicWidth],
+        ...row.slice(legacyPublicWidth + 1),
       ]);
     }
     const legacySystemHeaders =
       systemColumns.length > 0 &&
       headersStartWithLegacySchema(systemData[0], systemColumns.slice(0, -1)) &&
       !populated(systemData[0].slice(systemColumns.length - 1));
-    if (
-      !headersStartWith(publicData[0], columns) ||
-      (!headersStartWith(systemData[0], systemColumns) && !legacySystemHeaders)
-    ) {
-      throw new Error("La cabecera no coincide con el esquema esperado.");
+    if (!headersStartWith(publicData[0], columns)) {
+      const mismatch = firstHeaderMismatch(publicData[0], columns);
+      throw new Error(
+        `La cabecera de ${sheetName} no coincide con el esquema esperado en ${mismatch?.column}: ` +
+          `esperado "${mismatch?.expected}", encontrado "${mismatch?.actual}".`,
+      );
+    }
+    if (!headersStartWith(systemData[0], systemColumns) && !legacySystemHeaders) {
+      const mismatch = firstHeaderMismatch(systemData[0], systemColumns);
+      throw new Error(
+        `La cabecera de ${systemSheetName} no coincide con el esquema esperado en ${mismatch?.column}: ` +
+          `esperado "${mismatch?.expected}", encontrado "${mismatch?.actual}".`,
+      );
     }
     const extraHeaders = publicData[0].slice(width);
     if (!managementHeadersMatch(extraHeaders)) {
@@ -278,7 +307,7 @@ export function createPublicSheetSync({
       if (!matches.length) {
         await client.spreadsheets.values.append({
           spreadsheetId, range: `${publicName}!A:${lastColumn}`,
-          valueInputOption: "RAW", insertDataOption: "INSERT_ROWS",
+          valueInputOption: "RAW", insertDataOption: "OVERWRITE",
           requestBody: { majorDimension: "ROWS", values: [[
             ...buildRow(record), id, "pendiente", record.drive_status || "pending", record.email_status || "pending",
           ]] },

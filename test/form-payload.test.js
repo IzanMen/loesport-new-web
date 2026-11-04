@@ -188,7 +188,7 @@ test("rechaza claves duplicadas normalizadas en los formularios persistentes", (
     { key: "PARTICIPANT_FULL_NAME", value: "Grace" },
   ];
 
-  for (const type of ["inscripcion", "preinscripcion"]) {
+  for (const type of ["inscripcion", "preinscripcion", "baja", "equipacion"]) {
     assertBadRequest(
       () => parsePayload(payload({ type, answers })),
       "Las respuestas del formulario no son válidas.",
@@ -204,13 +204,11 @@ test("rechaza claves duplicadas normalizadas en los formularios persistentes", (
 
 test("los formularios excluidos de Sheets siguen aceptando respuestas sin key", async (t) => {
   const excludedTypes = [
-    "baja",
     "licencias",
     "newsletter",
     "contacto",
     "socio",
     "patrocinio",
-    "equipacion",
   ];
 
   for (const type of excludedTypes) {

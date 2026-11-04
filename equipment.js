@@ -25,8 +25,9 @@ function createProductCard(product) {
   link.setAttribute("aria-label", "Ver producto");
 
   const media = document.createElement("div");
-  media.className = `equipment-card-media${product.images.length > 1 ? " equipment-pack-media" : ""}`;
-  product.images.forEach((source, index) => {
+  const mediaSources = product.catalogImage ? [product.catalogImage] : product.images;
+  media.className = `equipment-card-media${mediaSources.length > 1 ? " equipment-pack-media" : ""}`;
+  mediaSources.forEach((source, index) => {
     const image = document.createElement("img");
     image.src = source;
     image.alt = index === 0 ? product.name : "";

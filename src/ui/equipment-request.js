@@ -21,7 +21,7 @@ function writeRequest(items) {
 }
 
 function itemKey(item) {
-  return `${item.productId}|${item.size || ""}|${item.gender || ""}`;
+  return `${item.productId}|${item.size || ""}|${item.gender || ""}|${item.variant || ""}`;
 }
 
 function createText(text) {
@@ -29,7 +29,16 @@ function createText(text) {
 }
 
 function lineDescription(item) {
-  return [item.size && ["Talla", item.size], item.gender && ["Patrón", item.gender]].filter(Boolean);
+  return [
+    item.size && ["Talla", item.size],
+    item.gender && ["Patrón", item.gender],
+    item.variant && ["Modelo", item.variant],
+  ].filter(Boolean);
+}
+
+function itemImage(product, item) {
+  const variant = product.variants?.find((entry) => entry.name === item.variant);
+  return product.images[variant?.imageIndex || 0];
 }
 
 export function initEquipmentRequest() {
@@ -71,7 +80,7 @@ export function initEquipmentRequest() {
     row.dataset.requestItem = itemKey(item);
 
     const image = document.createElement("img");
-    image.src = product.images[0];
+    image.src = itemImage(product, item);
     image.alt = "";
 
     const content = document.createElement("div");
@@ -201,24 +210,55 @@ export function initEquipmentRequest() {
 
     submitting = true;
     const data = new FormData(form);
-    const productAnswers = items.map((item, index) => {
+    const productLines = items.map((item, index) => {
       const product = getEquipmentProduct(item.productId);
       const variant = lineDescription(item).map(([label, value]) => `${label} ${value}`).join(" · ");
       const lineTotal = formatEquipmentPrice(product.price * item.quantity);
-      return {
-        section: "Artículos solicitados",
-        label: `${index + 1}. ${product.name}`,
-        value: `${variant || "Talla única"} · ${item.quantity} ud. · ${lineTotal}`,
-      };
+      return `${index + 1}. ${product.name}: ${variant || "Talla única"} · ${item.quantity} ud. · ${lineTotal}`;
     });
     const answers = [
-      { section: "Datos de contacto", label: "Nombre y apellidos", value: data.get("name") },
-      { section: "Datos de contacto", label: "Correo electrónico", value: data.get("email") },
-      { section: "Datos de contacto", label: "Teléfono", value: data.get("phone") || "Sin respuesta" },
-      ...productAnswers,
-      { section: "Resumen", label: "Total orientativo", value: formatEquipmentPrice(requestTotal()) },
-      { section: "Resumen", label: "Observaciones", value: data.get("notes") || "Sin respuesta" },
-      { section: "Privacidad", label: "Consentimiento", value: "Aceptado" },
+      {
+        key: "contact_full_name",
+        section: "Datos de contacto",
+        label: "Nombre y apellidos",
+        value: data.get("name"),
+      },
+      {
+        key: "contact_email",
+        section: "Datos de contacto",
+        label: "Correo electrónico",
+        value: data.get("email"),
+      },
+      {
+        key: "contact_phone",
+        section: "Datos de contacto",
+        label: "Teléfono",
+        value: data.get("phone") || "Sin respuesta",
+      },
+      {
+        key: "order_items",
+        section: "Artículos solicitados",
+        label: "Artículos solicitados",
+        value: productLines.join("\n"),
+      },
+      {
+        key: "order_total",
+        section: "Resumen",
+        label: "Total orientativo",
+        value: formatEquipmentPrice(requestTotal()),
+      },
+      {
+        key: "comments",
+        section: "Resumen",
+        label: "Observaciones",
+        value: data.get("notes") || "Sin respuesta",
+      },
+      {
+        key: "privacy_consent",
+        section: "Privacidad",
+        label: "Consentimiento",
+        value: "Aceptado",
+      },
     ];
     const button = form.querySelector('button[type="submit"]');
     const originalButtonContent = button?.innerHTML;

@@ -12,6 +12,8 @@
     "configure:form-storage-access": "node server/configure-form-storage-access.js",
     "verify:form-storage": "node server/verify-form-storage.js",
     "reconcile:form-sheets": "node scripts/reconcile-form-sheets.mjs",
+    "import:historical-bajas": "node scripts/import-historical-bajas.mjs",
+    "import:historical-equipacion": "node scripts/import-historical-equipacion.mjs",
     "clean": "rm -rf dist",
     "build": "vite build",
     "test": "node --test",

@@ -22,6 +22,7 @@ function createOption(value) {
 function renderGallery() {
   const gallery = document.createElement("div");
   gallery.className = "product-gallery";
+  const thumbnailButtons = [];
 
   const stage = document.createElement("div");
   stage.className = "product-gallery-stage";
@@ -30,6 +31,15 @@ function renderGallery() {
   mainImage.alt = product.name;
   stage.append(mainImage);
   gallery.append(stage);
+
+  function showImage(index) {
+    const source = product.images[index];
+    if (!source) return;
+    mainImage.src = source;
+    thumbnailButtons.forEach((button, buttonIndex) => {
+      button.classList.toggle("is-active", buttonIndex === index);
+    });
+  }
 
   if (product.images.length > 1) {
     const thumbnails = document.createElement("div");
@@ -43,19 +53,17 @@ function renderGallery() {
       image.src = source;
       image.alt = "";
       button.append(image);
-      button.addEventListener("click", () => {
-        mainImage.src = source;
-        thumbnails.querySelectorAll("button").forEach((item) => item.classList.toggle("is-active", item === button));
-      });
+      button.addEventListener("click", () => showImage(index));
+      thumbnailButtons.push(button);
       thumbnails.append(button);
     });
     gallery.append(thumbnails);
   }
 
-  return gallery;
+  return { gallery, showImage };
 }
 
-function renderProductInfo() {
+function renderProductInfo(showGalleryImage) {
   const info = document.createElement("div");
   info.className = "product-info";
 
@@ -78,15 +86,40 @@ function renderProductInfo() {
   const form = document.createElement("form");
   form.className = "product-options";
   form.dataset.productOptions = "";
+  const variants = product.variants || [];
+  const genders = product.genders || [];
 
-  if (product.genders.length > 1) {
+  if (variants.length) {
+    const variantField = document.createElement("fieldset");
+    variantField.className = "product-option-field";
+    const legend = document.createElement("legend");
+    legend.textContent = "Modelo y color";
+    const choices = document.createElement("div");
+    choices.className = "product-segments product-variant-segments";
+    variants.forEach((variant, index) => {
+      const label = document.createElement("label");
+      const input = document.createElement("input");
+      input.type = "radio";
+      input.name = "variant";
+      input.value = variant.name;
+      input.required = true;
+      if (index === 0) input.checked = true;
+      input.addEventListener("change", () => showGalleryImage(variant.imageIndex));
+      const text = document.createElement("span");
+      text.textContent = variant.name;
+      label.append(input, text);
+      choices.append(label);
+    });
+    variantField.append(legend, choices);
+    form.append(variantField);
+  } else if (genders.length > 1) {
     const genderField = document.createElement("fieldset");
     genderField.className = "product-option-field";
     const legend = document.createElement("legend");
     legend.textContent = "Género / patrón";
     const choices = document.createElement("div");
     choices.className = "product-segments";
-    product.genders.forEach((gender, index) => {
+    genders.forEach((gender, index) => {
       const label = document.createElement("label");
       const input = document.createElement("input");
       input.type = "radio";
@@ -104,7 +137,7 @@ function renderProductInfo() {
   } else {
     const gender = document.createElement("p");
     gender.className = "product-static-option";
-    gender.innerHTML = `<span>Patrón</span><strong>${product.genders[0]}</strong>`;
+    gender.innerHTML = `<span>Patrón</span><strong>${genders[0]}</strong>`;
     form.append(gender);
   }
 
@@ -128,9 +161,12 @@ function renderProductInfo() {
     form.append(size);
   }
 
-  const color = document.createElement("div");
-  color.className = "product-color";
-  color.innerHTML = `<span>Color</span><p><i style="--swatch: ${product.colorHex}" aria-hidden="true"></i><strong>${product.color}</strong></p>`;
+  let color;
+  if (!variants.length) {
+    color = document.createElement("div");
+    color.className = "product-color";
+    color.innerHTML = `<span>Color</span><p><i style="--swatch: ${product.colorHex}" aria-hidden="true"></i><strong>${product.color}</strong></p>`;
+  }
 
   const quantityLabel = document.createElement("label");
   quantityLabel.className = "product-quantity";
@@ -147,7 +183,9 @@ function renderProductInfo() {
 
   const optionRow = document.createElement("div");
   optionRow.className = "product-option-row";
-  optionRow.append(color, quantityLabel);
+  if (color) optionRow.append(color);
+  else optionRow.classList.add("is-quantity-only");
+  optionRow.append(quantityLabel);
   form.append(optionRow);
 
   const submit = document.createElement("button");
@@ -204,8 +242,8 @@ function renderRelatedProduct(item) {
   return link;
 }
 
-const gallery = renderGallery();
-const { info, form } = renderProductInfo();
+const { gallery, showImage: showGalleryImage } = renderGallery();
+const { info, form } = renderProductInfo(showGalleryImage);
 detailRoot?.append(gallery, info);
 
 const related = equipmentProducts
@@ -223,7 +261,8 @@ form.addEventListener("submit", (event) => {
   request.addItem({
     productId: product.id,
     size: product.sizes.length ? data.get("size") : "",
-    gender: product.genders.length > 1 ? data.get("gender") : product.genders[0],
+    gender: !product.variants?.length && product.genders.length > 1 ? data.get("gender") : product.genders?.[0] || "",
+    variant: product.variants?.length ? data.get("variant") : "",
     quantity: Math.min(Math.max(Number(data.get("quantity")) || 1, 1), 20),
   });
 });

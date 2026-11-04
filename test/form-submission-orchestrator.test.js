@@ -1199,3 +1199,57 @@ test("puede persistir preinscripcion reutilizando el mismo orquestador", async (
   assert.equal(drive.reconcileArchive.mock.callCount(), 1);
   assert.equal(sendEmail.mock.callCount(), 1);
 });
+
+test("puede persistir baja reutilizando el mismo orquestador", async () => {
+  const sheets = statefulSheetStore();
+  const drive = statefulDriveStore();
+  const sendEmail = mock.fn(async () => ({ gmailMessageId: "gmail-baja" }));
+  const orchestrator = createFormSubmissionOrchestrator({
+    sendEmail,
+    sheetStore: sheets.store,
+    driveStore: drive.store,
+    persistedFormType: "baja",
+  });
+  const payload = registrationPayload({
+    type: "baja",
+    title: "Solicitud de baja",
+    attachments: [],
+    pageUrl: "https://loesport.es/baja",
+  });
+
+  const result = await orchestrator.submit(payload, SNAPSHOT, []);
+
+  assert.equal(result.sheetStored, true);
+  assert.equal(result.driveStored, true);
+  assert.equal(sheets.appendPending.mock.calls[0].arguments[0].payload.type, "baja");
+  assert.equal(drive.planArchive.mock.callCount(), 1);
+  assert.equal(drive.reconcileArchive.mock.callCount(), 1);
+  assert.equal(sendEmail.mock.callCount(), 1);
+});
+
+test("puede persistir equipación reutilizando el mismo orquestador", async () => {
+  const sheets = statefulSheetStore();
+  const drive = statefulDriveStore();
+  const sendEmail = mock.fn(async () => ({ gmailMessageId: "gmail-equipacion" }));
+  const orchestrator = createFormSubmissionOrchestrator({
+    sendEmail,
+    sheetStore: sheets.store,
+    driveStore: drive.store,
+    persistedFormType: "equipacion",
+  });
+  const payload = registrationPayload({
+    type: "equipacion",
+    title: "Solicitud de equipación",
+    attachments: [],
+    pageUrl: "https://loesport.es/equipamiento",
+  });
+
+  const result = await orchestrator.submit(payload, SNAPSHOT, []);
+
+  assert.equal(result.sheetStored, true);
+  assert.equal(result.driveStored, true);
+  assert.equal(sheets.appendPending.mock.calls[0].arguments[0].payload.type, "equipacion");
+  assert.equal(drive.planArchive.mock.callCount(), 1);
+  assert.equal(drive.reconcileArchive.mock.callCount(), 1);
+  assert.equal(sendEmail.mock.callCount(), 1);
+});

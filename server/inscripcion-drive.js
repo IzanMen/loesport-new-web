@@ -678,3 +678,45 @@ export function createPreinscripcionDriveStore({
     formType: "preinscripcion",
   });
 }
+
+export function createBajaDriveStore({
+  environment = process.env,
+  folderId =
+    environment.GOOGLE_DRIVE_BAJA_FOLDER_ID ||
+    environment.GOOGLE_DRIVE_FORMS_FOLDER_ID ||
+    environment.GOOGLE_DRIVE_INSCRIPCION_FOLDER_ID,
+  sharedDriveId =
+    environment.GOOGLE_DRIVE_BAJA_SHARED_DRIVE_ID ||
+    environment.GOOGLE_DRIVE_FORMS_SHARED_DRIVE_ID ||
+    environment.GOOGLE_DRIVE_INSCRIPCION_SHARED_DRIVE_ID,
+  ...options
+} = {}) {
+  return createInscripcionDriveStore({
+    ...options,
+    environment,
+    folderId,
+    sharedDriveId,
+    formType: "baja",
+  });
+}
+
+export function createEquipacionDriveStore({
+  environment = process.env,
+  folderId =
+    environment.GOOGLE_DRIVE_EQUIPACION_FOLDER_ID ||
+    environment.GOOGLE_DRIVE_FORMS_FOLDER_ID ||
+    environment.GOOGLE_DRIVE_INSCRIPCION_FOLDER_ID,
+  sharedDriveId =
+    environment.GOOGLE_DRIVE_EQUIPACION_SHARED_DRIVE_ID ||
+    environment.GOOGLE_DRIVE_FORMS_SHARED_DRIVE_ID ||
+    environment.GOOGLE_DRIVE_INSCRIPCION_SHARED_DRIVE_ID,
+  ...options
+} = {}) {
+  return createInscripcionDriveStore({
+    ...options,
+    environment,
+    folderId,
+    sharedDriveId,
+    formType: "equipacion",
+  });
+}

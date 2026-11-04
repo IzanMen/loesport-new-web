@@ -84,6 +84,7 @@ export function createSupplementalCatalogue() {
     "MAÓ",
     "MERCADAL",
     "100 €",
+    "Aitor",
     "Ajuntament d'Alaior",
     "Catalina Cardona",
     "Colonya Caixa Pollença",
@@ -96,10 +97,10 @@ export function createSupplementalCatalogue() {
     "Esports Illes Balears",
     "FAIB",
     "Fatness Free Sugar",
+    "Ivona",
     "Izan Sánchez",
     "Julia Carreras",
     "Lô News",
-    "Marc Gomila",
     "Marta Orives",
     "Miguel Quesada",
     "Mode Marquès",
@@ -108,7 +109,7 @@ export function createSupplementalCatalogue() {
     "Rewind Lab.",
     "Sergi Reurer",
     "Tenim Pla",
-    "Yzabelle Maciel",
+    "Toni",
     "ES00 0000 0000 0000 0000 0000",
     "IBAN",
     ".",
@@ -133,11 +134,16 @@ export function createSupplementalCatalogue() {
     "7-8A",
     "8-9A",
     "3/5, 6/8, 9/11, 12/14, XS, S, M, L, XL, 2XL.",
+    "3/5, 6/8, 9/11, 12/14, S, M, L, XL, 2XL",
+    "3/5, 6/8, 9/11, 12/14, S, M, L, XL, 2XL.",
+    "16, S, M, L, XL, XXL",
+    "16, S, M, L, XL, XXL.",
     "XS, S, M, L, XL.",
     "S, M, L, XL, XXL.",
     "XS, S, M, L, XL, XXL.",
     "5-6A, 7-8A, 8-9A, 10-11A, 12-13A, 14-15A.",
     "Alaior Esport - NIF: G57722951",
+    "Toni Seguí",
     "Avenida Monte Toro, 56, 07730-Alaior",
   );
 
@@ -155,7 +161,7 @@ export function createSupplementalCatalogue() {
   add("Plazo de solicitud", "Termini de sol·licitud", "Prazo da solicitude", "Eskaera-epea");
   add("Solicitud de baja — Lô Esport Menorca", "Sol·licitud de baixa — Lô Esport Menorca", "Solicitude de baixa — Lô Esport Menorca", "Baja-eskaera — Lô Esport Menorca");
 
-  add("13 productos", "13 productes", "13 produtos", "13 produktu");
+  add("16 productos", "16 productes", "16 produtos", "16 produktu");
   add("Abre la ficha del producto y selecciona talla, patrón y cantidad.", "Obre la fitxa del producte i selecciona talla, patró i quantitat.", "Abre a ficha do produto e selecciona talla, patrón e cantidade.", "Ireki produktuaren fitxa eta hautatu neurria, patroia eta kopurua.");
   add("Añade todas las prendas que necesites a una única solicitud.", "Afegeix totes les peces que necessitis a una única sol·licitud.", "Engade todas as prendas que necesites a unha única solicitude.", "Gehitu behar dituzun jantzi guztiak eskaera bakarrean.");
   add("CLUB", "CLUB", "CLUB", "KLUBA");
@@ -397,6 +403,9 @@ export function createSupplementalCatalogue() {
   add("Mallas adulto — Equipación Lô Esport Menorca", "Malles adult — Equipació Lô Esport Menorca", "Mallas adulto — Equipación Lô Esport Menorca", "Helduen malla luzeak — Lô Esport Menorca ekipazioa");
   add("Equipación oficial del club", "Equipació oficial del club", "Equipación oficial do club", "Klubaren ekipazio ofiziala");
   add("Mono competición — Equipación Lô Esport Menorca", "Mono competició — Equipació Lô Esport Menorca", "Mono competición — Equipación Lô Esport Menorca", "Lehiaketako monoa — Lô Esport Menorca ekipazioa");
+  add("Camiseta de tirantes — Equipación Lô Esport Menorca", "Samarreta de tirants — Equipació Lô Esport Menorca", "Camiseta de tirantes — Equipación Lô Esport Menorca", "Tirantedun kamiseta — Lô Esport Menorca ekipazioa");
+  add("Camiseta técnica blanca — Equipación Lô Esport Menorca", "Samarreta tècnica blanca — Equipació Lô Esport Menorca", "Camiseta técnica branca — Equipación Lô Esport Menorca", "Kamiseta tekniko zuria — Lô Esport Menorca ekipazioa");
+  add("Camiseta ConectaBalear — Equipación Lô Esport Menorca", "Samarreta ConectaBalear — Equipació Lô Esport Menorca", "Camiseta ConectaBalear — Equipación Lô Esport Menorca", "ConectaBalear kamiseta — Lô Esport Menorca ekipazioa");
 
   add("Lunes", "Dilluns", "Luns", "Astelehena");
   add("Miércoles", "Dimecres", "Mércores", "Asteazkena");
@@ -420,6 +429,7 @@ export function createSupplementalCatalogue() {
   add("Con hijo/a en la escuela: suplemento de 15 €/mes", "Amb fill/a a l'escola: suplement de 15 €/mes", "Con fillo/a na escola: suplemento de 15 €/mes", "Seme-alaba eskolan: 15 €/hileko gehigarria");
   add("Entrenamiento para adultos, incluidas madres y padres mientras entrena la escuela. El sábado es un tercer día solo para mujeres con el grupo Women.", "Entrenament per a adults, incloses mares i pares mentre entrena l'escola. El dissabte és un tercer dia només per a dones amb el grup Women.", "Adestramento para adultos, incluídos nais e pais mentres adestra a escola. O sábado é un terceiro día só para mulleres co grupo Women.", "Helduentzako entrenamendua, eskola entrenatzen ari den bitartean gurasoak barne. Larunbata hirugarren eguna da emakumeentzat bakarrik, Women taldearekin.");
   add("Consentimiento", "Consentiment", "Consentimento", "Baimena");
+  add("Artículos solicitados", "Articles sol·licitats", "Artigos solicitados", "Eskatutako artikuluak");
   add("Solicitud enviada correctamente.", "Sol·licitud enviada correctament.", "Solicitude enviada correctamente.", "Eskaera behar bezala bidali da.");
   add("No se ha podido enviar la solicitud.", "No s'ha pogut enviar la sol·licitud.", "Non se puido enviar a solicitude.", "Ezin izan da eskaera bidali.");
   add("No se pudo generar la captura.", "No s'ha pogut generar la captura.", "Non se puido xerar a captura.", "Ezin izan da pantaila-argazkia sortu.");

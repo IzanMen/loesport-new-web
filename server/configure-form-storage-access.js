@@ -44,6 +44,56 @@ function assertPrivate(permissions, resource) {
   }
 }
 
+async function ensureSpreadsheetWriter(drive, fileId, serviceAccountEmail, resource) {
+  const [spreadsheetResponse, permissions] = await Promise.all([
+    drive.files.get({
+      fileId,
+      supportsAllDrives: true,
+      fields: "id,mimeType,trashed,capabilities(canShare)",
+    }),
+    listPermissions(drive, fileId),
+  ]);
+  const spreadsheet = spreadsheetResponse.data || {};
+  if (
+    spreadsheet.mimeType !== SPREADSHEET_MIME_TYPE ||
+    spreadsheet.trashed ||
+    spreadsheet.capabilities?.canShare !== true
+  ) {
+    throw new Error(`${resource} no permite configurar el acceso del servidor.`);
+  }
+  assertPrivate(permissions, resource);
+
+  const existingPermission = permissions.find(
+    (permission) =>
+      !permission?.deleted &&
+      permission?.type === "user" &&
+      String(permission?.emailAddress || "").trim().toLowerCase() === serviceAccountEmail,
+  );
+  if (!existingPermission) {
+    await drive.permissions.create({
+      fileId,
+      supportsAllDrives: true,
+      sendNotificationEmail: false,
+      fields: "id,role,type",
+      requestBody: {
+        type: "user",
+        role: "writer",
+        emailAddress: serviceAccountEmail,
+      },
+    });
+  } else if (![
+    "owner", "organizer", "fileOrganizer", "writer",
+  ].includes(existingPermission.role)) {
+    await drive.permissions.update({
+      fileId,
+      permissionId: existingPermission.id,
+      supportsAllDrives: true,
+      fields: "id,role,type",
+      requestBody: { role: "writer" },
+    });
+  }
+}
+
 async function main() {
   const clientId = await valueFromEnvironment(
     "GOOGLE_DRIVE_CLIENT_ID",
@@ -58,6 +108,10 @@ async function main() {
     "GOOGLE_DRIVE_REFRESH_TOKEN_FILE",
   );
   const spreadsheetId = requiredId("GOOGLE_SHEETS_SPREADSHEET_ID");
+  const bajaSpreadsheetId = requiredId("GOOGLE_SHEETS_BAJA_SPREADSHEET_ID");
+  const equipacionSpreadsheetId = requiredId(
+    "GOOGLE_SHEETS_EQUIPACION_SPREADSHEET_ID",
+  );
   const folderId = requiredId("GOOGLE_DRIVE_INSCRIPCION_FOLDER_ID");
   const serviceAccountEmail = String(
     process.env.GOOGLE_SHEETS_SERVICE_ACCOUNT_EMAIL || "",
@@ -72,21 +126,14 @@ async function main() {
   const auth = new google.auth.OAuth2(clientId, clientSecret);
   auth.setCredentials({ refresh_token: refreshToken });
   const drive = google.drive({ version: "v3", auth });
-  const [folderResponse, spreadsheetResponse, folderPermissions, spreadsheetPermissions] =
-    await Promise.all([
-      drive.files.get({
-        fileId: folderId,
-        supportsAllDrives: true,
-        fields: "id,mimeType,trashed,driveId,capabilities(canAddChildren)",
-      }),
-      drive.files.get({
-        fileId: spreadsheetId,
-        supportsAllDrives: true,
-        fields: "id,mimeType,trashed,capabilities(canShare)",
-      }),
-      listPermissions(drive, folderId),
-      listPermissions(drive, spreadsheetId),
-    ]);
+  const [folderResponse, folderPermissions] = await Promise.all([
+    drive.files.get({
+      fileId: folderId,
+      supportsAllDrives: true,
+      fields: "id,mimeType,trashed,driveId,capabilities(canAddChildren)",
+    }),
+    listPermissions(drive, folderId),
+  ]);
 
   const folder = folderResponse.data || {};
   if (
@@ -97,50 +144,35 @@ async function main() {
   ) {
     throw new Error("La carpeta de Mi unidad no permite guardar inscripciones.");
   }
-  const spreadsheet = spreadsheetResponse.data || {};
-  if (
-    spreadsheet.mimeType !== SPREADSHEET_MIME_TYPE ||
-    spreadsheet.trashed ||
-    spreadsheet.capabilities?.canShare !== true
-  ) {
-    throw new Error("La hoja de cálculo no permite configurar el acceso del servidor.");
-  }
   assertPrivate(folderPermissions, "La carpeta de Google Drive");
-  assertPrivate(spreadsheetPermissions, "La hoja de cálculo");
-
-  const existingPermission = spreadsheetPermissions.find(
-    (permission) =>
-      !permission?.deleted &&
-      permission?.type === "user" &&
-      String(permission?.emailAddress || "").trim().toLowerCase() === serviceAccountEmail,
-  );
-  if (!existingPermission) {
-    await drive.permissions.create({
-      fileId: spreadsheetId,
-      supportsAllDrives: true,
-      sendNotificationEmail: false,
-      fields: "id,role,type",
-      requestBody: {
-        type: "user",
-        role: "writer",
-        emailAddress: serviceAccountEmail,
-      },
-    });
-  } else if (!["owner", "organizer", "fileOrganizer", "writer"].includes(existingPermission.role)) {
-    await drive.permissions.update({
-      fileId: spreadsheetId,
-      permissionId: existingPermission.id,
-      supportsAllDrives: true,
-      fields: "id,role,type",
-      requestBody: { role: "writer" },
-    });
-  }
+  await Promise.all([
+    ensureSpreadsheetWriter(
+      drive,
+      spreadsheetId,
+      serviceAccountEmail,
+      "La hoja de cálculo de inscripciones",
+    ),
+    ensureSpreadsheetWriter(
+      drive,
+      bajaSpreadsheetId,
+      serviceAccountEmail,
+      "La hoja de cálculo de bajas",
+    ),
+    ensureSpreadsheetWriter(
+      drive,
+      equipacionSpreadsheetId,
+      serviceAccountEmail,
+      "La hoja de cálculo de equipación",
+    ),
+  ]);
 
   console.log(JSON.stringify({
     ok: true,
     folderPrivate: true,
     spreadsheetPrivate: true,
     spreadsheetWriterConfigured: true,
+    bajaSpreadsheetWriterConfigured: true,
+    equipacionSpreadsheetWriterConfigured: true,
     driveScope: GOOGLE_DRIVE_SCOPE,
   }));
 }

@@ -158,6 +158,14 @@ const DRIVE_SHEET_COLUMNS = freezeColumns(DRIVE_COLUMNS);
 const UUID_PATTERN =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
+function publicHeadersNeedContactEmailMigration(headers) {
+  if (!headersMatch(headers.slice(0, INSCRIPCION_PUBLIC_V2_HEADERS.length), INSCRIPCION_PUBLIC_V2_HEADERS)) {
+    return false;
+  }
+  const nextHeader = String(headers[INSCRIPCION_PUBLIC_V2_HEADERS.length] ?? "");
+  return nextHeader === "" || nextHeader === "ID de envío";
+}
+
 const LEGACY_LABEL_ALIASES = [
   ["Sede", "training_location"],
   ["ID del grupo", "training_group_id"],
@@ -991,7 +999,10 @@ export async function ensureInscripcionPublicSheet({
         values: [[...INSCRIPCION_PUBLIC_HEADERS]],
       },
     });
-  } else if (headersMatch(header.headers, INSCRIPCION_PUBLIC_V2_HEADERS)) {
+  } else if (
+    headersMatch(header.headers, INSCRIPCION_PUBLIC_V2_HEADERS) ||
+    publicHeadersNeedContactEmailMigration(header.headers)
+  ) {
     await sheetsClient.spreadsheets.values.update({
       spreadsheetId: normalizedSpreadsheetId,
       range: header.range,

@@ -10,22 +10,43 @@ import {
   PREINSCRIPCION_PUBLIC_COLUMNS, PREINSCRIPCION_SHEET_COLUMNS,
   preinscripcionRecordToSheetRow, preinscripcionSheetRowToRecord,
 } from "../server/preinscripcion-sheet.js";
+import {
+  BAJA_PUBLIC_COLUMNS, BAJA_SHEET_COLUMNS, bajaRecordToSheetRow,
+  bajaSheetRowToRecord, buildBajaPublicRow, buildBajaRecord, createBajaSheetStore,
+} from "../server/baja-sheet.js";
+import {
+  EQUIPACION_PUBLIC_COLUMNS, EQUIPACION_SHEET_COLUMNS,
+  buildEquipacionPublicRow, buildEquipacionRecord, createEquipacionSheetStore,
+  equipacionRecordToSheetRow, equipacionSheetRowToRecord,
+} from "../server/equipacion-sheet.js";
 
 const ids = ["5b661911-7d24-4466-82bc-9b9179084a51", "5b661911-7d24-4466-82bc-9b9179084a52"];
 const configs = [
   { type: "inscripcion", sheetName: "Inscripciones", systemSheetName: "_Inscripciones sistema",
     columns: INSCRIPCION_PUBLIC_COLUMNS, systemColumns: INSCRIPCION_SHEET_COLUMNS,
     buildRow: buildInscripcionPublicRow, parseRow: sheetRowToRecord, record: buildInscripcionRecord,
-    toRow: recordToSheetRow, store: createInscripcionSheetStore },
+    toRow: recordToSheetRow, store: createInscripcionSheetStore, editableKey: "comments" },
   { type: "preinscripcion", sheetName: "Periodos de prueba", systemSheetName: "_Pruebas sistema",
     columns: PREINSCRIPCION_PUBLIC_COLUMNS, systemColumns: PREINSCRIPCION_SHEET_COLUMNS,
     buildRow: buildPreinscripcionPublicRow, parseRow: preinscripcionSheetRowToRecord,
-    record: buildPreinscripcionRecord, toRow: preinscripcionRecordToSheetRow, store: createPreinscripcionSheetStore },
+    record: buildPreinscripcionRecord, toRow: preinscripcionRecordToSheetRow,
+    store: createPreinscripcionSheetStore, editableKey: "comments" },
+  { type: "baja", sheetName: "Baixes", systemSheetName: "_Baixes sistema",
+    columns: BAJA_PUBLIC_COLUMNS, systemColumns: BAJA_SHEET_COLUMNS,
+    buildRow: buildBajaPublicRow, parseRow: bajaSheetRowToRecord,
+    record: buildBajaRecord, toRow: bajaRecordToSheetRow,
+    store: createBajaSheetStore, editableKey: "withdrawal_reason" },
+  { type: "equipacion", sheetName: "Equipament", systemSheetName: "_Equipament sistema",
+    columns: EQUIPACION_PUBLIC_COLUMNS, systemColumns: EQUIPACION_SHEET_COLUMNS,
+    buildRow: buildEquipacionPublicRow, parseRow: equipacionSheetRowToRecord,
+    record: buildEquipacionRecord, toRow: equipacionRecordToSheetRow,
+    store: createEquipacionSheetStore, editableKey: "comments" },
 ];
 
 function payload(config, index = 0) {
+  const nameKey = config.type === "equipacion" ? "contact_full_name" : "participant_full_name";
   return { type: config.type, submissionId: ids[index], answers: [
-    { key: "participant_full_name", value: index ? "Segunda persona" : "Primera persona" },
+    { key: nameKey, value: index ? "Segunda persona" : "Primera persona" },
     { key: "participant_document_number", value: "DOCUMENTO-COMPARTIDO" },
     { key: "contact_phone", value: "600000000" },
   ] };
@@ -88,11 +109,11 @@ function fakeSheets(config, records, publicRows, { managed = false } = {}) {
         return { data: { values: data.get(p.title).slice(p.start, p.end).map((r) => r.slice(p.first, p.last)) } };
       },
       update: async ({ range, requestBody }) => { writes.push({ range }); write(range, requestBody.values); return { data: {} }; },
-      append: async ({ range, requestBody }) => {
+      append: async ({ range, requestBody, insertDataOption }) => {
         const p = parse(range), rows = data.get(p.title);
         await Promise.resolve();
         rows.push(...structuredClone(requestBody.values));
-        writes.push({ range });
+        writes.push({ range, insertDataOption });
         return { data: { updates: { updatedRange: `'${p.title}'!A${rows.length}:BD${rows.length}` } } };
       },
       batchUpdate: async ({ requestBody }) => {
@@ -110,7 +131,7 @@ for (const config of configs) {
     const records = recordsFor(config);
     const row = config.buildRow(records[0]);
     row[0] = 46288 + 12.5 / 24;
-    const comments = config.columns.findIndex((c) => c.key === "comments");
+    const comments = config.columns.findIndex((c) => c.key === config.editableKey);
     row[comments] = "Anotación manual";
     const fake = fakeSheets(config, records, [[], row, []]);
     fake.sheets[0].basicFilter = { range: { sheetId: 1, endColumnIndex: config.columns.length, endRowIndex: 3 } };
@@ -152,6 +173,7 @@ for (const config of configs) {
     const sync = createPublicSheetSync({ ...config, client: fake.client, spreadsheetId: "test" });
     await Promise.all([sync.upsert(records[0]), sync.upsert(records[1]), sync.upsert(records[0])]);
     assert.equal(fake.data.get(config.sheetName).length, 3);
+    assert.equal(fake.writes.find(({ insertDataOption }) => insertDataOption)?.insertDataOption, "OVERWRITE");
     const store = config.store({ sheetsClient: fake.client, spreadsheetId: "test" });
     await store.appendPending({ payload: payload(config), receivedAt: "2026-09-23T10:30:00.000Z" });
     assert.equal(fake.data.get(config.sheetName).length, 3);
@@ -172,7 +194,7 @@ for (const config of configs) {
   test(`${config.type}: publica los enlaces en la fila correcta sin borrar anotaciones`, async () => {
     const records = recordsFor(config);
     const rows = records.map((r, i) => [...config.buildRow(r), ids[i], "prueba", r.drive_status, "pending"]).reverse();
-    const comments = config.columns.findIndex((c) => c.key === "comments");
+    const comments = config.columns.findIndex((c) => c.key === config.editableKey);
     rows[0][comments] = "Anotación conservada";
     const fake = fakeSheets(config, records, rows, { managed: true });
     const store = config.store({ sheetsClient: fake.client, spreadsheetId: "test" });

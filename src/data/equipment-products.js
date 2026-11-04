@@ -1,6 +1,20 @@
 import bragaMujerImage from "../../assets/equipment/braga-mujer.webp";
 import camisetaHombreImage from "../../assets/equipment/camiseta-hombre.webp";
 import camisetaMujerImage from "../../assets/equipment/camiseta-mujer.webp";
+import camisetaTirantesImage from "../../assets/equipment/camiseta-tirantes.webp";
+import camisetaTirantesHombreNegraImage from "../../assets/equipment/camiseta-tirantes-hombre-negra.webp";
+import camisetaTirantesMujerNegraImage from "../../assets/equipment/camiseta-tirantes-mujer-negra.webp";
+import camisetaTirantesAmarillaImage from "../../assets/equipment/camiseta-tirantes-amarilla.webp";
+import camisetaTirantesFucsiaImage from "../../assets/equipment/camiseta-tirantes-fucsia.webp";
+import camisetaTecnicaBlancaFrontalImage from "../../assets/equipment/camiseta-tecnica-blanca-frontal.webp";
+import camisetaTecnicaBlancaTraseraImage from "../../assets/equipment/camiseta-tecnica-blanca-trasera.webp";
+import camisetasConectaBalearImage from "../../assets/equipment/camisetas-conectabalear.webp";
+import camisetaConectaBalearAmarillaFrontalImage from "../../assets/equipment/camiseta-conectabalear-amarilla-frontal.webp";
+import camisetaConectaBalearAmarillaTraseraImage from "../../assets/equipment/camiseta-conectabalear-amarilla-trasera.webp";
+import camisetaConectaBalearNegraFrontalImage from "../../assets/equipment/camiseta-conectabalear-negra-frontal.webp";
+import camisetaConectaBalearNegraTraseraImage from "../../assets/equipment/camiseta-conectabalear-negra-trasera.webp";
+import camisetaConectaBalearFucsiaFrontalImage from "../../assets/equipment/camiseta-conectabalear-fucsia-frontal.webp";
+import camisetaConectaBalearFucsiaTraseraImage from "../../assets/equipment/camiseta-conectabalear-fucsia-trasera.webp";
 import mallasCortasHombreImage from "../../assets/equipment/mallas-cortas-hombre.png";
 import mallasLargasImage from "../../assets/equipment/mallas-largas.png";
 import mochilaImage from "../../assets/equipment/mochila.png";
@@ -11,6 +25,77 @@ import sudaderaImage from "../../assets/equipment/sudadera.png";
 import topMujerImage from "../../assets/equipment/top-mujer.png";
 
 export const equipmentProducts = [
+  {
+    id: "camiseta-tirantes",
+    name: "Camiseta de tirantes",
+    price: 15,
+    category: "club",
+    categories: ["club", "hombre", "mujer"],
+    categoryLabel: "Club",
+    catalogImage: camisetaTirantesImage,
+    images: [
+      camisetaTirantesHombreNegraImage,
+      camisetaTirantesMujerNegraImage,
+      camisetaTirantesAmarillaImage,
+      camisetaTirantesFucsiaImage,
+    ],
+    variants: [
+      { name: "Hombre · negro", imageIndex: 0 },
+      { name: "Mujer · negro", imageIndex: 1 },
+      { name: "Mujer · amarillo", imageIndex: 2 },
+      { name: "Mujer · fucsia", imageIndex: 3 },
+    ],
+    description: "Camiseta ligera de tirantes con logotipo Lô Esport Menorca.",
+    detail:
+      "Camiseta de tirantes para entrenamiento, disponible en patrón de hombre y mujer y en varios colores.",
+    sizes: ["S", "M", "L", "XL", "XXL"],
+    features: ["Patrón de hombre o mujer", "Tejido técnico ligero", "Cuatro modelos disponibles"],
+  },
+  {
+    id: "camiseta-tecnica-blanca",
+    name: "Camiseta técnica blanca",
+    price: 20,
+    category: "club",
+    categories: ["club"],
+    categoryLabel: "Club",
+    catalogImage: camisetaTecnicaBlancaFrontalImage,
+    images: [camisetaTecnicaBlancaFrontalImage, camisetaTecnicaBlancaTraseraImage],
+    description: "Camiseta técnica blanca con los colaboradores del club.",
+    detail:
+      "Camiseta técnica sublimada con los logotipos del club, sus colaboradores y las instituciones que lo apoyan.",
+    sizes: ["16", "S", "M", "L", "XL", "XXL"],
+    genders: ["Unisex"],
+    color: "Blanco",
+    colorHex: "#ffffff",
+    features: ["Diseño sublimado", "Vista frontal y trasera", "Logotipos de colaboradores e instituciones"],
+  },
+  {
+    id: "camiseta-conectabalear",
+    name: "Camiseta ConectaBalear",
+    price: 12,
+    category: "club",
+    categories: ["club", "mujer", "junior"],
+    categoryLabel: "Club",
+    catalogImage: camisetasConectaBalearImage,
+    images: [
+      camisetaConectaBalearAmarillaFrontalImage,
+      camisetaConectaBalearAmarillaTraseraImage,
+      camisetaConectaBalearNegraFrontalImage,
+      camisetaConectaBalearNegraTraseraImage,
+      camisetaConectaBalearFucsiaFrontalImage,
+      camisetaConectaBalearFucsiaTraseraImage,
+    ],
+    variants: [
+      { name: "Escola Atletisme · amarillo", imageIndex: 0 },
+      { name: "Menorca · negro", imageIndex: 2 },
+      { name: "Women · fucsia", imageIndex: 4 },
+    ],
+    description: "Camiseta del club con diseño ConectaBalear en tres modelos.",
+    detail:
+      "Camiseta Lô Esport Menorca con patrocinio ConectaBalear, disponible en los modelos Escola Atletisme, Menorca y Women.",
+    sizes: ["3/5", "6/8", "9/11", "12/14", "S", "M", "L", "XL", "2XL"],
+    features: ["Tres modelos disponibles", "Diseño frontal y trasero", "Patrocinio ConectaBalear"],
+  },
   {
     id: "pack-mochila-sudadera",
     name: "Pack mochila + sudadera",

@@ -54,12 +54,32 @@ const PREINSCRIPCION_ANSWER_KEYS = [
   "terms_consent",
 ];
 
+const BAJA_ANSWER_KEYS = [
+  "participant_residence_city",
+  "participant_full_name",
+  "participant_birth_date",
+  "withdrawal_reason",
+  "privacy_consent",
+  "terms_consent",
+];
+
+const EQUIPACION_ANSWER_KEYS = [
+  "contact_full_name",
+  "contact_email",
+  "contact_phone",
+  "order_items",
+  "order_total",
+  "comments",
+  "privacy_consent",
+];
+
 async function frontendSources() {
-  const [registrationForms, formSubmission] = await Promise.all([
+  const [registrationForms, formSubmission, equipmentRequest] = await Promise.all([
     readFile(new URL("../src/ui/registration-forms.js", import.meta.url), "utf8"),
     readFile(new URL("../src/ui/form-submission.js", import.meta.url), "utf8"),
+    readFile(new URL("../src/ui/equipment-request.js", import.meta.url), "utf8"),
   ]);
-  return { registrationForms, formSubmission };
+  return { registrationForms, formSubmission, equipmentRequest };
 }
 
 test("el frontend de inscripción mantiene exactamente 33 claves enviadas", async () => {
@@ -101,6 +121,33 @@ test("el periodo de prueba envía todas sus respuestas con claves semánticas", 
   const submittedKeys = [...GROUP_ANSWER_KEYS, ...PREINSCRIPCION_ANSWER_KEYS];
   assert.equal(submittedKeys.length, 15);
   assert.equal(new Set(submittedKeys).size, 15);
+});
+
+test("la solicitud de baja envía todas sus respuestas con claves semánticas", async () => {
+  const { registrationForms } = await frontendSources();
+  const definitionStart = registrationForms.indexOf("  baja: {");
+  const definitionEnd = registrationForms.indexOf("\n  licencias: {", definitionStart);
+  assert.ok(definitionStart >= 0 && definitionEnd > definitionStart);
+
+  const definition = registrationForms.slice(definitionStart, definitionEnd);
+  const definitionKeys = [...definition.matchAll(/\bkey:\s*"([a-z0-9_]+)"/g)]
+    .map((match) => match[1]);
+  assert.deepEqual(definitionKeys, BAJA_ANSWER_KEYS);
+  assert.equal(new Set(definitionKeys).size, BAJA_ANSWER_KEYS.length);
+});
+
+test("la solicitud de equipación consolida el pedido y usa claves semánticas", async () => {
+  const { equipmentRequest } = await frontendSources();
+  const answersStart = equipmentRequest.indexOf("    const answers = [");
+  const answersEnd = equipmentRequest.indexOf("\n    ];", answersStart);
+  assert.ok(answersStart >= 0 && answersEnd > answersStart);
+
+  const answers = equipmentRequest.slice(answersStart, answersEnd);
+  const keys = [...answers.matchAll(/\bkey:\s*"([a-z0-9_]+)"/g)]
+    .map((match) => match[1]);
+  assert.deepEqual(keys, EQUIPACION_ANSWER_KEYS);
+  assert.equal(new Set(keys).size, EQUIPACION_ANSWER_KEYS.length);
+  assert.match(answers, /value: productLines\.join\("\\n"\)/);
 });
 
 test("submissionId se reutiliza al reintentar y se reinicia tras éxito, conflicto o edición", async () => {

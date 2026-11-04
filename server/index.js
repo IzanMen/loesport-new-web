@@ -15,9 +15,13 @@ import {
 } from "./form-payload.js";
 import { createFormSubmissionOrchestrator } from "./form-submission-orchestrator.js";
 import {
+  createBajaDriveStore,
+  createEquipacionDriveStore,
   createInscripcionDriveStore,
   createPreinscripcionDriveStore,
 } from "./inscripcion-drive.js";
+import { createBajaSheetStore } from "./baja-sheet.js";
+import { createEquipacionSheetStore } from "./equipacion-sheet.js";
 import { createInscripcionSheetStore } from "./inscripcion-sheet.js";
 import { createPreinscripcionSheetStore } from "./preinscripcion-sheet.js";
 import { normalizeUploadedFile } from "./upload-validation.js";
@@ -285,10 +289,32 @@ const preinscripcionSubmissionOrchestrator = createFormSubmissionOrchestrator({
   driveStore: preinscripcionDriveStore,
   persistedFormType: "preinscripcion",
 });
+const bajaSheetStore = createBajaSheetStore();
+const bajaDriveStore = createBajaDriveStore();
+const bajaSubmissionOrchestrator = createFormSubmissionOrchestrator({
+  sendEmail: sendSubmissionEmail,
+  sheetStore: bajaSheetStore,
+  driveStore: bajaDriveStore,
+  persistedFormType: "baja",
+});
+const equipacionSheetStore = createEquipacionSheetStore();
+const equipacionDriveStore = createEquipacionDriveStore();
+const equipacionSubmissionOrchestrator = createFormSubmissionOrchestrator({
+  sendEmail: sendSubmissionEmail,
+  sheetStore: equipacionSheetStore,
+  driveStore: equipacionDriveStore,
+  persistedFormType: "equipacion",
+});
 
 function submitForm(payload, snapshot, attachments) {
   if (payload.type === "preinscripcion") {
     return preinscripcionSubmissionOrchestrator.submit(payload, snapshot, attachments);
+  }
+  if (payload.type === "baja") {
+    return bajaSubmissionOrchestrator.submit(payload, snapshot, attachments);
+  }
+  if (payload.type === "equipacion") {
+    return equipacionSubmissionOrchestrator.submit(payload, snapshot, attachments);
   }
   return inscripcionSubmissionOrchestrator.submit(payload, snapshot, attachments);
 }
@@ -332,6 +358,14 @@ app.get("/api/health", (_request, response) => {
       preinscripcion: {
         spreadsheetConfigured: preinscripcionSheetStore.configured,
         driveConfigured: preinscripcionDriveStore.configured,
+      },
+      baja: {
+        spreadsheetConfigured: bajaSheetStore.configured,
+        driveConfigured: bajaDriveStore.configured,
+      },
+      equipacion: {
+        spreadsheetConfigured: equipacionSheetStore.configured,
+        driveConfigured: equipacionDriveStore.configured,
       },
     },
   });
