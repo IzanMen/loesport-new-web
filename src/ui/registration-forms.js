@@ -1,5 +1,3 @@
-import altaLicensePdfUrl from "../../assets/documents/solicitud-alta-licencia-rfea-2026.pdf?url";
-import renewalLicensePdfUrl from "../../assets/documents/solicitud-renovacion-licencia-rfea-2026.pdf?url";
 import {
   TRAINING_GROUPS,
   TRAINING_LOCATIONS,
@@ -276,13 +274,6 @@ export const FORM_DEFINITIONS = {
         title: "Autorizaciones",
         fields: [
           {
-            type: "notice",
-            entry: "license-information",
-            label: "Licencia y camiseta por categorías",
-            help:
-              "La licencia federativa es obligatoria hasta Sub-18 incluida. El club cubre su coste hasta Sub-12 incluida; desde Sub-14, el coste que apruebe la FAIB para cada categoría se abonará en enero. La camiseta Lô Esport está incluida hasta Sub-18; desde Sub-20 se adquiere aparte.",
-          },
-          {
             type: "radio",
             entry: "207757834",
             key: "image_use_authorization",
@@ -541,22 +532,8 @@ export const FORM_DEFINITIONS = {
   },
   licencias: {
     title: "Licencias de atletismo",
-    eyebrow: "Temporada 2026-27",
-    intro: "Solicita el alta o la renovación de tu licencia autonómica o nacional.",
-    documents: [
-      {
-        title: "Alta de licencia RFEA",
-        description: "Descarga el documento de alta, rellénalo y fírmalo antes de enviarlo al club.",
-        href: altaLicensePdfUrl,
-      },
-      {
-        title: "Renovación de licencia RFEA",
-        description: "Descarga el documento de renovación, rellénalo y fírmalo antes de enviarlo al club.",
-        href: renewalLicensePdfUrl,
-      },
-    ],
-    documentsNote:
-      "Descarga el impreso que corresponda, rellénalo y adjúntalo firmado en este formulario junto con el DNI/NIE por las dos caras.",
+    eyebrow: "Temporada federativa 2027",
+    intro: "Solicita a través del club tu licencia federativa para el año natural 2027.",
     submitLabel: "Tramitar licencia",
     successTitle: "Solicitud recibida",
     success:
@@ -568,36 +545,29 @@ export const FORM_DEFINITIONS = {
           {
             type: "radio",
             entry: "1498135098",
-            label: "TRAMITE",
+            label: "Trámite solicitado",
             required: true,
-            options: ["ALTA", "RENOVACION"],
-          },
-          {
-            type: "radio",
-            entry: "1973504877",
-            label: "LICENCIA BALEAR AUTONÓMICA (Seleccione la licencia que desea)",
             options: [
-              "CROSS-RUTA-TRAIL (50€)",
-              "ATLETISMO sub.18  (51,50€)",
-              "ATLETISMO categoría sub.20 (60€)",
-              "ATLETISMO categoría sub.23 (76€)",
-              "ATLETISMO categoría Sénior (76€)",
-              "ATLETISMO categoria máster (81€)",
+              "Alta o cambio · Estándar",
+              "Renovación · Estándar",
+              "Renovación Cross + Ruta (solo si tenías este pack en 2026)",
             ],
           },
           {
             type: "radio",
-            entry: "299386162",
-            label:
-              "LICENCIA NACIONAL- Válida para competiciones autonómicas y nacionales\nSelecciones la licencia que desea:",
-            options: [
-              "ATLETISMO sub.16 (71,50€)",
-              "ATLETISMO sub.18 (89,50€)",
-              "ATLETISMO categoría sub.20 (98€)",
-              "ATLETISMO categoría sub.23 (136€)",
-              "ATLETISMO categoría Sénior (136€)",
-              "ATLETISMO categoria Máster (141€)",
-            ],
+            entry: "license-scope",
+            label: "Ámbito de la licencia estándar",
+            required: true,
+            showWhenEntry: "1498135098",
+            showWhenValueIncludes: "Estándar",
+            options: ["Autonómica", "Nacional"],
+          },
+          {
+            type: "radio",
+            entry: "license-category",
+            label: "Categoría federativa 2027",
+            required: true,
+            options: ["Sub-14", "Sub-16", "Sub-18", "Sub-20", "Sub-23", "Sénior", "Máster"],
           },
         ],
       },
@@ -647,14 +617,6 @@ export const FORM_DEFINITIONS = {
               "Obligatorio solo si el documento indicado es NIE. Debe tener una antigüedad máxima de 3 meses.",
           },
           {
-            type: "radio",
-            entry: "1992566615",
-            label:
-              "Para cumplir con el reglamento FAIB y poder validar la licencia, los atletas extranjeros con documentación NIE deberán aportar una fotocopia del NIE y un certificado de empadronamiento con una antigüedad máxima de 3 meses, al correo electrónico del club: loesport@gmail.com ",
-            required: true,
-            options: ["Entiendo la norma"],
-          },
-          {
             type: "text",
             entry: "1385629040",
             label: "DOMICILIO",
@@ -687,16 +649,20 @@ export const FORM_DEFINITIONS = {
             type: "radio",
             entry: "1180835478",
             label: "FORMA DE PAGO LICENCIA",
+            required: true,
             options: [
               "EFECTIVO (entregar al entrenador o algún responsable del club)",
               "DOMICILIACION BANCARIA, soy deportista del club y ya tienen mis datos bancarios.",
-              "DOMICILACION BANCARIA, soy nuevo en el club.",
+              "DOMICILIACION BANCARIA, soy nuevo en el club.",
             ],
             other: true,
           },
           {
             type: "text",
             entry: "1098533702",
+            required: true,
+            showWhenEntry: "1180835478",
+            showWhenValueIncludes: "soy nuevo",
             label:
               "Si eres nuevo en el club y has elegido la opción de pago por domiciliación bancaria, indica el número de cuenta.   ",
             autocomplete: "off",
@@ -704,6 +670,9 @@ export const FORM_DEFINITIONS = {
           {
             type: "radio",
             entry: "171988604",
+            required: true,
+            showWhenEntry: "1180835478",
+            showWhenValueIncludes: "DOMICILIACION BANCARIA",
             label:
               "Doy mi AUTORIZACION a Lô Esport Menorca para que cargue el recibo derivado del coste de la tramitación de la licencia en cuenta.  ",
             options: ["AUTORIZO"],
@@ -718,7 +687,7 @@ export const FORM_DEFINITIONS = {
             type: "radio",
             entry: "1149625315",
             label:
-              "De conformidad con lo previsto en la normativa de protección de datos de carácter personal (la LO 3/2018, de 5 de diciembre, de Protección de datos personales y garantía de los derechos digitales, LOPDyGDD y el Reglamento General sobre Protección de Datos 2016/679, de 27 de abril de 2016, RGPD, o norma que los sustituya), LES INFORMAMOS que los datos personales recogidos en el formulario de inscripción serán tratados por parte del club Lô Esport Menorca como responsable del tratamiento con la única finalidad de programar la temporada 2026 y para tramitar las licencias deportivas. Les informamos que pueden ejercer sus derechos de acceso, rectificación, supresión, limitación del tratamiento, portabilidad de los datos y oposición enviando un correo electrónico a loesport@gmail.com",
+              "De conformidad con lo previsto en la normativa de protección de datos de carácter personal (la LO 3/2018, de 5 de diciembre, de Protección de datos personales y garantía de los derechos digitales, LOPDyGDD y el Reglamento General sobre Protección de Datos 2016/679, de 27 de abril de 2016, RGPD, o norma que los sustituya), LES INFORMAMOS que los datos personales recogidos en el formulario de inscripción serán tratados por parte del club Lô Esport Menorca como responsable del tratamiento con la única finalidad de programar la temporada 2027 y para tramitar las licencias deportivas. Les informamos que pueden ejercer sus derechos de acceso, rectificación, supresión, limitación del tratamiento, portabilidad de los datos y oposición enviando un correo electrónico a loesport@gmail.com",
             required: true,
             options: ["CONOZCO Y ACEPTO PRIVACIDAD Y TRATAMIENTO DE MIS DATOS PERSONALES"],
             legal: true,
@@ -1780,37 +1749,6 @@ function setSubmittingState(form, submitting) {
   button.querySelector("span:first-child").textContent = submitting ? "Enviando..." : form.dataset.submitLabel;
 }
 
-function createDocumentDownloads(definition) {
-  if (!definition.documents?.length) return null;
-
-  const section = document.createElement("section");
-  section.className = "registration-documents";
-  section.append(
-    createTextElement("p", "eyebrow", "Documentación RFEA"),
-    createTextElement("h2", "", "Descarga y completa el impreso correspondiente"),
-  );
-
-  const list = document.createElement("div");
-  list.className = "registration-document-list";
-  definition.documents.forEach((documentDefinition) => {
-    const link = document.createElement("a");
-    link.className = "registration-document-card";
-    link.href = documentDefinition.href;
-    link.target = "_blank";
-    link.rel = "noopener noreferrer";
-    link.append(
-      createTextElement("strong", "", documentDefinition.title),
-      createTextElement("span", "", documentDefinition.description),
-      createTextElement("small", "", "Abrir PDF ↗"),
-    );
-    list.append(link);
-  });
-  section.append(list);
-
-  section.append(createTextElement("p", "registration-document-note", definition.documentsNote));
-  return section;
-}
-
 function renderForm(root, definition, key) {
   const form = document.createElement("form");
   form.className = "registration-form";
@@ -1819,9 +1757,6 @@ function renderForm(root, definition, key) {
   form.dataset.formType = key;
   form.dataset.submitLabel = definition.submitLabel;
   form.noValidate = false;
-
-  const documentDownloads = createDocumentDownloads(definition);
-  if (documentDownloads) form.append(documentDownloads);
 
   definition.sections.forEach((section, index) => form.append(createSection(section, index)));
 

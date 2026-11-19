@@ -139,6 +139,11 @@ body.has-scrolled .registration-tabs {
 .registration-aside {
   position: sticky;
   top: 104px;
+  max-height: calc(100dvh - 128px);
+  padding-right: 10px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
 }
 
 .registration-aside .eyebrow {
@@ -726,6 +731,56 @@ body.has-scrolled .registration-tabs {
   .family-submit {
     padding: 26px 20px;
   }
+}
+
+.license-info-link {
+  color: inherit;
+  font-weight: 750;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.license-rates {
+  scroll-margin-top: calc(var(--nav-height) + 1rem);
+}
+
+.license-rates h2 {
+  margin: 0;
+  font: 800 clamp(32px, 3vw, 46px) / 1 "Barlow Condensed", Impact, sans-serif;
+  text-transform: uppercase;
+}
+
+.license-rates p {
+  line-height: 1.55;
+}
+
+.license-rates table {
+  width: 100%;
+  margin: 20px 0;
+  border-collapse: collapse;
+  font-size: clamp(0.8rem, 2vw, 1rem);
+  font-variant-numeric: tabular-nums;
+}
+
+.license-rates th,
+.license-rates td {
+  padding: 0.65em 0.35em;
+  border-bottom: 1px solid var(--line-dark);
+  text-align: right;
+}
+
+.license-rates th:first-child {
+  text-align: left;
+}
+
+.license-rates th small {
+  display: block;
+  font-weight: 400;
+}
+
+.license-insurance {
+  padding: 0.6em 0.8em;
+  background: #f3f9c8;
 }
 
 .registration-documents {
@@ -1752,6 +1807,15 @@ button[aria-busy="true"] {
   font-weight: 700;
 }
 
+@media (min-width: 901px) and (max-height: 980px) {
+  .registration-aside {
+    position: static;
+    max-height: none;
+    padding-right: 0;
+    overflow: visible;
+  }
+}
+
 @media (max-width: 900px) {
   .registration-header .desktop-nav,
   .registration-header .nav-social,
@@ -1779,6 +1843,9 @@ button[aria-busy="true"] {
 
   .registration-aside {
     position: static;
+    max-height: none;
+    padding-right: 0;
+    overflow: visible;
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(220px, 0.55fr);
     gap: 18px 42px;

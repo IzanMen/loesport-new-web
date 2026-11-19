@@ -99,9 +99,6 @@ const baseFields = new Map(
     section.fields.filter((field) => field.key).map((field) => [field.key, field]),
   ),
 );
-const licenseNotice = baseDefinition.sections
-  .flatMap((section) => section.fields)
-  .find((field) => field.entry === "license-information");
 
 function setFamilyTranslation(element, phrase, params = {}) {
   element.dataset.familyTranslation = phrase;
@@ -265,7 +262,7 @@ function memberDefinition({ role, number, locationId, contextualGroupId }) {
       },
       {
         title: "Salud y autorizaciones",
-        fields: [cloneField(licenseNotice, suffix), ...fieldsFor(authorizationKeys, suffix)],
+        fields: fieldsFor(authorizationKeys, suffix),
       },
     ],
   };
