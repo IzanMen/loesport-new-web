@@ -1,11 +1,13 @@
 import {
   createBajaDriveStore,
   createEquipacionDriveStore,
+  createLicenciasDriveStore,
   createInscripcionDriveStore,
   createPreinscripcionDriveStore,
 } from "./inscripcion-drive.js";
 import { createBajaSheetStore } from "./baja-sheet.js";
 import { createEquipacionSheetStore } from "./equipacion-sheet.js";
+import { createLicenciasSheetStore } from "./licencias-sheet.js";
 import { createInscripcionSheetStore } from "./inscripcion-sheet.js";
 import { createPreinscripcionSheetStore } from "./preinscripcion-sheet.js";
 
@@ -29,6 +31,11 @@ const stores = [
     type: "equipacion",
     sheet: createEquipacionSheetStore(),
     drive: createEquipacionDriveStore(),
+  },
+  {
+    type: "licencias",
+    sheet: createLicenciasSheetStore(),
+    drive: createLicenciasDriveStore(),
   },
 ];
 

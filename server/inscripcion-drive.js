@@ -720,3 +720,24 @@ export function createEquipacionDriveStore({
     formType: "equipacion",
   });
 }
+
+export function createLicenciasDriveStore({
+  environment = process.env,
+  folderId =
+    environment.GOOGLE_DRIVE_LICENCIAS_FOLDER_ID ||
+    environment.GOOGLE_DRIVE_FORMS_FOLDER_ID ||
+    environment.GOOGLE_DRIVE_INSCRIPCION_FOLDER_ID,
+  sharedDriveId =
+    environment.GOOGLE_DRIVE_LICENCIAS_SHARED_DRIVE_ID ||
+    environment.GOOGLE_DRIVE_FORMS_SHARED_DRIVE_ID ||
+    environment.GOOGLE_DRIVE_INSCRIPCION_SHARED_DRIVE_ID,
+  ...options
+} = {}) {
+  return createInscripcionDriveStore({
+    ...options,
+    environment,
+    folderId,
+    sharedDriveId,
+    formType: "licencias",
+  });
+}

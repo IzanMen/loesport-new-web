@@ -14,6 +14,10 @@ import {
   EQUIPACION_PUBLIC_COLUMNS, EQUIPACION_SHEET_COLUMNS,
   buildEquipacionPublicRow, equipacionSheetRowToRecord,
 } from "../server/equipacion-sheet.js";
+import {
+  LICENCIAS_PUBLIC_COLUMNS, LICENCIAS_SHEET_COLUMNS,
+  buildLicenciasPublicRow, licenciasSheetRowToRecord,
+} from "../server/licencias-sheet.js";
 import { createPublicSheetSync } from "../server/public-sheet-sync.js";
 
 const apply = process.argv.includes("--apply");
@@ -26,6 +30,12 @@ const equipacionSpreadsheetId = String(
 ).trim();
 if (!equipacionSpreadsheetId) {
   throw new Error("Falta GOOGLE_SHEETS_EQUIPACION_SPREADSHEET_ID.");
+}
+const licenciasSpreadsheetId = String(
+  process.env.GOOGLE_SHEETS_LICENCIAS_SPREADSHEET_ID || "",
+).trim();
+if (!licenciasSpreadsheetId) {
+  throw new Error("Falta GOOGLE_SHEETS_LICENCIAS_SPREADSHEET_ID.");
 }
 const client = createGoogleSheetsClient();
 const configurations = [
@@ -57,6 +67,14 @@ const configurations = [
       process.env.GOOGLE_SHEETS_EQUIPACION_SYSTEM_TAB || "_Equipament sistema",
     columns: EQUIPACION_PUBLIC_COLUMNS, systemColumns: EQUIPACION_SHEET_COLUMNS,
     buildRow: buildEquipacionPublicRow, parseRow: equipacionSheetRowToRecord,
+  },
+  {
+    spreadsheetId: licenciasSpreadsheetId,
+    sheetName: process.env.GOOGLE_SHEETS_LICENCIAS_TAB || "Llicències",
+    systemSheetName:
+      process.env.GOOGLE_SHEETS_LICENCIAS_SYSTEM_TAB || "_Llicències sistema",
+    columns: LICENCIAS_PUBLIC_COLUMNS, systemColumns: LICENCIAS_SHEET_COLUMNS,
+    buildRow: buildLicenciasPublicRow, parseRow: licenciasSheetRowToRecord,
   },
 ];
 

@@ -188,7 +188,7 @@ test("rechaza claves duplicadas normalizadas en los formularios persistentes", (
     { key: "PARTICIPANT_FULL_NAME", value: "Grace" },
   ];
 
-  for (const type of ["inscripcion", "preinscripcion", "baja", "equipacion"]) {
+  for (const type of ["inscripcion", "preinscripcion", "baja", "equipacion", "licencias"]) {
     assertBadRequest(
       () => parsePayload(payload({ type, answers })),
       "Las respuestas del formulario no son válidas.",

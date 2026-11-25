@@ -112,6 +112,9 @@ async function main() {
   const equipacionSpreadsheetId = requiredId(
     "GOOGLE_SHEETS_EQUIPACION_SPREADSHEET_ID",
   );
+  const licenciasSpreadsheetId = requiredId(
+    "GOOGLE_SHEETS_LICENCIAS_SPREADSHEET_ID",
+  );
   const folderId = requiredId("GOOGLE_DRIVE_INSCRIPCION_FOLDER_ID");
   const serviceAccountEmail = String(
     process.env.GOOGLE_SHEETS_SERVICE_ACCOUNT_EMAIL || "",
@@ -164,6 +167,12 @@ async function main() {
       serviceAccountEmail,
       "La hoja de cálculo de equipación",
     ),
+    ensureSpreadsheetWriter(
+      drive,
+      licenciasSpreadsheetId,
+      serviceAccountEmail,
+      "La hoja de cálculo de licencias",
+    ),
   ]);
 
   console.log(JSON.stringify({
@@ -173,6 +182,7 @@ async function main() {
     spreadsheetWriterConfigured: true,
     bajaSpreadsheetWriterConfigured: true,
     equipacionSpreadsheetWriterConfigured: true,
+    licenciasSpreadsheetWriterConfigured: true,
     driveScope: GOOGLE_DRIVE_SCOPE,
   }));
 }

@@ -63,6 +63,30 @@ const BAJA_ANSWER_KEYS = [
   "terms_consent",
 ];
 
+const LICENCIAS_ANSWER_KEYS = [
+  "license_request_type",
+  "license_scope",
+  "license_category",
+  "participant_full_name",
+  "participant_birth_date",
+  "participant_document_number",
+  "license_signed_form",
+  "participant_document_front",
+  "participant_document_back",
+  "participant_census_certificate",
+  "participant_address",
+  "participant_postal_code",
+  "participant_city_province",
+  "participant_nationality",
+  "contact_phone",
+  "payment_method",
+  "bank_details",
+  "direct_debit_authorization",
+  "comments",
+  "privacy_consent",
+  "terms_consent",
+];
+
 const EQUIPACION_ANSWER_KEYS = [
   "contact_full_name",
   "contact_email",
@@ -134,6 +158,19 @@ test("la solicitud de baja envía todas sus respuestas con claves semánticas", 
     .map((match) => match[1]);
   assert.deepEqual(definitionKeys, BAJA_ANSWER_KEYS);
   assert.equal(new Set(definitionKeys).size, BAJA_ANSWER_KEYS.length);
+});
+
+test("la solicitud de licencia envía todas sus respuestas con claves semánticas", async () => {
+  const { registrationForms } = await frontendSources();
+  const definitionStart = registrationForms.indexOf("  licencias: {");
+  const definitionEnd = registrationForms.indexOf("\nconst groupSelectionControllers", definitionStart);
+  assert.ok(definitionStart >= 0 && definitionEnd > definitionStart);
+
+  const definition = registrationForms.slice(definitionStart, definitionEnd);
+  const definitionKeys = [...definition.matchAll(/\bkey:\s*"([a-z0-9_]+)"/g)]
+    .map((match) => match[1]);
+  assert.deepEqual(definitionKeys, LICENCIAS_ANSWER_KEYS);
+  assert.equal(new Set(definitionKeys).size, LICENCIAS_ANSWER_KEYS.length);
 });
 
 test("la solicitud de equipación consolida el pedido y usa claves semánticas", async () => {

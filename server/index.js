@@ -17,11 +17,13 @@ import { createFormSubmissionOrchestrator } from "./form-submission-orchestrator
 import {
   createBajaDriveStore,
   createEquipacionDriveStore,
+  createLicenciasDriveStore,
   createInscripcionDriveStore,
   createPreinscripcionDriveStore,
 } from "./inscripcion-drive.js";
 import { createBajaSheetStore } from "./baja-sheet.js";
 import { createEquipacionSheetStore } from "./equipacion-sheet.js";
+import { createLicenciasSheetStore } from "./licencias-sheet.js";
 import { createInscripcionSheetStore } from "./inscripcion-sheet.js";
 import { createPreinscripcionSheetStore } from "./preinscripcion-sheet.js";
 import { normalizeUploadedFile } from "./upload-validation.js";
@@ -305,6 +307,14 @@ const equipacionSubmissionOrchestrator = createFormSubmissionOrchestrator({
   driveStore: equipacionDriveStore,
   persistedFormType: "equipacion",
 });
+const licenciasSheetStore = createLicenciasSheetStore();
+const licenciasDriveStore = createLicenciasDriveStore();
+const licenciasSubmissionOrchestrator = createFormSubmissionOrchestrator({
+  sendEmail: sendSubmissionEmail,
+  sheetStore: licenciasSheetStore,
+  driveStore: licenciasDriveStore,
+  persistedFormType: "licencias",
+});
 
 function submitForm(payload, snapshot, attachments) {
   if (payload.type === "preinscripcion") {
@@ -315,6 +325,9 @@ function submitForm(payload, snapshot, attachments) {
   }
   if (payload.type === "equipacion") {
     return equipacionSubmissionOrchestrator.submit(payload, snapshot, attachments);
+  }
+  if (payload.type === "licencias") {
+    return licenciasSubmissionOrchestrator.submit(payload, snapshot, attachments);
   }
   return inscripcionSubmissionOrchestrator.submit(payload, snapshot, attachments);
 }
@@ -366,6 +379,10 @@ app.get("/api/health", (_request, response) => {
       equipacion: {
         spreadsheetConfigured: equipacionSheetStore.configured,
         driveConfigured: equipacionDriveStore.configured,
+      },
+      licencias: {
+        spreadsheetConfigured: licenciasSheetStore.configured,
+        driveConfigured: licenciasDriveStore.configured,
       },
     },
   });

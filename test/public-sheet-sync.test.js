@@ -19,6 +19,11 @@ import {
   buildEquipacionPublicRow, buildEquipacionRecord, createEquipacionSheetStore,
   equipacionRecordToSheetRow, equipacionSheetRowToRecord,
 } from "../server/equipacion-sheet.js";
+import {
+  LICENCIAS_PUBLIC_COLUMNS, LICENCIAS_SHEET_COLUMNS,
+  buildLicenciasPublicRow, buildLicenciasRecord, createLicenciasSheetStore,
+  licenciasRecordToSheetRow, licenciasSheetRowToRecord,
+} from "../server/licencias-sheet.js";
 
 const ids = ["5b661911-7d24-4466-82bc-9b9179084a51", "5b661911-7d24-4466-82bc-9b9179084a52"];
 const configs = [
@@ -41,6 +46,11 @@ const configs = [
     buildRow: buildEquipacionPublicRow, parseRow: equipacionSheetRowToRecord,
     record: buildEquipacionRecord, toRow: equipacionRecordToSheetRow,
     store: createEquipacionSheetStore, editableKey: "comments" },
+  { type: "licencias", sheetName: "Llicències", systemSheetName: "_Llicències sistema",
+    columns: LICENCIAS_PUBLIC_COLUMNS, systemColumns: LICENCIAS_SHEET_COLUMNS,
+    buildRow: buildLicenciasPublicRow, parseRow: licenciasSheetRowToRecord,
+    record: buildLicenciasRecord, toRow: licenciasRecordToSheetRow,
+    store: createLicenciasSheetStore, editableKey: "comments" },
 ];
 
 function payload(config, index = 0) {

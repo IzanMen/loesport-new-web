@@ -18,6 +18,7 @@ export const STORED_FORM_TYPES = new Set([
   "preinscripcion",
   "baja",
   "equipacion",
+  "licencias",
 ]);
 
 const submissionIdPattern =

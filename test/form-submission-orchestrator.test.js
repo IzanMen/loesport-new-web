@@ -1227,6 +1227,33 @@ test("puede persistir baja reutilizando el mismo orquestador", async () => {
   assert.equal(sendEmail.mock.callCount(), 1);
 });
 
+test("puede persistir licencias reutilizando el mismo orquestador", async () => {
+  const sheets = statefulSheetStore();
+  const drive = statefulDriveStore();
+  const sendEmail = mock.fn(async () => ({ gmailMessageId: "gmail-licencias" }));
+  const orchestrator = createFormSubmissionOrchestrator({
+    sendEmail,
+    sheetStore: sheets.store,
+    driveStore: drive.store,
+    persistedFormType: "licencias",
+  });
+  const payload = registrationPayload({
+    type: "licencias",
+    title: "Licencias de atletismo",
+    attachments: [],
+    pageUrl: "https://loesport.es/licencias",
+  });
+
+  const result = await orchestrator.submit(payload, SNAPSHOT, []);
+
+  assert.equal(result.sheetStored, true);
+  assert.equal(result.driveStored, true);
+  assert.equal(sheets.appendPending.mock.calls[0].arguments[0].payload.type, "licencias");
+  assert.equal(drive.planArchive.mock.callCount(), 1);
+  assert.equal(drive.reconcileArchive.mock.callCount(), 1);
+  assert.equal(sendEmail.mock.callCount(), 1);
+});
+
 test("puede persistir equipación reutilizando el mismo orquestador", async () => {
   const sheets = statefulSheetStore();
   const drive = statefulDriveStore();

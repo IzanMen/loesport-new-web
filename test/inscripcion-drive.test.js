@@ -12,6 +12,7 @@ import {
   RESUMABLE_UPLOAD_THRESHOLD_BYTES,
   createBajaDriveStore,
   createEquipacionDriveStore,
+  createLicenciasDriveStore,
   createArchiveDescriptors,
   createEnvironmentDriveAuth,
   createGoogleDriveClient,
@@ -454,6 +455,42 @@ test("la baja usa carpeta y propiedades propias reutilizando el almacén", async
   assert.equal(archive.attachments.length, 0);
   assert.equal(fake.created.get(plan.folder.id).appProperties.loesport_kind, "baja_folder");
   assert.equal(fake.created.get(plan.snapshot.id).appProperties.loesport_form_type, "baja");
+});
+
+test("licencias usa carpeta propia y archiva los documentos adjuntos", async () => {
+  const fake = fakeDriveClient();
+  const store = createLicenciasDriveStore({
+    driveClient: fake.client,
+    folderId: PARENT_ID,
+    sharedDriveId: "sharedDrive12345",
+    environment: {},
+    wait: async () => undefined,
+  });
+  const licensePayload = payload({ type: "licencias" });
+
+  const plan = await store.planArchive({
+    payload: licensePayload,
+    snapshot: SNAPSHOT,
+    uploadedFiles: UPLOADED_FILES,
+  });
+  const archive = await store.reconcileArchive({
+    plan,
+    payload: licensePayload,
+    snapshot: SNAPSHOT,
+    uploadedFiles: UPLOADED_FILES,
+  });
+
+  assert.equal(store.formType, "licencias");
+  assert.equal(plan.folder.name, `licencias-${SUBMISSION_ID}`);
+  assert.equal(archive.attachments.length, 1);
+  assert.equal(
+    fake.created.get(plan.folder.id).appProperties.loesport_kind,
+    "licencias_folder",
+  );
+  assert.equal(
+    fake.created.get(plan.snapshot.id).appProperties.loesport_form_type,
+    "licencias",
+  );
 });
 
 test("equipación usa carpeta y propiedades propias reutilizando el almacén", async () => {

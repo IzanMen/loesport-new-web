@@ -545,6 +545,7 @@ export const FORM_DEFINITIONS = {
           {
             type: "radio",
             entry: "1498135098",
+            key: "license_request_type",
             label: "Trámite solicitado",
             required: true,
             options: [
@@ -556,6 +557,7 @@ export const FORM_DEFINITIONS = {
           {
             type: "radio",
             entry: "license-scope",
+            key: "license_scope",
             label: "Ámbito de la licencia estándar",
             required: true,
             showWhenEntry: "1498135098",
@@ -565,6 +567,7 @@ export const FORM_DEFINITIONS = {
           {
             type: "radio",
             entry: "license-category",
+            key: "license_category",
             label: "Categoría federativa 2027",
             required: true,
             options: ["Sub-14", "Sub-16", "Sub-18", "Sub-20", "Sub-23", "Sénior", "Máster"],
@@ -577,15 +580,17 @@ export const FORM_DEFINITIONS = {
           {
             type: "text",
             entry: "1286702453",
+            key: "participant_full_name",
             label: "NOMBRE Y APELLIDOS",
             required: true,
             autocomplete: "name",
           },
-          { type: "date-text", entry: "2606285", label: "FECHA DE NACIMIENTO", required: true },
-          { type: "text", entry: "945385681", label: "DNI ó NIE", required: true },
+          { type: "date-text", entry: "2606285", key: "participant_birth_date", label: "FECHA DE NACIMIENTO", required: true },
+          { type: "text", entry: "945385681", key: "participant_document_number", label: "DNI ó NIE", required: true },
           {
             type: "file",
             entry: "license-signed-form",
+            key: "license_signed_form",
             label: "Impreso de licencia firmado",
             required: true,
             accept: "image/*,.pdf",
@@ -594,6 +599,7 @@ export const FORM_DEFINITIONS = {
           {
             type: "file",
             entry: "license-document-front",
+            key: "participant_document_front",
             label: "DNI/NIE · parte delantera",
             required: true,
             accept: "image/*,.pdf",
@@ -602,6 +608,7 @@ export const FORM_DEFINITIONS = {
           {
             type: "file",
             entry: "license-document-back",
+            key: "participant_document_back",
             label: "DNI/NIE · parte trasera",
             required: true,
             accept: "image/*,.pdf",
@@ -610,6 +617,7 @@ export const FORM_DEFINITIONS = {
           {
             type: "file",
             entry: "license-nie-census",
+            key: "participant_census_certificate",
             label: "Certificado de empadronamiento para NIE",
             accept: "image/*,.pdf",
             requiredWhenNieEntry: "945385681",
@@ -619,6 +627,7 @@ export const FORM_DEFINITIONS = {
           {
             type: "text",
             entry: "1385629040",
+            key: "participant_address",
             label: "DOMICILIO",
             required: true,
             autocomplete: "street-address",
@@ -626,16 +635,18 @@ export const FORM_DEFINITIONS = {
           {
             type: "text",
             entry: "405526252",
+            key: "participant_postal_code",
             label: "CODIGO POSTAL",
             required: true,
             autocomplete: "postal-code",
             inputmode: "numeric",
           },
-          { type: "text", entry: "1268392866", label: "CIUDAD Y PROVINCIA" },
-          { type: "text", entry: "371836545", label: "NACIONALIDAD" },
+          { type: "text", entry: "1268392866", key: "participant_city_province", label: "CIUDAD Y PROVINCIA" },
+          { type: "text", entry: "371836545", key: "participant_nationality", label: "NACIONALIDAD" },
           {
             type: "tel",
             entry: "613103488",
+            key: "contact_phone",
             label: "TELEFONO DE CONTACTO",
             required: true,
             autocomplete: "tel",
@@ -648,6 +659,7 @@ export const FORM_DEFINITIONS = {
           {
             type: "radio",
             entry: "1180835478",
+            key: "payment_method",
             label: "FORMA DE PAGO LICENCIA",
             required: true,
             options: [
@@ -660,6 +672,7 @@ export const FORM_DEFINITIONS = {
           {
             type: "text",
             entry: "1098533702",
+            key: "bank_details",
             required: true,
             showWhenEntry: "1180835478",
             showWhenValueIncludes: "soy nuevo",
@@ -670,6 +683,7 @@ export const FORM_DEFINITIONS = {
           {
             type: "radio",
             entry: "171988604",
+            key: "direct_debit_authorization",
             required: true,
             showWhenEntry: "1180835478",
             showWhenValueIncludes: "DOMICILIACION BANCARIA",
@@ -677,7 +691,7 @@ export const FORM_DEFINITIONS = {
               "Doy mi AUTORIZACION a Lô Esport Menorca para que cargue el recibo derivado del coste de la tramitación de la licencia en cuenta.  ",
             options: ["AUTORIZO"],
           },
-          { type: "textarea", entry: "1830396874", label: "Observaciones" },
+          { type: "textarea", entry: "1830396874", key: "comments", label: "Observaciones" },
         ],
       },
       {
@@ -686,6 +700,7 @@ export const FORM_DEFINITIONS = {
           {
             type: "radio",
             entry: "1149625315",
+            key: "privacy_consent",
             label:
               "De conformidad con lo previsto en la normativa de protección de datos de carácter personal (la LO 3/2018, de 5 de diciembre, de Protección de datos personales y garantía de los derechos digitales, LOPDyGDD y el Reglamento General sobre Protección de Datos 2016/679, de 27 de abril de 2016, RGPD, o norma que los sustituya), LES INFORMAMOS que los datos personales recogidos en el formulario de inscripción serán tratados por parte del club Lô Esport Menorca como responsable del tratamiento con la única finalidad de programar la temporada 2027 y para tramitar las licencias deportivas. Les informamos que pueden ejercer sus derechos de acceso, rectificación, supresión, limitación del tratamiento, portabilidad de los datos y oposición enviando un correo electrónico a loesport@gmail.com",
             required: true,
@@ -695,6 +710,7 @@ export const FORM_DEFINITIONS = {
           {
             type: "radio",
             entry: "2041182478",
+            key: "terms_consent",
             label:
               "Condiciones de uso: Quien ha cumplimentado el presente formulario declara que los datos en él consignado son reales con lo que desde el momento que pulse sobre el botón ENVIAR supone su aceptación y la aceptación de las condiciones de uso y reglamentos del Club Lô Esport Menorca",
             required: true,

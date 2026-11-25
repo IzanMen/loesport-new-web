@@ -37,7 +37,7 @@ Cada envío intenta generar una captura del formulario, incluye las respuestas e
 el cuerpo del correo y adjunta los archivos originales. La captura es opcional:
 si el navegador no puede generarla o hace superar el límite de tamaño, el envío
 continúa con normalidad sin ella. Además, los envíos de tipo `inscripcion`,
-`preinscripcion`, `baja` y `equipacion` se guardan en vistas de Google Sheets y
+`preinscripcion`, `baja`, `equipacion` y `licencias` se guardan en vistas de Google Sheets y
 sus archivos o capturas se archivan en Google Drive; los demás formularios
 continúan usando solo el correo.
 
@@ -70,15 +70,17 @@ Configuración necesaria:
    Antes de cambiar la identidad del servicio, concédele acceso de lectura solo a
    los tres secretos de Gmail ya usados por la API para no interrumpir el resto de
    formularios.
-3. Crea tres hojas privadas propiedad del club: `Inscripcions 26-27 Lô Esport
-   Menorca`, `Baixes 26-27 Lô Esport Menorca` y `Equipament 26-27 Lô Esport
-   Menorca`. Compártelas como editoras únicamente con esa cuenta de servicio.
+3. Crea cuatro hojas privadas propiedad del club: `Inscripcions 26-27 Lô Esport
+   Menorca`, `Baixes 26-27 Lô Esport Menorca`, `Equipament 26-27 Lô Esport
+   Menorca` y la hoja de licencias. Compártelas como editoras únicamente con esa cuenta de servicio.
 4. Configura `GOOGLE_SHEETS_SPREADSHEET_ID` con el identificador de la hoja de
    inscripciones.
    Configura también `GOOGLE_SHEETS_BAJA_SPREADSHEET_ID` con el identificador de
    `Baixes 26-27 Lô Esport Menorca`.
    Configura `GOOGLE_SHEETS_EQUIPACION_SPREADSHEET_ID` con el identificador de
    `Equipament 26-27 Lô Esport Menorca`.
+   Configura `GOOGLE_SHEETS_LICENCIAS_SPREADSHEET_ID` con el identificador de la
+   hoja de licencias.
 5. Opcionalmente, configura `GOOGLE_SHEETS_INSCRIPCION_TAB`; por defecto se usa
    `Inscripciones`. La pestaña técnica oculta usa
    `GOOGLE_SHEETS_INSCRIPCION_SYSTEM_TAB` o `_Inscripciones sistema` por defecto.
@@ -90,6 +92,9 @@ Configuración necesaria:
    Las solicitudes de equipación usan `GOOGLE_SHEETS_EQUIPACION_TAB` o
    `Equipament` y una pestaña técnica `GOOGLE_SHEETS_EQUIPACION_SYSTEM_TAB` o
    `_Equipament sistema` dentro de su documento.
+   Las solicitudes de licencia usan `GOOGLE_SHEETS_LICENCIAS_TAB` o
+   `Llicències` y una pestaña técnica `GOOGLE_SHEETS_LICENCIAS_SYSTEM_TAB` o
+   `_Llicències sistema` dentro de su documento.
 6. Crea una carpeta privada para formularios y configura su ID en
    `GOOGLE_DRIVE_INSCRIPCION_FOLDER_ID`.
 7. Si usas una unidad compartida, configura obligatoriamente
@@ -161,6 +166,17 @@ carpeta privada de inscripciones; puede separarse con
 `GOOGLE_DRIVE_EQUIPACION_FOLDER_ID` y
 `GOOGLE_DRIVE_EQUIPACION_SHARED_DRIVE_ID`.
 
+El formulario de licencias se registra en el documento configurado mediante
+`GOOGLE_SHEETS_LICENCIAS_SPREADSHEET_ID`. La pestaña visible `Llicències`
+contiene el trámite, ámbito y categoría, los datos personales, los nombres de
+los archivos adjuntos (impreso firmado, DNI/NIE y empadronamiento), la forma de
+pago, observaciones y consentimientos, además de los enlaces privados a la
+captura y a su carpeta de Drive, donde se guardan los archivos. El estado
+técnico se conserva en `_Llicències sistema` y el correo solo se envía después
+de persistir la solicitud. Por defecto reutiliza la carpeta privada de
+inscripciones; puede separarse con `GOOGLE_DRIVE_LICENCIAS_FOLDER_ID` y
+`GOOGLE_DRIVE_LICENCIAS_SHARED_DRIVE_ID`.
+
 Para conservar la deduplicación y los reintentos sin ensuciar la vista, la API
 mantiene esos datos en `_Inscripciones sistema`, una pestaña oculta. Al desplegar
 este esquema, la pestaña técnica anterior se renombra y oculta automáticamente,
@@ -172,7 +188,7 @@ cabecera no coincide con el esquema esperado, el envío se detiene antes del
 correo.
 
 `GET /api/health` conserva `spreadsheetConfigured` y `driveConfigured` para
-inscripción y añade el detalle de los cuatro formularios persistentes en
+inscripción y añade el detalle de los cinco formularios persistentes en
 `formStorage`, sin revelar identificadores. Solo confirma que existen las
 variables mínimas; ejecuta
 `npm run verify:form-storage` con la identidad de producción y termina con un envío
@@ -182,10 +198,11 @@ o eliminar físicamente filas mientras haya envíos en curso.
 
 ### Reconciliar las vistas de gestión
 
-`npm run reconcile:form-sheets` analiza las cuatro vistas sin escribir, usando
+`npm run reconcile:form-sheets` analiza las cinco vistas sin escribir, usando
 `GOOGLE_SHEETS_SPREADSHEET_ID`, `GOOGLE_SHEETS_BAJA_SPREADSHEET_ID`,
-`GOOGLE_SHEETS_EQUIPACION_SPREADSHEET_ID` y credenciales ADC con acceso a los
-tres documentos.
+`GOOGLE_SHEETS_EQUIPACION_SPREADSHEET_ID`,
+`GOOGLE_SHEETS_LICENCIAS_SPREADSHEET_ID` y credenciales ADC con acceso a los
+cuatro documentos.
 `npm run reconcile:form-sheets -- --apply` aplica la reconciliación, crea una
 copia de cada vista con datos y verifica los IDs escritos. No envía correos ni
 modifica archivos de Drive o registros técnicos.
