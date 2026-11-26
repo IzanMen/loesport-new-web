@@ -9,18 +9,18 @@ import {
 
 export const DEFAULT_LICENCIAS_SHEET_NAME = "Llicències";
 export const DEFAULT_LICENCIAS_SYSTEM_SHEET_NAME = "_Llicències sistema";
-export const LICENCIAS_SHEET_SCHEMA_VERSION = "1";
+export const LICENCIAS_SHEET_SCHEMA_VERSION = "2";
 
 const ANSWER_COLUMNS = [
   ["license_request_type", "Trámite solicitado"],
   ["license_scope", "Ámbito de la licencia"],
   ["license_category", "Categoría federativa 2027"],
+  ["license_plus", "Ampliación trail-running (Plus)"],
+  ["license_plus_scope", "Cobertura del suplemento Plus"],
   ["participant_full_name", "Nombre y apellidos"],
   ["participant_birth_date", "Fecha de nacimiento"],
   ["participant_document_number", "DNI o NIE"],
   ["license_signed_form", "Impreso de licencia firmado"],
-  ["participant_document_front", "DNI/NIE · parte delantera"],
-  ["participant_document_back", "DNI/NIE · parte trasera"],
   ["participant_census_certificate", "Certificado de empadronamiento"],
   ["participant_address", "Domicilio"],
   ["participant_postal_code", "Código postal"],

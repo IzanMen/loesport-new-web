@@ -750,6 +750,12 @@ body.has-scrolled .registration-tabs {
   text-transform: uppercase;
 }
 
+.license-rates h3 {
+  margin: 32px 0 0;
+  font: 800 clamp(24px, 2.3vw, 32px) / 1.05 "Barlow Condensed", Impact, sans-serif;
+  text-transform: uppercase;
+}
+
 .license-rates p {
   line-height: 1.55;
 }

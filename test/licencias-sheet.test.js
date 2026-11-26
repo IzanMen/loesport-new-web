@@ -25,12 +25,12 @@ function licenciasPayload(overrides = {}) {
       { key: "license_request_type", value: "Renovación · Estándar" },
       { key: "license_scope", value: "Autonómica" },
       { key: "license_category", value: "Sub-16" },
+      { key: "license_plus", value: "Sí, solicito la ampliación Plus" },
+      { key: "license_plus_scope", value: "Europeo" },
       { key: "participant_full_name", value: "Ada Lovelace" },
       { key: "participant_birth_date", value: "10/12/2012" },
       { key: "participant_document_number", value: "12345678Z" },
       { key: "license_signed_form", value: "impreso.pdf" },
-      { key: "participant_document_front", value: "dni-delante.jpg" },
-      { key: "participant_document_back", value: "dni-detras.jpg" },
       { key: "participant_census_certificate", value: "Sin archivo" },
       { key: "participant_address", value: "Carrer Major 1" },
       { key: "participant_postal_code", value: "07730" },
@@ -44,8 +44,6 @@ function licenciasPayload(overrides = {}) {
     ],
     attachments: [
       { index: 0, key: "license_signed_form", label: "Impreso", name: "impreso.pdf" },
-      { index: 1, key: "participant_document_front", label: "DNI", name: "dni-delante.jpg" },
-      { index: 2, key: "participant_document_back", label: "DNI", name: "dni-detras.jpg" },
     ],
     pageUrl: "https://loesport.es/licencias",
     submittedAt: "2026-11-25T15:30:00.000Z",
@@ -105,7 +103,8 @@ test("mapea la licencia, guarda los adjuntos y publica los enlaces privados", ()
   assert.equal(record.participant_full_name, "Ada Lovelace");
   assert.equal(record.license_category, "Sub-16");
   assert.equal(record.license_scope, "Autonómica");
-  assert.equal(record.attachment_names, "impreso.pdf | dni-delante.jpg | dni-detras.jpg");
+  assert.equal(record.license_plus_scope, "Europeo");
+  assert.equal(record.attachment_names, "impreso.pdf");
   assert.equal(record.drive_status, "stored");
   assert.match(record.unmapped_answers, /future_field/);
   assert.equal(licenciasRecordToSheetRow(record).length, LICENCIAS_SHEET_COLUMNS.length);
